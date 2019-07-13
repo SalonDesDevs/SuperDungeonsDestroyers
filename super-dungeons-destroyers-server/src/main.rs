@@ -19,7 +19,6 @@ fn main() -> Fallible<()> {
 
     let server = listener()?
         .incoming()
-        .map_err(|_error| ())
         .for_each(move |socket| {
             println!("New socket");
 
@@ -28,8 +27,11 @@ fn main() -> Fallible<()> {
                 .map(|_| ())
                 .map_err(|_| ());
 
-            tokio::spawn(task)
-        });
+            tokio::spawn(task);
+
+            Ok(())
+        })
+        .map_err(|_error| ());
 
     tokio::run(server);
 
