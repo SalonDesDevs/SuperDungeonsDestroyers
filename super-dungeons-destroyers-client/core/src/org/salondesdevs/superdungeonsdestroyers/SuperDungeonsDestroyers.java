@@ -2,7 +2,9 @@ package org.salondesdevs.superdungeonsdestroyers;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.google.inject.AbstractModule;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.states.TestState;
 import org.salondesdevs.superdungeonsdestroyers.systems.AssetService;
 import org.salondesdevs.superdungeonsdestroyers.systems.CameraService;
 import org.salondesdevs.superdungeonsdestroyers.systems.DebugSystem;
@@ -17,19 +19,18 @@ public class SuperDungeonsDestroyers extends ApplicationAdapter {
 	@Override
 	public void create () {
 		WorldConfiguration worldConfiguration = new WorldConfiguration();
-
-		// Be aware, the order matters.
-		worldConfiguration.register(AssetService.class);
-		worldConfiguration.register(CameraService.class);
-		worldConfiguration.register(RenderingSystem.class);
-		worldConfiguration.register(GroundRenderSystem.class);
-		worldConfiguration.register(OverlayRenderSystem.class);
-		worldConfiguration.register(InputSystem.class);
-		worldConfiguration.register(DebugSystem.class);
-
+		worldConfiguration.getExtraModules().add(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(SuperDungeonsDestroyers.class).toInstance(SuperDungeonsDestroyers.this);
+			}
+		})
 		world = new World(worldConfiguration);
 		world.initialize();
+
+		world.push(TestState.class);
 	}
+
 
 	@Override
 	public void resize(int width, int height) {
