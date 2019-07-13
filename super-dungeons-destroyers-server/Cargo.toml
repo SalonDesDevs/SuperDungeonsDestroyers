@@ -1,9 +1,13 @@
 [package]
-name = "super-dungeons-destroyers-server"
+name = "sdd"
 version = "0.1.0"
-authors = ["Adrien 'Litarvan' Navratil <adrien1975@live.fr>"]
+authors = ["Adrien 'Litarvan' Navratil <adrien1975@live.fr>", "LightDiscord <root@arnaud.sh>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[build-dependencies]
+flatc-rust = "0.1"
+failure = "0.1"
 
 [dependencies]
+flatbuffers = "0.6"
+failure = "0.1"
