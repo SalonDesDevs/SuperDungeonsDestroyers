@@ -7,8 +7,8 @@ struct Vec3 {
 }
 
 table Player {
-    name: string;
-    location: Vec3;
+    name: string (required);
+    location: Vec3 (required);
 }
 
 root_type Player;

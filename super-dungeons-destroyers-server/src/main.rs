@@ -19,5 +19,5 @@ fn main() {
     let buffer = builder.finished_data();
     let player = get_root_as_player(buffer);
 
-    println!("Player's name is {:?}", player.name());
+    println!("Player's name is {}", player.name());
 }
