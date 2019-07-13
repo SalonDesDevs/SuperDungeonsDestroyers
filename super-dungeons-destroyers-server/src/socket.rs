@@ -63,18 +63,13 @@ impl Socket {
 
         shared.sockets.insert(socket.id, self.clone());
     }
-
-    fn unregister(&mut self) {
-        let socket = self.0.lock().unwrap();
-        let mut shared = socket.shared.0.lock().unwrap();
-
-        shared.sockets.remove(&socket.id);
-    }
 }
 
-impl Drop for Socket {
+impl Drop for SocketInner {
     fn drop(&mut self) {
-        self.unregister();
+        println!("SocketInner dropped (id={})", self.id);
+
+        self.shared.0.lock().unwrap().sockets.remove(&self.id);
     }
 }
 
