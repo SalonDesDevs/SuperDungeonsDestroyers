@@ -13,8 +13,13 @@ import org.salondesdevs.superdungeonsdestroyers.systems.InputSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.OverlayRenderSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SuperDungeonsDestroyers extends ApplicationAdapter {
 	World world;
+
+	private Set<Runnable> resizeListeners = new HashSet<Runnable>();
 
 	@Override
 	public void create () {
@@ -24,20 +29,21 @@ public class SuperDungeonsDestroyers extends ApplicationAdapter {
 			protected void configure() {
 				bind(SuperDungeonsDestroyers.class).toInstance(SuperDungeonsDestroyers.this);
 			}
-		})
+		});
+
 		world = new World(worldConfiguration);
 		world.initialize();
 
 		world.push(TestState.class);
 	}
 
+	public void addResizeListener(Runnable run) {
+		this.resizeListeners.add(run);
+	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO: dispatch event through systems (see CameraSystem::resized)
-
-		// TODO: ugly
-		CameraService.instance.resized();
+		this.resizeListeners.forEach(Runnable::run);
 	}
 
 	@Override
