@@ -30,7 +30,7 @@ public class RenderingSystem extends BaseSystem {
 
     @Override
     public void process() {
-        batch.draw(assetService.img, 0, 0);
+        //batch.draw(assetService.img, 0, 0);
     }
 
     @Override

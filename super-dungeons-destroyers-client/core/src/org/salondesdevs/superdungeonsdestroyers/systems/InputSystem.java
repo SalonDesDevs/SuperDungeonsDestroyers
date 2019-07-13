@@ -23,23 +23,26 @@ public class InputSystem extends BaseSystem implements InputProcessor {
         Gdx.input.setInputProcessor(this);
     }
 
+    //TODO: this is temporary
+    static float speed = 2.0f;
+
     @Override
+    //TODO: this is temporary
     public void process() {
-        //TODO: this is temporary
         if (keys.contains(Input.Keys.UP)) {
-            cameraService.camera.position.y += 0.5f;
+            cameraService.camera.position.y += speed;
             cameraService.camera.update();
         }
         if (keys.contains(Input.Keys.DOWN)) {
-            cameraService.camera.position.y -= 0.5f;
+            cameraService.camera.position.y -= speed;
             cameraService.camera.update();
         }
         if (keys.contains(Input.Keys.LEFT)) {
-            cameraService.camera.position.x -= 0.5f;
+            cameraService.camera.position.x -= speed;
             cameraService.camera.update();
         }
         if (keys.contains(Input.Keys.RIGHT)) {
-            cameraService.camera.position.x += 0.5f;
+            cameraService.camera.position.x += speed;
             cameraService.camera.update();
         }
     }

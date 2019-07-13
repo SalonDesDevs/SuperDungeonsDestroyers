@@ -1,12 +1,12 @@
 package org.salondesdevs.superdungeonsdestroyers.components;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapWrapper;
 
 public class Terrain implements Component {
-    public final TiledMap tiledMap;
+    public final TiledMapWrapper tiledMapWrapper;
 
-    public Terrain(TiledMap tiledMap) {
-        this.tiledMap = tiledMap;
+    public Terrain(TiledMapWrapper tiledMap) {
+        this.tiledMapWrapper = tiledMap;
     }
 }

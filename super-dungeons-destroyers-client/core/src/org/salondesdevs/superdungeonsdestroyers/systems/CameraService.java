@@ -7,15 +7,25 @@ import net.wytrem.ecs.*;
 import javax.inject.Singleton;
 
 @Singleton
-public class CameraService extends BaseSystem {
+public class CameraService extends Service {
 
     public OrthographicCamera camera;
     public OrthographicCamera guiCamera;
     public final float zoom;
 
+    // TODO: ugly for testing purposes, to be removed
+    public static CameraService instance;
+
     public CameraService() {
-        this.zoom = 1.0f;
+        this.zoom = 2.5f;
+    }
+
+    @Override
+    public void initialize() {
         resized();
+
+        // TODO: ugly for testing purposes, to be removed
+        instance = this;
     }
 
     // TODO: to be called when the window is resized
@@ -24,7 +34,7 @@ public class CameraService extends BaseSystem {
         setupViewport(Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
     }
 
-    protected void setupViewport( float width, float height) {
+    private void setupViewport( float width, float height) {
         camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false, width, height);
         camera.update();
