@@ -2,10 +2,10 @@ package org.salondesdevs.superdungeonsdestroyers;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.systems.AssetService;
+import org.salondesdevs.superdungeonsdestroyers.systems.CameraService;
+import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
 
 public class SuperDungeonsDestroyers extends ApplicationAdapter {
 	World world;
@@ -13,10 +13,19 @@ public class SuperDungeonsDestroyers extends ApplicationAdapter {
 	@Override
 	public void create () {
 		WorldConfiguration worldConfiguration = new WorldConfiguration();
+
+		// Be aware, the order matters.
+		worldConfiguration.register(AssetService.class);
+		worldConfiguration.register(CameraService.class);
 		worldConfiguration.register(RenderingSystem.class);
 
 		world = new World(worldConfiguration);
 		world.initialize();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO: dispatch event through systems (see CameraSystem::resized)
 	}
 
 	@Override

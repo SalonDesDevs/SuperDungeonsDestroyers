@@ -1,36 +1,45 @@
-package org.salondesdevs.superdungeonsdestroyers;
+package org.salondesdevs.superdungeonsdestroyers.systems;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class RenderingSystem extends BaseSystem {
+    @Inject
+    AssetService assetService;
+
 
     SpriteBatch batch;
-    Texture img;
 
     @Override
     public void initialize() {
         batch = new SpriteBatch();
+    }
 
-        img = new Texture("badlogic.jpg");
-
+    @Override
+    public void begin() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
     }
 
     @Override
     public void process() {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        batch.draw(img, 0, 0);
+        batch.draw(assetService.img, 0, 0);
+    }
+
+    @Override
+    public void end() {
         batch.end();
     }
 
     @Override
     public void dispose() {
-        img.dispose();
         batch.dispose();
     }
 }
