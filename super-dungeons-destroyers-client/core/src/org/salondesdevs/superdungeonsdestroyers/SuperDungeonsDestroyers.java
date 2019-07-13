@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.systems.AssetService;
 import org.salondesdevs.superdungeonsdestroyers.systems.CameraService;
+import org.salondesdevs.superdungeonsdestroyers.systems.InputSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
 
 public class SuperDungeonsDestroyers extends ApplicationAdapter {
@@ -18,6 +19,7 @@ public class SuperDungeonsDestroyers extends ApplicationAdapter {
 		worldConfiguration.register(AssetService.class);
 		worldConfiguration.register(CameraService.class);
 		worldConfiguration.register(RenderingSystem.class);
+		worldConfiguration.register(InputSystem.class);
 
 		world = new World(worldConfiguration);
 		world.initialize();
