@@ -42,7 +42,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile "net.wytrem:ecs:1.0-SNAPSHOT"        
     }
 }
 
@@ -53,6 +52,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "net.wytrem:ecs:1.5"
+        compile "com.google.flatbuffers:flatbuffers-java:1.11.1"
     }
 }
 

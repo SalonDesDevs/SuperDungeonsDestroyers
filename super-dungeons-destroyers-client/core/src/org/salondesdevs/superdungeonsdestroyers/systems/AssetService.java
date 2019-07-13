@@ -11,20 +11,23 @@ import javax.inject.Singleton;
 public class AssetService extends Service {
     public Texture img;
     public TiledMapWrapper testMap;
+    public Texture tilesetTexture;
 
     @Override
     public void initialize() {
         img = new Texture("badlogic.jpg");
-        testMap = this.load("testmap.tmx");
+        testMap = this.loadTiledMap("testmap.tmx");
+        tilesetTexture = new Texture("dungeon_tileset.png");
     }
 
     @Override
     public void dispose() {
         img.dispose();
         testMap.dispose();
+        tilesetTexture.dispose();
     }
 
-    protected TiledMapWrapper load(String internalName) {
+    protected TiledMapWrapper loadTiledMap(String internalName) {
         return new TiledMapWrapper(new TmxMapLoader().load(internalName));
     }
 }
