@@ -13,7 +13,6 @@ public class RenderingSystem extends BaseSystem {
     @Inject
     AssetService assetService;
 
-
     SpriteBatch batch;
 
     @Override
