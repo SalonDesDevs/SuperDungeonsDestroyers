@@ -27,7 +27,6 @@ public class AssetService extends Service {
         tilesetTexture.dispose();
     }
 
-
     protected TiledMapWrapper loadTiledMap(String internalName) {
         return new TiledMapWrapper(new TmxMapLoader().load(internalName));
     }
