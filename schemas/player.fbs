@@ -1,0 +1,14 @@
+namespace SDD.Player;
+
+struct Vec3 {
+    x: float;
+    y: float;
+    z: float;
+}
+
+table Player {
+    name: string (required);
+    location: Vec3 (required);
+}
+
+root_type Player;
