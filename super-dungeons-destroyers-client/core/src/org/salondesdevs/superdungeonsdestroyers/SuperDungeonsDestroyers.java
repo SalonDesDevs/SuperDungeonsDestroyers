@@ -5,13 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.states.TestState;
-import org.salondesdevs.superdungeonsdestroyers.systems.AssetService;
-import org.salondesdevs.superdungeonsdestroyers.systems.CameraService;
-import org.salondesdevs.superdungeonsdestroyers.systems.DebugSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.GroundRenderSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.InputSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.OverlayRenderSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
 
 import java.util.HashSet;
 import java.util.Set;
