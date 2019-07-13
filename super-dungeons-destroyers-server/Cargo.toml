@@ -11,4 +11,4 @@ failure = "0.1"
 [dependencies]
 flatbuffers = "0.6"
 failure = "0.1"
-tokio = {git="https://github.com/tokio-rs/tokio"}
+tokio = "0.1"
