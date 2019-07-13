@@ -1,7 +1,7 @@
 [package]
 name = "sdd"
 version = "0.1.0"
-authors = ["Adrien 'Litarvan' Navratil <adrien1975@live.fr>", "LightDiscord <root@arnaud.sh>"]
+authors = ["Adrien 'Litarvan' Navratil <adrien1975@live.fr>", "LightDiscord <root@arnaud.sh>", "Navatar <teo.nespoulet@gmail.com>"]
 edition = "2018"
 
 [build-dependencies]
@@ -11,3 +11,4 @@ failure = "0.1"
 [dependencies]
 flatbuffers = "0.6"
 failure = "0.1"
+tokio = {git="https://github.com/tokio-rs/tokio"}
