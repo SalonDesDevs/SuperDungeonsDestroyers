@@ -1,13 +1,18 @@
 #![feature(async_await, vec_remove_item)]
 
+mod network;
+mod game;
+mod binding;
+
+use crate::network::Connection;
+use crate::game::shared::Shared;
+
 use tokio::prelude::*;
 use tokio::net::TcpListener;
-use failure::Fallible;
 
-mod socket;
-use socket::{ Shared, Socket };
+use failure::{ Fallible, Error };
 
-mod codec;
+use std::sync::{ Arc, Mutex };
 
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
@@ -16,63 +21,27 @@ fn listener() -> Fallible<TcpListener> {
 }
 
 fn main() -> Fallible<()> {
-    let shared = Shared::default();
+    let shared = Arc::new(Mutex::new(Shared::default()));
 
     let server = listener()?
         .incoming()
         .for_each(move |socket| {
             println!("New socket");
 
-            let socket = Socket::new(socket, shared.clone());
-            tokio::spawn(socket.handle());
+            let connection = Connection::new(socket);
+
+            tokio::spawn(connection.process(shared.clone()));
 
             Ok(())
         })
-        .map_err(|_error| ());
+        .map_err(Error::from)
+        .map_err(|error| {
+            for cause in error.as_fail().iter_causes() {
+                eprintln!("{}", cause);
+            }
+        });
 
     println!("Server is listening!");
-
-    use flatbuffers::FlatBufferBuilder;
-    use sdd::request::{ Request, RequestArgs, Action, Ping, PingArgs, Task, TaskArgs };
-
-    let mut builder = FlatBufferBuilder::new();
-
-    let ping = Ping::create(
-        &mut builder,
-        &PingArgs {
-            value: 42
-        }
-    );
-
-    let task = Task::create(
-        &mut builder,
-        &TaskArgs {
-            action_type: Action::Ping,
-            action: Some(ping.as_union_value())
-        }
-    );
-
-    let tasks = builder.create_vector(&[task]);
-
-    let request = Request::create(
-        &mut builder,
-        &RequestArgs {
-            tasks: Some(tasks)
-        }
-    );
-
-    builder.finish(request, None);
-
-    let buf = builder.finished_data();
-
-    let hexas = (buf.len() as u32)
-        .to_le_bytes()
-        .iter()
-        .chain(buf)
-        .map(|x| format!("\\x{:x}", x))
-        .collect::<String>();
-
-    println!("{}", hexas);
 
     tokio::run(server);
 

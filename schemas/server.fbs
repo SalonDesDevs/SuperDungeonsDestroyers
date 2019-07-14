@@ -1,0 +1,17 @@
+namespace SDD.Server;
+
+table Pong {
+    value: byte;
+}
+
+union Content { Pong }
+
+table Message {
+    content: Content;
+}
+
+table Messages {
+    messages: [Message] (required);
+}
+
+root_type Messages;
