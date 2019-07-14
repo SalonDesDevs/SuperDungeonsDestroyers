@@ -75,8 +75,6 @@ public class AssetsLoadingSystem extends BaseSystem {
 
     @Override
     public void begin() {
-        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
     }
 
