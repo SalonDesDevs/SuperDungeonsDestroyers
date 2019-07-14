@@ -1,17 +1,34 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.connectingtoserver;
 
+import SDD.Request.Action;
+import SDD.Request.Ping;
+import SDD.Request.Request;
+import SDD.Request.Task;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
+import com.google.flatbuffers.FlatBufferBuilder;
 import net.wytrem.ecs.*;
 
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class NetworkSystem extends BaseSystem {
 
     private Socket clientSocket;
+
+    private List<Request> requests = new ArrayList<>();
 
     @Override
     public void initialize() {
@@ -21,32 +38,25 @@ public class NetworkSystem extends BaseSystem {
             @Override
             public void run() {
 
-                InputStream inputStream = clientSocket.getInputStream();
+                DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
 
                 long size;
-                byte[] sizeBuffer = new byte[4];
-                byte[] buffer = new byte[1024];
 
                 try {
 
                     while (true) {
-                        if (inputStream.read(sizeBuffer) != 1) {
-                            size = 0;
-                            for (int i = 0; i < 4; i++) {
-                                size <<= 8;
-                                size |= (sizeBuffer[i] & 0xFF);
+                        if ((size = (inputStream.readInt() & 0x00000000ffffffffL)) != -1) {
+
+                            byte[] buffer = new byte[(int) size];
+
+                            inputStream.read(buffer);
+
+                            Request request = Request.getRootAsRequest(ByteBuffer.wrap(buffer));
+
+                            synchronized (requests) {
+                                requests.add(request);
                             }
-
-//                            System.out.println("size = ");
-
-                            if (buffer.length < size) {
-                                buffer = new byte[(int) size];
-                            }
-
-                            inputStream.read(buffer, 0, (int) size);
-
                         }
-
                     }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
@@ -56,14 +66,75 @@ public class NetworkSystem extends BaseSystem {
         }.start();
     }
 
+
+
+    float remaining = 4;
+
+    boolean test = true;
     @Override
     public void process() {
         // Send enqueued packets, ...
+
+       remaining -= world.getDelta();
+
+        if (remaining < 0 && test) {
+            test = false;
+            FlatBufferBuilder builder = new FlatBufferBuilder();
+            int request = createRequest(builder);
+
+            builder.finish(request);
+            ByteBuffer byteBuffer = builder.dataBuffer();
+
+            DataOutputStream dataOutputStream = new DataOutputStream(this.clientSocket.getOutputStream());
+            try {
+                dataOutputStream.writeInt(byteBuffer.remaining());
+                WritableByteChannel channel = Channels.newChannel(dataOutputStream);
+
+                channel.write(byteBuffer);
+                dataOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
 
 //        try {
 //            this.clientSocket.getOutputStream().flush();
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    public static byte[] longToBytesUint(long l) {
+        byte[] result = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            result[i] = (byte)(l & 0xFF);
+            l >>= 8;
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        long test = 256;
+
+        System.out.println(Arrays.toString(longToBytesUint(test)));
+    }
+
+    public int createRequest(FlatBufferBuilder builder) {
+        int ping = Ping.createPing(builder, (byte) 28);
+
+        Task.startTask(builder);
+        Task.addActionType(builder, Action.Ping);
+        Task.addAction(builder, ping);
+        int task = Task.endTask(builder);
+
+        int tasks = Request.createTasksVector(builder, new int[]{task});
+
+        Request.startRequest(builder);
+        Request.addTasks(builder, tasks);
+
+        return Request.endRequest(builder);
     }
 }
