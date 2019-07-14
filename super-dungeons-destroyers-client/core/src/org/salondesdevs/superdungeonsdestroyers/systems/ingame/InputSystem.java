@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

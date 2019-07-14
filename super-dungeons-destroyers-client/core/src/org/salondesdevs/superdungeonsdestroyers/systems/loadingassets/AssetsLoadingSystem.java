@@ -11,7 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.states.MainMenuState;
-import org.salondesdevs.superdungeonsdestroyers.systems.Assets;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

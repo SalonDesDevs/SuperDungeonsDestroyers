@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems;
+package org.salondesdevs.superdungeonsdestroyers.systems.common;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,19 +13,20 @@ import java.lang.annotation.Target;
 @Singleton
 /**
  * The collection of all assets needed in the game.
- * Fields annotated with {@link Assets.Asset} will be automatically filled up by the {@link org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem}.
+ * Fields annotated with {@link Assets.Asset} will be automatically filled
+ * up by the {@link org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem}.
  *
+ * To register an asset, simply create a public field and annotate it with {@link Assets.Asset}.
  */
 public class Assets extends Service {
-
     @Asset(path = "badlogic.jpg")
     public Texture img;
 
     @Asset(path = "testmap.tmx")
     public TiledMap testMap;
 
-    @Asset(path = "dungeon_tileset.png")
-    public Texture tilesetTexture;
+    @Asset(path = "title.png")
+    public Texture title;
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
