@@ -62,7 +62,7 @@ project(":core") {
         inputDir = file("../../schemas")
         outputDir = file("src/")
         language = 'java'
-        extraArgs = ''
+        extraArgs = '--gen-mutable'
     }
 
 }

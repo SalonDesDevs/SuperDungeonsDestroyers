@@ -20,7 +20,7 @@ public class RenderingSystem extends BaseSystem {
 
     BitmapFont font;
 
-    float remaining = 6.0f;
+    float remaining = 1.0f;
 
     @Override
     public void initialize() {
