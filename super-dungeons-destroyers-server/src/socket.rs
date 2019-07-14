@@ -5,6 +5,9 @@ use std::io;
 
 use tokio::prelude::*;
 use tokio::net::TcpStream;
+use tokio::codec::Framed;
+
+use crate::codec::{ Codec, RequestData };
 
 type Identifier = usize;
 
@@ -69,6 +72,30 @@ impl Socket {
         let mut shared = socket.shared.0.lock().unwrap();
 
         shared.sockets.remove(&socket.id);
+    }
+
+    pub fn handle(self) -> impl Future<Item = (), Error = ()> {
+        Framed::new(self.clone(), Codec::default())
+            .for_each(|request| {
+                let RequestData { request, .. } = request;
+
+                println!("Got {} task(s)!", request.tasks().len());
+
+                for task in 0..request.tasks().len() {
+                    let task = request.tasks().get(task);
+                    println!("Action type is {:?}", task.action_type());
+                }
+
+                Ok(())
+            })
+            .and_then(move |_| {
+                println!("Socket quit");
+
+                self.disconnect();
+
+                Ok(())
+            })
+            .map_err(|_| ())
     }
 }
 

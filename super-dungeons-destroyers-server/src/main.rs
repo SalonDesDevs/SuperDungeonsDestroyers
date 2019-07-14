@@ -2,14 +2,12 @@
 
 use tokio::prelude::*;
 use tokio::net::TcpListener;
-use tokio::codec::Framed;
 use failure::Fallible;
 
 mod socket;
 use socket::{ Shared, Socket };
 
 mod codec;
-use codec::{ Codec, RequestData };
 
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
@@ -26,30 +24,7 @@ fn main() -> Fallible<()> {
             println!("New socket");
 
             let socket = Socket::new(socket, shared.clone());
-            let framed = Framed::new(socket.clone(), Codec::default());
-            let connection = framed
-                .for_each(|request| {
-                    let RequestData { request, .. } = request;
-
-                    println!("Got {} task(s)!", request.tasks().len());
-
-                    for task in 0..request.tasks().len() {
-                        let task = request.tasks().get(task);
-                        println!("Action type is {:?}", task.action_type());
-                    }
-
-                    Ok(())
-                })
-                .and_then(move |_| {
-                    println!("Socket quit");
-
-                    socket.disconnect();
-
-                    Ok(())
-                })
-                .map_err(|_| ());
-
-            tokio::spawn(connection);
+            tokio::spawn(socket.handle());
 
             Ok(())
         })
