@@ -8,6 +8,8 @@ use failure::Fallible;
 mod socket;
 use socket::{ Shared, Socket };
 
+mod codec;
+
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
 

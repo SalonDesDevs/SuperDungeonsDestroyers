@@ -456,6 +456,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "sdd"
 version = "0.1.0"
 dependencies = [
+ "bytes 0.4.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "flatbuffers 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "flatc-rust 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
