@@ -1,13 +1,13 @@
-use tokio::codec::Decoder;
-use bytes::{ Bytes, BytesMut };
+use tokio::codec::{ Decoder, Encoder };
+use bytes::{ Bytes, BytesMut, BufMut };
 use failure::Error;
 use std::mem;
 use std::convert::TryInto;
 use sdd::request::{ get_root_as_request, Request };
 
 pub struct RequestData {
-    raw: Bytes,
-    request: Request<'static>,
+    _raw: Bytes,
+    pub request: Request<'static>,
 }
 
 pub struct Codec {
@@ -41,6 +41,18 @@ impl Decoder for Codec {
         let request = unsafe { mem::transmute(get_root_as_request(&bytes)) };
 
         self.length = None;
-        Ok(Some(RequestData { raw: bytes, request }))
+        Ok(Some(RequestData { _raw: bytes, request }))
+    }
+}
+
+impl Encoder for Codec {
+    type Item = Bytes;
+    type Error = Error;
+
+    fn encode(&mut self, response: Self::Item, dst: &mut BytesMut) -> Result<(), Self::Error> {
+        dst.put_u32_le(response.len().try_into().unwrap());
+        dst.put(response);
+
+        Ok(())
     }
 }
