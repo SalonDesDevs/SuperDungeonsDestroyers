@@ -8,18 +8,19 @@ use tokio::net::TcpStream;
 
 type Identifier = usize;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Socket(Arc<Mutex<SocketInner>>);
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Shared(Arc<Mutex<SharedInner>>);
 
+#[derive(Debug)]
 struct SocketInner {
     id: Identifier,
     stream: TcpStream,
     shared: Shared
 }
-
+#[derive(Debug)]
 struct SharedInner {
     sockets: HashMap<Identifier, Socket>,
     id_counter: Identifier,
@@ -63,13 +64,12 @@ impl Socket {
 
         shared.sockets.insert(socket.id, self.clone());
     }
-}
 
-impl Drop for SocketInner {
-    fn drop(&mut self) {
-        println!("SocketInner dropped (id={})", self.id);
+    pub fn disconnect(&self) {
+        let socket = self.0.lock().unwrap();
+        let mut shared = socket.shared.0.lock().unwrap();
 
-        self.shared.0.lock().unwrap().sockets.remove(&self.id);
+        shared.sockets.remove(&socket.id);
     }
 }
 

@@ -1,17 +1,23 @@
-use tokio::codec::Decoder;
-use bytes::{ Bytes, BytesMut };
+use tokio::codec::{ Decoder, Encoder };
+use bytes::{ Bytes, BytesMut, BufMut };
 use failure::Error;
 use std::mem;
 use std::convert::TryInto;
 use sdd::request::{ get_root_as_request, Request };
 
 pub struct RequestData {
-    raw: Bytes,
-    request: Request<'static>,
+    _raw: Bytes,
+    pub request: Request<'static>,
 }
 
 pub struct Codec {
     length: Option<u32>,
+}
+
+impl Default for Codec {
+    fn default() -> Self {
+        Codec { length: None }
+    }
 }
 
 impl Decoder for Codec {
@@ -23,7 +29,7 @@ impl Decoder for Codec {
             if src.len() < mem::size_of::<u32>() {
                 return Ok(None);
             } else {
-                let bytes = src.split_off(mem::size_of::<u32>());
+                let bytes = src.split_to(mem::size_of::<u32>());
                 let length = bytes.as_ref().try_into().unwrap();
                 let length = u32::from_le_bytes(length);
 
@@ -37,10 +43,22 @@ impl Decoder for Codec {
             return Ok(None);
         }
 
-        let bytes = src.split_off(length).freeze();
+        let bytes = src.split_to(length).freeze();
         let request = unsafe { mem::transmute(get_root_as_request(&bytes)) };
 
         self.length = None;
-        Ok(Some(RequestData { raw: bytes, request }))
+        Ok(Some(RequestData { _raw: bytes, request }))
+    }
+}
+
+impl Encoder for Codec {
+    type Item = Bytes;
+    type Error = Error;
+
+    fn encode(&mut self, response: Self::Item, dst: &mut BytesMut) -> Result<(), Self::Error> {
+        dst.put_u32_le(response.len().try_into().unwrap());
+        dst.put(response);
+
+        Ok(())
     }
 }
