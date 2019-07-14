@@ -8,23 +8,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.net.NetJavaSocketImpl;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.google.flatbuffers.FlatBufferBuilder;
 import net.wytrem.ecs.*;
 
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NetworkSystem extends BaseSystem {
@@ -34,13 +30,19 @@ public class NetworkSystem extends BaseSystem {
     private List<Request> requests = new ArrayList<>();
 
     private ListenThread listenThread;
+    private OutputStream outputStream;
 
     @Override
     public void initialize() {
         this.clientSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, "localhost", 9000, new SocketHints());
 
         this.listenThread = new ListenThread();
-        this.listenThread.run();
+        this.listenThread.start();
+
+        sizeBuffer = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
+        outputStream = this.clientSocket.getOutputStream();
+        writeChannel = Channels.newChannel(outputStream);
+
         batch = new SpriteBatch();
         font = new BitmapFont();
     }
@@ -71,41 +73,8 @@ public class NetworkSystem extends BaseSystem {
         if (remaining < 0 && test) {
             System.err.println("SENT");
             test = false;
-            FlatBufferBuilder builder = new FlatBufferBuilder();
-            int request = createRequest(builder);
-
-            builder.finish(request);
-            ByteBuffer byteBuffer = builder.dataBuffer();
-
-            DataOutputStream dataOutputStream = new DataOutputStream(this.clientSocket.getOutputStream());
-
-            try {
-                dataOutputStream.writeInt(byteBuffer.remaining());
-                WritableByteChannel channel = Channels.newChannel(dataOutputStream);
-
-                System.err.println("Wrote " + channel.write(byteBuffer) + " bytes");
-                dataOutputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            this.sendPingRequest(38);
         }
-
-        if (remaining < -3 && this.clientSocket.isConnected()) {
-            this.close();
-        }
-
-//        try {
-//            this.clientSocket.getOutputStream().flush();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    public void close() {
-        System.err.println("CLOSED");
-        this.listenThread.isRunning = false;
-        this.clientSocket.dispose();
     }
 
     @Override
@@ -113,8 +82,32 @@ public class NetworkSystem extends BaseSystem {
         batch.end();
     }
 
-    public int createRequest(FlatBufferBuilder builder) {
-        int ping = Ping.createPing(builder, (byte) 28);
+    @Override
+    public void dispose() {
+        this.clientSocket.dispose();
+    }
+
+    ByteBuffer sizeBuffer;
+    WritableByteChannel writeChannel;
+    FlatBufferBuilder builder = new FlatBufferBuilder();
+
+    private void writeAndFlush(ByteBuffer byteBuffer) {
+        sizeBuffer.rewind();
+        sizeBuffer.putInt(byteBuffer.remaining());
+        sizeBuffer.flip();
+
+        try {
+            writeChannel.write(sizeBuffer);
+            System.err.println("Wrote " + writeChannel.write(byteBuffer) + " bytes");
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPingRequest(int number) {
+        builder.clear();
+        int ping = Ping.createPing(builder, (byte) number);
 
         Task.startTask(builder);
         Task.addActionType(builder, Action.Ping);
@@ -125,8 +118,9 @@ public class NetworkSystem extends BaseSystem {
 
         Request.startRequest(builder);
         Request.addTasks(builder, tasks);
-
-        return Request.endRequest(builder);
+        int request = Request.endRequest(builder);
+        builder.finish(request);
+        writeAndFlush(builder.dataBuffer());
     }
 
     public class ListenThread extends Thread {
@@ -164,7 +158,6 @@ public class NetworkSystem extends BaseSystem {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-
         }
     }
 }
