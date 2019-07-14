@@ -2,7 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.states;
 
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
-import org.salondesdevs.superdungeonsdestroyers.systems.AssetService;
+import org.salondesdevs.superdungeonsdestroyers.systems.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.CameraService;
 import org.salondesdevs.superdungeonsdestroyers.systems.GroundRenderSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.InputSystem;
@@ -11,23 +11,23 @@ import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
 
 import javax.inject.Inject;
 
-public class TestState extends GameState {
+public class IngameState extends GameState {
 
     @Inject
     Mapper<Terrain> terrainMapper;
 
     @Inject
-    AssetService assetService;
+    Assets assetService;
 
     @Inject
     World world;
 
 
-    public TestState() {
+    public IngameState() {
         super();
 
         // Be aware, the order matters.
-        register(AssetService.class);
+        register(Assets.class);
         register(CameraService.class);
         register(RenderingSystem.class);
         register(GroundRenderSystem.class);

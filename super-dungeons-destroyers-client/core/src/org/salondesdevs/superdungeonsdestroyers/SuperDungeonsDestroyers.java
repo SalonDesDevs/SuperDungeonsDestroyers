@@ -4,7 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.states.TestState;
+import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
+import org.salondesdevs.superdungeonsdestroyers.states.LoadingAssets;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class SuperDungeonsDestroyers extends ApplicationAdapter {
 		world = new World(worldConfiguration);
 		world.initialize();
 
-		world.push(TestState.class);
+		world.push(LoadingAssets.class);
 	}
 
 	public void addResizeListener(Runnable run) {
