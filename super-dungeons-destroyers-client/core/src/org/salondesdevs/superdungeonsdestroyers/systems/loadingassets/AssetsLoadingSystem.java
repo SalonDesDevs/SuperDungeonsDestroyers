@@ -1,6 +1,10 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.loadingassets;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -11,19 +15,22 @@ import org.salondesdevs.superdungeonsdestroyers.systems.Assets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.soap.SAAJResult;
 import java.lang.reflect.Field;
 
 @Singleton
+/**
+ * Detects {@link Assets} fields to be loaded and run an {@link AssetManager}.
+ */
 public class AssetsLoadingSystem extends BaseSystem {
 
-    AssetManager assetManager;
+    private AssetManager assetManager;
 
     @Inject
     Assets assets;
 
     SpriteBatch batch;
     BitmapFont font;
+    Texture splash;
 
     @Override
     public void initialize() {
@@ -31,7 +38,9 @@ public class AssetsLoadingSystem extends BaseSystem {
         this.assetManager.setLoader(TiledMap.class, new TmxMapLoader());
         registerAssets();
         batch = new SpriteBatch();
+        splash = new Texture("splash.png");
         font = new BitmapFont();
+        font.setColor(Color.BLACK);
     }
 
     private void registerAssets() {
@@ -45,6 +54,7 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
         }
     }
+
 
     private void fillAssets() {
         for (Field field : Assets.class.getDeclaredFields()) {
@@ -65,6 +75,8 @@ public class AssetsLoadingSystem extends BaseSystem {
 
     @Override
     public void begin() {
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
     }
 
@@ -75,8 +87,8 @@ public class AssetsLoadingSystem extends BaseSystem {
             this.world.push(MainMenuState.class);
         }
         else {
-            // TODO: make it much more pretty
-            font.draw(batch, " loading assets, progress = " + this.assetManager.getProgress(), 20, 20);
+            batch.draw(splash, (Gdx.graphics.getWidth() - splash.getWidth()) / 2, (Gdx.graphics.getHeight() - splash.getHeight()) / 2);
+            font.draw(batch, "Loading assets: " + (this.assetManager.getProgress() * 100) + "%", 0, 20);
         }
     }
 

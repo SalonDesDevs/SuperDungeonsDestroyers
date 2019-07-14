@@ -11,6 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Singleton
+/**
+ * The collection of all assets needed in the game.
+ * Fields annotated with {@link Assets.Asset} will be automatically filled up by the {@link org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem}.
+ *
+ */
 public class Assets extends Service {
 
     @Asset(path = "badlogic.jpg")
@@ -30,7 +35,9 @@ public class Assets extends Service {
         Class<?> type() default UseFieldType.class;
     }
 
-    public static final class UseFieldType {
-
-    }
+    /**
+     * A type class used to inform the {@link org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem}
+     * to use the Field's type.
+     */
+    public static final class UseFieldType {}
 }
