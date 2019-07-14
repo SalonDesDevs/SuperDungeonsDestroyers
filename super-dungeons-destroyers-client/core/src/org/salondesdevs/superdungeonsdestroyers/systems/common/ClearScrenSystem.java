@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ClearScrenSystem extends BaseSystem {
-
     @Override
     public void process() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
