@@ -51,7 +51,7 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "net.wytrem:ecs:1.6"
+        compile "net.wytrem:ecs:1.7"
         compile "com.google.flatbuffers:flatbuffers-java:1.11.1"
     }
 }

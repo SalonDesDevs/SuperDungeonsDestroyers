@@ -3,8 +3,10 @@ package org.salondesdevs.superdungeonsdestroyers.systems;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -37,12 +39,14 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
 
         // TODO: this is ugly for debug proposes
         if (tiledMapRenderer == null) {
-            tiledMapRenderer = new OrthogonalTiledMapRenderer(terrain.tiledMapWrapper.getTiledMap());
+            tiledMapRenderer = new OrthogonalTiledMapRenderer(terrain.tiledMap);
             layers = new int[layersToRender.length];
             int index = 0;
 
-            for (int i = 0; i < terrain.tiledMapWrapper.getLayers().size; i++) {
-                TiledMapTileLayer layer = terrain.tiledMapWrapper.getLayers().get(i);
+            Array<TiledMapTileLayer> allLayers = TiledMapUtils.getLayers(terrain.tiledMap);
+
+            for (int i = 0; i < allLayers.size; i++) {
+                TiledMapTileLayer layer = allLayers.get(i);
                 if (Arrays.binarySearch(layersToRender, layer.getName()) >= 0) {
                     layers[index] = i;
                     index++;

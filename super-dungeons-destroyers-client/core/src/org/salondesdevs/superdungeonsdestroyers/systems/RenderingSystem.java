@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 @Singleton
 public class RenderingSystem extends BaseSystem {
     @Inject
-    AssetService assetService;
+    Assets assets;
 
     SpriteBatch batch;
 
@@ -29,7 +29,7 @@ public class RenderingSystem extends BaseSystem {
 
     @Override
     public void process() {
-        //batch.draw(assetService.img, 0, 0);
+        batch.draw(assets.img, 0, 0);
     }
 
     @Override

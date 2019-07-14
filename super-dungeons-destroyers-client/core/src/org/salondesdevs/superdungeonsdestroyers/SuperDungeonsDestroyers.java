@@ -4,14 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.states.TestState;
-import org.salondesdevs.superdungeonsdestroyers.systems.AssetService;
-import org.salondesdevs.superdungeonsdestroyers.systems.CameraService;
-import org.salondesdevs.superdungeonsdestroyers.systems.DebugSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.GroundRenderSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.InputSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.OverlayRenderSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
+import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
+import org.salondesdevs.superdungeonsdestroyers.states.LoadingAssets;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +28,7 @@ public class SuperDungeonsDestroyers extends ApplicationAdapter {
 		world = new World(worldConfiguration);
 		world.initialize();
 
-		world.push(TestState.class);
+		world.push(LoadingAssets.class);
 	}
 
 	public void addResizeListener(Runnable run) {
