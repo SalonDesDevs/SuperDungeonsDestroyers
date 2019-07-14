@@ -6,6 +6,9 @@ import SDD.Request.Request;
 import SDD.Request.Task;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.net.NetJavaSocketImpl;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.google.flatbuffers.FlatBufferBuilder;
@@ -64,20 +67,37 @@ public class NetworkSystem extends BaseSystem {
 
             }
         }.start();
+
+        batch = new SpriteBatch();
+        font = new BitmapFont();
     }
 
+    SpriteBatch batch;
+
+    BitmapFont font;
 
 
     float remaining = 4;
 
     boolean test = true;
+
+    @Override
+    public void begin() {
+        batch.begin();
+    }
+
     @Override
     public void process() {
         // Send enqueued packets, ...
 
-       remaining -= world.getDelta();
+        remaining -= world.getDelta();
+
+        if (remaining > 0)
+            font.draw(batch, "Sending in " + remaining, 100, 100);
 
         if (remaining < 0 && test) {
+
+            System.err.println("SENT");
             test = false;
             FlatBufferBuilder builder = new FlatBufferBuilder();
             int request = createRequest(builder);
@@ -96,7 +116,11 @@ public class NetworkSystem extends BaseSystem {
                 e.printStackTrace();
             }
 
+        }
 
+        if (remaining < -3) {
+            System.err.println("CLOSED");
+            this.clientSocket.dispose();
         }
 
 //        try {
@@ -106,20 +130,9 @@ public class NetworkSystem extends BaseSystem {
 //        }
     }
 
-    public static byte[] longToBytesUint(long l) {
-        byte[] result = new byte[8];
-        for (int i = 7; i >= 0; i--) {
-            result[i] = (byte)(l & 0xFF);
-            l >>= 8;
-        }
-
-        return result;
-    }
-
-    public static void main(String[] args) {
-        long test = 256;
-
-        System.out.println(Arrays.toString(longToBytesUint(test)));
+    @Override
+    public void end() {
+        batch.end();
     }
 
     public int createRequest(FlatBufferBuilder builder) {
