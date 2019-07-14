@@ -14,6 +14,12 @@ pub struct Codec {
     length: Option<u32>,
 }
 
+impl Default for Codec {
+    fn default() -> Self {
+        Codec { length: None }
+    }
+}
+
 impl Decoder for Codec {
     type Item = RequestData;
     type Error = Error;
@@ -23,7 +29,7 @@ impl Decoder for Codec {
             if src.len() < mem::size_of::<u32>() {
                 return Ok(None);
             } else {
-                let bytes = src.split_off(mem::size_of::<u32>());
+                let bytes = src.split_to(mem::size_of::<u32>());
                 let length = bytes.as_ref().try_into().unwrap();
                 let length = u32::from_le_bytes(length);
 
@@ -37,7 +43,7 @@ impl Decoder for Codec {
             return Ok(None);
         }
 
-        let bytes = src.split_off(length).freeze();
+        let bytes = src.split_to(length).freeze();
         let request = unsafe { mem::transmute(get_root_as_request(&bytes)) };
 
         self.length = None;
