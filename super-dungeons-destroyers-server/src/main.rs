@@ -26,20 +26,28 @@ fn main() -> Fallible<()> {
             println!("New socket");
 
             let socket = Socket::new(socket, shared.clone());
-            let framed = Framed::new(socket, Codec::default());
-            let connection = framed.for_each(|request| {
-                let RequestData { request, .. } = request;
+            let framed = Framed::new(socket.clone(), Codec::default());
+            let connection = framed
+                .for_each(|request| {
+                    let RequestData { request, .. } = request;
 
-                println!("Got {} task(s)!", request.tasks().len());
+                    println!("Got {} task(s)!", request.tasks().len());
 
-                for task in 0..request.tasks().len() {
-                    let task = request.tasks().get(task);
-                    println!("Action type is {:?}", task.action_type());
-                }
+                    for task in 0..request.tasks().len() {
+                        let task = request.tasks().get(task);
+                        println!("Action type is {:?}", task.action_type());
+                    }
 
-                Ok(())
-            })
-            .map_err(|_| ());
+                    Ok(())
+                })
+                .and_then(move |_| {
+                    println!("Socket quit");
+
+                    socket.disconnect();
+
+                    Ok(())
+                })
+                .map_err(|_| ());
 
             tokio::spawn(connection);
 
