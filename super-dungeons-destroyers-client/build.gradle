@@ -7,8 +7,8 @@ buildscript {
         jcenter()
         google()
     }
-
-    dependencies {   
+    dependencies {
+        classpath "gradle.plugin.io.netifi:gradle-flatbuffers-plugin:1.0.5"
     }
 }
 
@@ -33,6 +33,8 @@ allprojects {
     }
 }
 
+import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
+
 project(":desktop") {
     apply plugin: "java"
 
@@ -47,13 +49,22 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: "io.netifi.flatbuffers"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "net.wytrem:ecs:1.8"
-        compile "com.google.flatbuffers:flatbuffers-java:1.11.1"
+        compile files("libs/flatbuffers-java-1.11.1.jar")
     }
+
+    task createFlatBuffers(type: FlatBuffers) {
+        inputDir = file("../../schemas")
+        outputDir = file("src/")
+        language = 'java'
+        extraArgs = ''
+    }
+
 }
 
 tasks.eclipse.doLast {
