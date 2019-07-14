@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import javax.inject.Singleton;
 

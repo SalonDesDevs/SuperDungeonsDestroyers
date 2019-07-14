@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
