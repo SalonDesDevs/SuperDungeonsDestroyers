@@ -11,18 +11,19 @@ use crate::codec::{ Codec, RequestData };
 
 type Identifier = usize;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Socket(Arc<Mutex<SocketInner>>);
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Shared(Arc<Mutex<SharedInner>>);
 
+#[derive(Debug)]
 struct SocketInner {
     id: Identifier,
     stream: TcpStream,
     shared: Shared
 }
-
+#[derive(Debug)]
 struct SharedInner {
     sockets: HashMap<Identifier, Socket>,
     id_counter: Identifier,
