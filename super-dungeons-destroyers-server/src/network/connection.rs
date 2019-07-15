@@ -47,7 +47,6 @@ impl Connection {
         }
     }
 
-    // TODO: Handle disconnection
     pub fn process(self, shared: Arc<Mutex<Shared>>) -> impl Future<Item = (), Error = ()> {
         let address = self.socket.peer_addr().unwrap();
         let (tx, rx) = mpsc::unbounded_channel();
@@ -66,6 +65,13 @@ impl Connection {
                 eprintln!("Received message(s) from the client.");
 
                 Listener::handle_messages(&peer, messages)
+            })
+            .and_then(move |_| {
+                eprintln!("Got disconnected");
+
+                shared.lock().unwrap().players.remove(&address);
+
+                Ok(())
             });
 
         to_client.join(from_client)
