@@ -10,8 +10,11 @@ fn main() -> Result<()> {
 
     run(Args {
         inputs: &[
+            Path::new("../schemas/dungeon.fbs"),
             Path::new("../schemas/player.fbs"),
-
+            Path::new("../schemas/pickable.fbs"),
+            Path::new("../schemas/mob.fbs"),
+            
             Path::new("../schemas/client.fbs"),
             Path::new("../schemas/server.fbs"),
         ],

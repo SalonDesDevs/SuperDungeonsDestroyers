@@ -1,0 +1,18 @@
+
+namespace SDD.Dungeon;
+include "player.fbs";
+include "mob.fbs";
+include "pickable.fbs";
+
+
+
+union Content { Mob, Player, Pickable }
+
+table Room {
+      content: Content;
+}
+table Dungeon {
+      rooms: [Room] (required);
+}
+
+root_type Dungeon;
