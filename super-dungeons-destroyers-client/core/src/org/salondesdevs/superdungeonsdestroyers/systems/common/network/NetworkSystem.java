@@ -1,10 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import SDD.Request.Action;
-import SDD.Request.Ping;
-import SDD.Request.Request;
-import SDD.Request.Task;
-import SDD.Response.Response;
+import SDD.Client.Content;
+import SDD.Client.Message;
+import SDD.Client.Messages;
+import SDD.Client.Ping;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -82,7 +81,7 @@ public class NetworkSystem extends BaseSystem {
         if (remaining < 0 && test) {
             System.err.println("SENT");
             test = false;
-            request().addPingAction((byte) 21).addPingAction((byte) 123).writeAndFlush();
+            request().addPingContent((byte) 21).addPingContent((byte) 123).writeAndFlush();
         }
 
 //        if (remaining < -3 && this.clientSocket.isConnected()) {
@@ -134,12 +133,12 @@ public class NetworkSystem extends BaseSystem {
             builder.clear();
         }
 
-        public RequestBuilder addPingAction(final byte number) {
-            return this.addAction(Action.Ping, fbb -> Ping.createPing(fbb, number));
+        public RequestBuilder addPingContent(final byte number) {
+            return this.addContent(Content.Ping, fbb -> Ping.createPing(fbb, number));
         }
 
-        public RequestBuilder addAction(byte actionType, Function<FlatBufferBuilder, Integer> creator) {
-            this.addPair(actionType, creator.apply(builder));
+        public RequestBuilder addContent(byte contentType, Function<FlatBufferBuilder, Integer> creator) {
+            this.addPair(contentType, creator.apply(builder));
             return this;
         }
 
@@ -148,22 +147,22 @@ public class NetworkSystem extends BaseSystem {
         }
 
         public void writeAndFlush() {
-            int[] tasksContent = new int[this.pairs.size()];
+            int[] messagesContent = new int[this.pairs.size()];
 
-            for (int i = 0; i < tasksContent.length; i++) {
-                Task.startTask(builder);
+            for (int i = 0; i < messagesContent.length; i++) {
+                Message.startMessage(builder);
                 Pair pair = this.pairs.get(i);
-                Task.addActionType(builder, pair.first);
-                Task.addAction(builder, pair.second);
-                tasksContent[i] = Task.endTask(builder);
+                Message.addContentType(builder, pair.first);
+                Message.addContent(builder, pair.second);
+                messagesContent[i] = Message.endMessage(builder);
             }
 
-            int tasks = Request.createTasksVector(builder, tasksContent);
+            int messagesVector = Messages.createMessagesVector(builder, messagesContent);
 
-            Request.startRequest(builder);
-            Request.addTasks(builder, tasks);
-            int request = Request.endRequest(builder);
-            builder.finish(request);
+            Messages.startMessages(builder);
+            Messages.addMessages(builder, messagesVector);
+            int messages = Messages.endMessages(builder);
+            builder.finish(messages);
             NetworkSystem.this.writeAndFlush(builder.dataBuffer());
         }
 
@@ -211,8 +210,8 @@ public class NetworkSystem extends BaseSystem {
 
                         inputStream.read(buffer);
 
-                        synchronized (networkHandler.responsesToHandle) {
-                            networkHandler.responsesToHandle.add(Response.getRootAsResponse(ByteBuffer.wrap(buffer)));
+                        synchronized (networkHandler.messagesToHandle) {
+                            networkHandler.messagesToHandle.add(SDD.Server.Messages.getRootAsMessages(ByteBuffer.wrap(buffer)));
                         }
                     }
                 }

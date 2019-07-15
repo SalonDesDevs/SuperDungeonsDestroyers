@@ -65,6 +65,11 @@ project(":core") {
         extraArgs = '--gen-mutable'
     }
 
+    task deletePreviousFlatBuffers(type: Delete) {
+        delete "src/SDD/"
+    }
+
+    tasks.createFlatBuffers.dependsOn(deletePreviousFlatBuffers)
 }
 
 tasks.eclipse.doLast {
