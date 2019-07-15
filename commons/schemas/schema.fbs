@@ -1,0 +1,99 @@
+namespace SDD.Client;
+
+    table Ping {
+        value: byte;
+    }
+
+    union Content { Ping }
+
+    table Message {
+        content: Content;
+    }
+
+    table Messages {
+        messages: [Message] (required);
+    }
+
+    root_type Messages;
+
+namespace SDD.Server;
+
+    table Pong {
+        value: byte;
+    }
+
+    union Content { Pong }
+
+    table Message {
+        content: Content;
+    }
+
+    table Messages {
+        messages: [Message] (required);
+    }
+
+    root_type Messages;
+
+namespace SDD.Mob;
+
+    struct Vec3 {
+        x: float;
+        y: float;
+        orientation: int;
+    }
+    table Mob {
+        location: Vec3;
+        hp: short;
+        name: string;
+        state: byte;
+    }
+
+    root_type Mob;
+
+namespace SDD.Player;
+
+    struct Vec3 {
+        x: float;
+        y: float;
+        z: float;
+    }
+
+    table Player {
+        name: string (required);
+        location: Vec3 (required);
+    }
+
+    root_type Player;
+
+namespace SDD.Pickable;
+
+    struct Vec2 {
+        x: float;
+        y: float;
+    }
+
+    table Pickable {
+        id: short;
+        name: string;
+        pos: Vec2(required);
+        durability: int;
+        damage: int;
+        critical_rate: short;
+        combo: int;
+    }
+
+    root_type Pickable;
+
+namespace SDD.Dungeon;
+
+    union Content { SDD.Mob.Mob, SDD.Player.Player, SDD.Pickable.Pickable }
+
+    table Room {
+        content: Content;
+    }
+
+    table Dungeon {
+        rooms: [Room] (required);
+    }
+
+    root_type Dungeon;

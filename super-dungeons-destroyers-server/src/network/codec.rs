@@ -1,18 +1,19 @@
+use crate::binding::client;
+
+use super::{ ClientMessages, ServerMessages };
+
 use tokio::codec::{ Encoder, Decoder };
 use bytes::{ BytesMut, BufMut };
 
 use std::{ io, mem };
 use std::convert::TryInto;
 
-use crate::binding::client::get_root_as_messages;
-
-use super::{ ClientMessages, ServerMessages };
+use flatbuffers::get_root;
 
 #[derive(Default)]
 pub struct MessageCodec {
     size: Option<u32>,
 }
-
 
 impl Decoder for MessageCodec {
     type Item = ClientMessages;
@@ -37,7 +38,7 @@ impl Decoder for MessageCodec {
             Ok(None)
         } else {
             let bytes = src.split_to(size).freeze();
-            let messages = unsafe { mem::transmute(get_root_as_messages(&bytes)) };
+            let messages = unsafe { mem::transmute(get_root::<client::Messages>(&bytes)) };
             let messages = ClientMessages { _bytes: bytes, messages };
 
             self.size = None;
