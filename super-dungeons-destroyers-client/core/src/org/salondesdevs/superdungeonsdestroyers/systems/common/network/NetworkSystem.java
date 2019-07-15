@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
+import com.badlogic.gdx.utils.LittleEndianInputStream;
 import com.google.flatbuffers.FlatBufferBuilder;
 import net.wytrem.ecs.*;
 
@@ -186,25 +187,17 @@ public class NetworkSystem extends BaseSystem {
         }
 
 
-        ByteBuffer sizeBuffer = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
-
         @Override
         public void run() {
             this.isRunning = true;
 
             DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
 
-            ReadableByteChannel readableByteChannel = Channels.newChannel(inputStream);
-
             int size;
 
             try {
 
                 while (isRunning) {
-
-                    sizeBuffer.rewind();
-                    readableByteChannel.read(sizeBuffer);
-
                     if ((size = readSize(inputStream)) != -1) {
                         byte[] buffer = new byte[size];
 

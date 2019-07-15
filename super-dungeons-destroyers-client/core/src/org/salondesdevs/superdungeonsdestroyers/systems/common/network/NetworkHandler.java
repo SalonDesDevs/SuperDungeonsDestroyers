@@ -20,6 +20,7 @@ public class NetworkHandler extends BaseSystem {
     public void process() {
         synchronized (messagesToHandle) {
             messagesToHandle.forEach(this::handleMessages);
+            messagesToHandle.clear();
         }
     }
 
