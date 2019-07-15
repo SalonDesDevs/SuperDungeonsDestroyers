@@ -13,7 +13,7 @@ pub struct ClientMessages {
 }
 
 pub struct ServerMessages {
-    bytes: Bytes,
+    pub bytes: Bytes,
 }
 
 pub type Rx = mpsc::UnboundedReceiver<ServerMessages>;

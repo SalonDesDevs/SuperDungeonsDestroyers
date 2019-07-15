@@ -19,10 +19,10 @@ pub struct Connection {
 }
 
 pub struct Peer {
-    shared: Arc<Mutex<Shared>>,
+    pub shared: Arc<Mutex<Shared>>,
 
-    address: SocketAddr,
-    tx: Tx,
+    pub address: SocketAddr,
+    pub tx: Tx,
 }
 
 impl Peer {

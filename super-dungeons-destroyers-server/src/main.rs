@@ -1,8 +1,8 @@
 #![feature(async_await, vec_remove_item)]
 
-mod network;
-mod game;
-mod binding;
+pub mod network;
+pub mod game;
+pub mod binding;
 
 use crate::network::Connection;
 use crate::game::shared::Shared;
