@@ -35,7 +35,5 @@ public final class Messages extends Table {
     builder.required(o, 4);  // messages
     return o;
   }
-  public static void finishMessagesBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedMessagesBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
 }
 

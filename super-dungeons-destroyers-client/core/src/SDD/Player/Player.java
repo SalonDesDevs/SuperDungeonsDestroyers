@@ -30,7 +30,5 @@ public final class Player extends Table {
     builder.required(o, 6);  // location
     return o;
   }
-  public static void finishPlayerBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedPlayerBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
 }
 
