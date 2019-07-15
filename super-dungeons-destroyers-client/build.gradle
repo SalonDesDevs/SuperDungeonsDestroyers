@@ -59,7 +59,7 @@ project(":core") {
     }
 
     task createFlatBuffers(type: FlatBuffers) {
-        inputDir = file("../../schemas")
+        inputDir = file("../../commons/schemas")
         outputDir = file("src/")
         language = 'java'
         extraArgs = '--gen-mutable'
