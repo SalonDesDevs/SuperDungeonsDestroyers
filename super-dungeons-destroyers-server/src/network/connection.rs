@@ -1,4 +1,4 @@
-use super::{ Rx, Tx };
+use super::Tx;
 use super::codec::MessageCodec;
 
 use crate::game::shared::{ Shared, Player };
@@ -26,17 +26,16 @@ pub struct Peer {
 }
 
 impl Peer {
-    fn new(address: SocketAddr, shared: Arc<Mutex<Shared>>) -> (Rx, Self) {
-        let (tx, rx) = mpsc::unbounded_channel();
+    fn new(address: SocketAddr, shared: Arc<Mutex<Shared>>, tx: Tx) -> Self {
         let player = Player::new(address.clone(), tx.clone());
 
         shared.lock().unwrap().players.insert(address, player);
 
-        (rx, Peer {
+        Peer {
             shared,
             address,
             tx,
-        })
+        }
     }
 }
 
@@ -50,22 +49,23 @@ impl Connection {
 
     pub fn process(self, shared: Arc<Mutex<Shared>>) -> impl Future<Item = (), Error = ()> {
         let address = self.socket.peer_addr().unwrap();
-        let (rx, peer) = Peer::new(address, shared.clone());
+        let (tx, rx) = mpsc::unbounded_channel();
+        let peer = Peer::new(address, shared.clone(), tx);
         let (sink, stream) = Framed::new(self.socket, MessageCodec::default()).split();
 
         let to_client = rx
             .map_err(Error::from)
-            .inspect(|x| eprintln!("Sending message(s) to the client."))
+            .inspect(|_| eprintln!("Sending message(s) to the client."))
             .forward(sink)
             .map_err(Error::from);
 
-        let from_client = stream.for_each(move |messages| {
-            eprintln!("Received message(s) from the client.");
+        let from_client = stream
+            .map_err(Error::from)
+            .for_each(move |messages| {
+                eprintln!("Received message(s) from the client.");
 
-            Listener::handle_messages(&peer, messages);
-
-            Ok(())
-        }).map_err(Error::from);
+                Listener::handle_messages(&peer, messages)
+            });
 
         to_client.join(from_client)
             .map(|_| ())

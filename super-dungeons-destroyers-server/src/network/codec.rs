@@ -1,5 +1,5 @@
 use tokio::codec::{ Encoder, Decoder };
-use bytes::{ Bytes, BytesMut, BufMut };
+use bytes::{ BytesMut, BufMut };
 
 use std::{ io, mem };
 use std::convert::TryInto;

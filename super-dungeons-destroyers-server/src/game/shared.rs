@@ -9,10 +9,10 @@ pub struct Shared {
 }
 
 pub struct Player {
-    name: String,
+    pub name: String,
 
-    tx: Tx,
-    address: SocketAddr,
+    pub tx: Tx,
+    pub address: SocketAddr,
 }
 
 impl Player {

@@ -12,6 +12,7 @@ pub struct ClientMessages {
     pub messages: client::Messages<'static>
 }
 
+#[derive(Debug)]
 pub struct ServerMessages {
     pub bytes: Bytes,
 }

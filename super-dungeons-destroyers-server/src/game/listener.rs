@@ -1,9 +1,6 @@
 use crate::network::{ ClientMessages, ServerMessages, Peer };
 use crate::binding::{ client, server };
 
-use super::shared::{ Player, Shared };
-
-use std::sync::{ Arc, Mutex };
 use std::io;
 
 use failure::Fallible;
@@ -43,12 +40,12 @@ impl Listener {
             bytes: builder.finished_data().into()
         };
 
-        peer.tx.clone().try_send(server_messages);
+        peer.tx.clone().try_send(server_messages)?;
 
         Ok(())
     }
 
-    pub fn handle_message<'b>(peer: &Peer, message: client::Message, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<Vec<ServerMessage<'b>>> {
+    pub fn handle_message<'b>(_peer: &Peer, message: client::Message, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<Vec<ServerMessage<'b>>> {
         use client::Content;
 
         match message.content_type() {
