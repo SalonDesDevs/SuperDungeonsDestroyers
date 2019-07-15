@@ -97,3 +97,15 @@ namespace SDD.Dungeon;
     }
 
     root_type Dungeon;
+
+namespace SDD.Tiled;
+
+    table TileLayer {
+        tiles: [ushort];
+    }
+
+    table Map {
+        width: ushort;
+        height: ushort;
+        layers: [TileLayer];
+    }
