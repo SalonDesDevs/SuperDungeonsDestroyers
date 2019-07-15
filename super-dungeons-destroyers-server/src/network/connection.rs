@@ -47,6 +47,7 @@ impl Connection {
         }
     }
 
+    // TODO: Handle disconnection
     pub fn process(self, shared: Arc<Mutex<Shared>>) -> impl Future<Item = (), Error = ()> {
         let address = self.socket.peer_addr().unwrap();
         let (tx, rx) = mpsc::unbounded_channel();

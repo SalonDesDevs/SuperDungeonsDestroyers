@@ -1,7 +1,9 @@
-use crate::network::Tx;
+use crate::network::{ Tx, ServerMessages };
 
 use std::net::SocketAddr;
 use std::collections::HashMap;
+
+use failure::Fallible;
 
 #[derive(Default)]
 pub struct Shared {
@@ -22,5 +24,15 @@ impl Player {
             tx,
             address
         }
+    }
+}
+
+impl Shared {
+    pub fn broadcast(&mut self, message: ServerMessages) -> Fallible<()> {
+        for (_, player) in &mut self.players {
+            player.tx.try_send(message.clone())?;
+        }
+
+        Ok(())
     }
 }
