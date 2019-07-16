@@ -63,7 +63,7 @@ impl GameLoop {
                 &mut builder,
                 &server::MessageArgs {
                     content: Some(environment.as_union_value()),
-                    content_type: server::Content::Pong
+                    content_type: server::Content::Environment
                 }
             );
 
