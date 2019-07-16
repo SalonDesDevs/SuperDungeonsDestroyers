@@ -7,29 +7,53 @@ use crate::network::ServerMessages;
 use failure::Fallible;
 
 use std::sync::Arc;
+use std::time::Instant;
 
 use flatbuffers::FlatBufferBuilder;
 
-pub struct GameLoop;
+pub struct GameLoop {
+    shared: Arc<Shared>,
+    initialized: bool
+}
 
 impl GameLoop {
-    pub fn tick(shared: Arc<Shared>) -> Fallible<()> {
-        eprintln!("Game tick!");
-
-        let mut players = shared.players.lock().unwrap();
-        let mut rooms = shared.rooms.lock().unwrap();
-
-        if rooms.is_empty() {
-            let lines = vec![
-                (0, room::RoomKind::Top),
-                (1, room::RoomKind::Bottom),
-                (2, room::RoomKind::Cave)
-            ];
-
-            for (id, kind) in lines {
-                rooms.insert(id, Room { id, kind });
-            }
+    pub fn new(shared: Arc<Shared>) -> Self {
+        GameLoop {
+            shared,
+            initialized: false,
         }
+    }
+
+    pub fn tick(&mut self, instant: Instant) -> Fallible<()> {
+        if !self.initialized {
+            self.initialization();
+        }
+
+        self.update_location();
+        self.send_environment()?;
+
+        eprintln!("Ticked in {:4}µs", instant.elapsed().as_micros());
+
+        Ok(())
+    }
+
+    fn initialization(&mut self) {
+        let mut rooms = self.shared.rooms.lock().unwrap();
+
+        let lines = vec![
+            room::RoomKind::Top,
+            room::RoomKind::Bottom,
+            room::RoomKind::Cave
+        ];
+
+        for (id, kind) in lines.into_iter().enumerate() {
+            rooms.insert(id, Room { id, kind });
+        }
+    }
+
+    fn update_location(&mut self) {
+        let mut players = self.shared.players.lock().unwrap();
+        let rooms = self.shared.rooms.lock().unwrap();
 
         for (_, player) in players.iter_mut() {
             let room = if rooms.is_empty() { None } else { Some(()) };
@@ -37,14 +61,18 @@ impl GameLoop {
                 .map_or(0, |x| (x + 1) % rooms.len());
 
             player.room = room.and(Some(player_room));
+        }
+    }
 
-            if player.room.is_none() {
-                continue;
-            }
+    fn send_environment(&mut self) -> Fallible<()> {
+        let mut players = self.shared.players.lock().unwrap();
+        let rooms = self.shared.rooms.lock().unwrap();
 
+        for (_, player) in players.iter_mut() {
             let mut builder = FlatBufferBuilder::new();
 
             let room = rooms.get(&player.room.unwrap()).unwrap();
+
             let room = common::Room::create(
                 &mut builder,
                 &common::RoomArgs {
@@ -84,9 +112,6 @@ impl GameLoop {
 
             player.tx.try_send(messages)?;
         }
-
-
-        //shared.broadcast(messages)?;
 
         Ok(())
     }

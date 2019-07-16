@@ -25,11 +25,12 @@ fn listener() -> Fallible<TcpListener> {
 
 fn main() -> Fallible<()> {
     let shared = Arc::new(Shared::default());
-    let shared_interval = shared.clone();
 
-    let interval = Interval::new_interval(Duration::from_millis(1000))
+    let mut game_loop = GameLoop::new(shared.clone());
+
+    let interval = Interval::new_interval(Duration::from_millis(100))
         .map_err(Error::from)
-        .for_each(move |_| GameLoop::tick(shared_interval.clone()));
+        .for_each(move |instant| game_loop.tick(instant));
 
     let server = listener()?
         .incoming()
