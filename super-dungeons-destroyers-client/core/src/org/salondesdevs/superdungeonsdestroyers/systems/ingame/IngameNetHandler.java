@@ -13,6 +13,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
     @Override
     public void handle(Message message) {
+
         switch (message.contentType()) {
             case Content
                     .Environment:
@@ -25,7 +26,6 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     }
 
     private void handlePong(Pong content) {
-
 //        System.err.println("received pong fram ingamenethandler" + content.value());
     }
 
@@ -36,6 +36,5 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
         Room room = environment.room();
         int kind = room.kind();
         mapSwitcher.scheduleChange(kind);
-
     }
 }
