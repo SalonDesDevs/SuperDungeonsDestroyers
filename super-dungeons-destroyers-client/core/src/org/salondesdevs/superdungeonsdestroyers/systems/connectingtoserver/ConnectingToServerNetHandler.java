@@ -1,7 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.connectingtoserver;
 
 import SDD.Server.Content;
-import SDD.Server.Environment;
 import SDD.Server.Message;
 import SDD.Server.Pong;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;

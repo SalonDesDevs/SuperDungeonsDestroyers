@@ -5,7 +5,6 @@ import org.salondesdevs.superdungeonsdestroyers.components.Camera;
 import org.salondesdevs.superdungeonsdestroyers.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
-import org.salondesdevs.superdungeonsdestroyers.systems.MainMenuRenderer;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;

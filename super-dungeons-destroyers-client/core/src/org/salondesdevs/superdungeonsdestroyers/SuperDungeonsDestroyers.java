@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
 import org.salondesdevs.superdungeonsdestroyers.states.LoadingAssets;
 
 import java.util.HashSet;

@@ -2,11 +2,10 @@
 
 package SDD.Pickable;
 
-import java.nio.*;
-import java.lang.*;
-import java.util.*;
+import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.Struct;
 
-import com.google.flatbuffers.*;
+import java.nio.ByteBuffer;
 
 @SuppressWarnings("unused")
 public final class Vec2 extends Struct {

@@ -1,7 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import javafx.geometry.Pos;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
