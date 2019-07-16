@@ -25,7 +25,7 @@ public class Assets extends Service {
     @Asset(path = "testmap.tmx")
     public TiledMap testMap;
 
-    @Asset(path = "rooms/*.tmx")
+    @Asset(path = "rooms/")
     public TiledMap[] rooms;
 
     @Retention(RetentionPolicy.RUNTIME)

@@ -18,6 +18,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Singleton
 /**
@@ -59,8 +63,11 @@ public class AssetsLoadingSystem extends BaseSystem {
                     FileHandle directory = fileHandleResolver.resolve(assetAnnotation.path());
 
                     if (directory.isDirectory()) {
+                        List<FileHandle> handles = Arrays.asList(directory.list());
+                        Collections.sort(handles, Comparator.comparing(FileHandle::name));
 
-                        for (FileHandle fileHandle : directory.list()) {
+
+                        for (FileHandle fileHandle : handles) {
                             this.assetManager.load(fileHandle.path(), componentType);
                         }
                     } else {

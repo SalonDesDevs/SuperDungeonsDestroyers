@@ -28,6 +28,7 @@ public class MapSwitcher extends IteratingSystem {
 
             Terrain terrain = terrainMapper.get(entity);
             terrain.tiledMap = assets.rooms[scheduledRoom];
+
             scheduledRoom = -1;
         }
     }

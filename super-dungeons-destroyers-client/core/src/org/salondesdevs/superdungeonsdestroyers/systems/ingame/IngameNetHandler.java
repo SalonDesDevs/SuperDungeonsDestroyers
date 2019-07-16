@@ -25,7 +25,8 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     }
 
     private void handlePong(Pong content) {
-        System.err.println("received pong fram ingamenethandler" + content.value());
+
+//        System.err.println("received pong fram ingamenethandler" + content.value());
     }
 
     @Inject
@@ -34,8 +35,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     public void handleEnvironment(Environment environment) {
         Room room = environment.room();
         int kind = room.kind();
-        System.err.println("Received environment with roomkind = " + kind);
-
+        mapSwitcher.scheduleChange(kind);
 
     }
 }
