@@ -10,6 +10,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 
 @Singleton
 public class RenderingSystem extends BaseSystem {

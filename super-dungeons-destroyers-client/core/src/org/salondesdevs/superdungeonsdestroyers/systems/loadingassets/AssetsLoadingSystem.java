@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +16,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 @Singleton
@@ -59,6 +59,7 @@ public class AssetsLoadingSystem extends BaseSystem {
                     FileHandle directory = fileHandleResolver.resolve(assetAnnotation.path());
 
                     if (directory.isDirectory()) {
+
                         for (FileHandle fileHandle : directory.list()) {
                             this.assetManager.load(fileHandle.path(), componentType);
                         }
@@ -87,15 +88,17 @@ public class AssetsLoadingSystem extends BaseSystem {
                         Class<?> componentType = fieldType.getComponentType();
                         FileHandle directory = fileHandleResolver.resolve(assetAnnotation.path());
 
-
-
                         if (directory.isDirectory()) {
-                            fieldType.getConstructor()
-                            fieldType.newInstance();
+                            Object array = Array.newInstance(componentType, directory.list().length);
+
+                            int i = 0;
 
                             for (FileHandle fileHandle : directory.list()) {
-                                this.assetManager.load(fileHandle.path(), componentType);
+                                Array.set(array, i, this.assetManager.get(fileHandle.path()));
+                                i++;
                             }
+
+                            field.set(assets, array);
                         } else {
                             // Wrong.
                         }
@@ -104,8 +107,6 @@ public class AssetsLoadingSystem extends BaseSystem {
                     }
                 } catch (IllegalAccessException e) {
                     System.err.println("Could not load asset called " + assetAnnotation.path() + " with type " + assetAnnotation.type());
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
                     e.printStackTrace();
                 }
             }
