@@ -1,6 +1,6 @@
 use super::shared::Shared;
 
-use crate::binding::server;
+use crate::binding::{ server, common };
 use crate::network::ServerMessages;
 
 use failure::Fallible;
@@ -17,17 +17,24 @@ impl GameLoop {
 
         let mut builder = FlatBufferBuilder::new();
 
-        let pong = server::Pong::create(
+        let room = common::Room::create(
             &mut builder,
-            &server::PongArgs {
-                value: 12i8
+            &common::RoomArgs {
+                kind: common::RoomKind::TestMap
+            }
+        );
+
+        let environment = server::Environment::create(
+            &mut builder,
+            &server::EnvironmentArgs {
+                room: Some(room)
             }
         );
 
         let message = server::Message::create(
             &mut builder,
             &server::MessageArgs {
-                content: Some(pong.as_union_value()),
+                content: Some(environment.as_union_value()),
                 content_type: server::Content::Pong
             }
         );

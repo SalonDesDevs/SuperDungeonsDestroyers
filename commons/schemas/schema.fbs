@@ -1,3 +1,12 @@
+namespace SDD.Common;
+    enum RoomKind: uint8 {
+        TestMap
+    }
+
+    table Room {
+        kind: RoomKind;
+    }
+
 namespace SDD.Client;
 
     table Ping {
@@ -22,7 +31,14 @@ namespace SDD.Server;
         value: byte;
     }
 
-    union Content { Pong }
+    table Environment {
+        room: SDD.Common.Room;
+    }
+
+    union Content {
+        Pong,
+        Environment
+    }
 
     table Message {
         content: Content;
