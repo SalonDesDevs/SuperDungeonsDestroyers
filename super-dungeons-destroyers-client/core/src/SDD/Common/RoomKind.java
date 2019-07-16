@@ -3,11 +3,15 @@
 package SDD.Common;
 
 public final class RoomKind {
-  private RoomKind() { }
-  public static final byte TestMap = 0;
+    private RoomKind() {
+    }
 
-  public static final String[] names = { "TestMap", };
+    public static final byte TestMap = 0;
 
-  public static String name(int e) { return names[e]; }
+    public static final String[] names = {"TestMap",};
+
+    public static String name(int e) {
+        return names[e];
+    }
 }
 

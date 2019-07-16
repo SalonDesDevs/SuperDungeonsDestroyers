@@ -60,7 +60,6 @@ public class NetworkSystem extends BaseSystem {
     BitmapFont font;
 
 
-
     boolean test = true;
 
     @Override
@@ -166,7 +165,7 @@ public class NetworkSystem extends BaseSystem {
 
         private class Pair {
             public byte first;
-                public int second;
+            public int second;
 
             public Pair(byte first, int second) {
                 this.first = first;

@@ -1,6 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.states;
 
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.components.Camera;
+import org.salondesdevs.superdungeonsdestroyers.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.MainMenuRenderer;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
@@ -8,11 +11,14 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.CameraService;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.CameraSyncSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.EntityCreator;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.GroundRenderSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameNetHandler;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.InputSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.MapSwitcher;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.OverlayRenderSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.SpriteRenderer;
 
 import javax.inject.Inject;
 
@@ -26,7 +32,7 @@ public class IngameState extends GameState {
 
     @Inject
     World world;
-   @Inject
+    @Inject
     NetworkHandlerSystem networkHandlerSystem;
 
 
@@ -39,11 +45,22 @@ public class IngameState extends GameState {
         register(NetworkHandlerSystem.class);
         register(MapSwitcher.class);
         register(CameraService.class);
+        register(CameraSyncSystem.class);
         register(ClearScrenSystem.class);
         register(GroundRenderSystem.class);
+        register(SpriteRenderer.class);
         register(OverlayRenderSystem.class);
         register(InputSystem.class);
     }
+
+    @Inject
+    EntityCreator entityCreator;
+
+    @Inject
+    Mapper<Position> positionMapper;
+
+    @Inject
+    Mapper<Camera> cameraMapper;
 
     @Override
     public void pushed() {
@@ -51,5 +68,17 @@ public class IngameState extends GameState {
 
         int terrain = world.createEntity();
         terrainMapper.set(terrain, new Terrain(assetService.testMap));
+
+        int chestTest = world.createEntity();
+        entityCreator.addSprited(chestTest, Sprited.Sprites.IRON_CHEST_EMPTY);
+
+        Position pos = new Position();
+        pos.x = pos.y = 30;
+
+        positionMapper.set(chestTest, pos);
+
+
+        cameraMapper.set(chestTest, Camera.INSTANCE);
+
     }
 }

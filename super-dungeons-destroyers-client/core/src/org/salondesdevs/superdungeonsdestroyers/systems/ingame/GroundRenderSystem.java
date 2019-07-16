@@ -9,6 +9,6 @@ import javax.inject.Singleton;
 @Singleton
 public class GroundRenderSystem extends MapLayerRenderSystem {
     public GroundRenderSystem() {
-        super("ground");
+        super("ground", "ground_second");
     }
 }

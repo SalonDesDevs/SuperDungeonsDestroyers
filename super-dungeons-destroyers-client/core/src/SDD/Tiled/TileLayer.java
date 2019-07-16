@@ -5,36 +5,89 @@ package SDD.Tiled;
 import java.nio.*;
 import java.lang.*;
 import java.util.*;
+
 import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class TileLayer extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_1_11_1(); }
-  public static TileLayer getRootAsTileLayer(ByteBuffer _bb) { return getRootAsTileLayer(_bb, new TileLayer()); }
-  public static TileLayer getRootAsTileLayer(ByteBuffer _bb, TileLayer obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public TileLayer __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+    public static void ValidateVersion() {
+        Constants.FLATBUFFERS_1_11_1();
+    }
 
-  public int tiles(int j) { int o = __offset(4); return o != 0 ? bb.getShort(__vector(o) + j * 2) & 0xFFFF : 0; }
-  public int tilesLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
-  public ByteBuffer tilesAsByteBuffer() { return __vector_as_bytebuffer(4, 2); }
-  public ByteBuffer tilesInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 2); }
-  public boolean mutateTiles(int j, int tiles) { int o = __offset(4); if (o != 0) { bb.putShort(__vector(o) + j * 2, (short)tiles); return true; } else { return false; } }
+    public static TileLayer getRootAsTileLayer(ByteBuffer _bb) {
+        return getRootAsTileLayer(_bb, new TileLayer());
+    }
 
-  public static int createTileLayer(FlatBufferBuilder builder,
-      int tilesOffset) {
-    builder.startTable(1);
-    TileLayer.addTiles(builder, tilesOffset);
-    return TileLayer.endTileLayer(builder);
-  }
+    public static TileLayer getRootAsTileLayer(ByteBuffer _bb, TileLayer obj) {
+        _bb.order(ByteOrder.LITTLE_ENDIAN);
+        return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
+    }
 
-  public static void startTileLayer(FlatBufferBuilder builder) { builder.startTable(1); }
-  public static void addTiles(FlatBufferBuilder builder, int tilesOffset) { builder.addOffset(0, tilesOffset, 0); }
-  public static int createTilesVector(FlatBufferBuilder builder, short[] data) { builder.startVector(2, data.length, 2); for (int i = data.length - 1; i >= 0; i--) builder.addShort(data[i]); return builder.endVector(); }
-  public static void startTilesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(2, numElems, 2); }
-  public static int endTileLayer(FlatBufferBuilder builder) {
-    int o = builder.endTable();
-    return o;
-  }
+    public void __init(int _i, ByteBuffer _bb) {
+        __reset(_i, _bb);
+    }
+
+    public TileLayer __assign(int _i, ByteBuffer _bb) {
+        __init(_i, _bb);
+        return this;
+    }
+
+    public int tiles(int j) {
+        int o = __offset(4);
+        return o != 0 ? bb.getShort(__vector(o) + j * 2) & 0xFFFF : 0;
+    }
+
+    public int tilesLength() {
+        int o = __offset(4);
+        return o != 0 ? __vector_len(o) : 0;
+    }
+
+    public ByteBuffer tilesAsByteBuffer() {
+        return __vector_as_bytebuffer(4, 2);
+    }
+
+    public ByteBuffer tilesInByteBuffer(ByteBuffer _bb) {
+        return __vector_in_bytebuffer(_bb, 4, 2);
+    }
+
+    public boolean mutateTiles(int j, int tiles) {
+        int o = __offset(4);
+        if (o != 0) {
+            bb.putShort(__vector(o) + j * 2, (short) tiles);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static int createTileLayer(FlatBufferBuilder builder,
+                                      int tilesOffset) {
+        builder.startTable(1);
+        TileLayer.addTiles(builder, tilesOffset);
+        return TileLayer.endTileLayer(builder);
+    }
+
+    public static void startTileLayer(FlatBufferBuilder builder) {
+        builder.startTable(1);
+    }
+
+    public static void addTiles(FlatBufferBuilder builder, int tilesOffset) {
+        builder.addOffset(0, tilesOffset, 0);
+    }
+
+    public static int createTilesVector(FlatBufferBuilder builder, short[] data) {
+        builder.startVector(2, data.length, 2);
+        for (int i = data.length - 1; i >= 0; i--) builder.addShort(data[i]);
+        return builder.endVector();
+    }
+
+    public static void startTilesVector(FlatBufferBuilder builder, int numElems) {
+        builder.startVector(2, numElems, 2);
+    }
+
+    public static int endTileLayer(FlatBufferBuilder builder) {
+        int o = builder.endTable();
+        return o;
+    }
 }
 

@@ -3,14 +3,18 @@
 package SDD.Dungeon;
 
 public final class Content {
-  private Content() { }
-  public static final byte NONE = 0;
-  public static final byte SDD_Mob_Mob = 1;
-  public static final byte SDD_Player_Player = 2;
-  public static final byte SDD_Pickable_Pickable = 3;
+    private Content() {
+    }
 
-  public static final String[] names = { "NONE", "SDD_Mob_Mob", "SDD_Player_Player", "SDD_Pickable_Pickable", };
+    public static final byte NONE = 0;
+    public static final byte SDD_Mob_Mob = 1;
+    public static final byte SDD_Player_Player = 2;
+    public static final byte SDD_Pickable_Pickable = 3;
 
-  public static String name(int e) { return names[e]; }
+    public static final String[] names = {"NONE", "SDD_Mob_Mob", "SDD_Player_Player", "SDD_Pickable_Pickable",};
+
+    public static String name(int e) {
+        return names[e];
+    }
 }
 

@@ -19,9 +19,8 @@ public class CameraService extends Service {
     SuperDungeonsDestroyers sdd;
 
     public CameraService() {
-        this.zoom = 2.5f;
+        this.zoom = 2.f;
     }
-
 
 
     @Override
@@ -31,11 +30,11 @@ public class CameraService extends Service {
     }
 
     public void resized() {
-        float zoomFactorInverter = 1f/zoom;
+        float zoomFactorInverter = 1f / zoom;
         setupViewport(Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
     }
 
-    private void setupViewport( float width, float height) {
+    private void setupViewport(float width, float height) {
         camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false, width, height);
         camera.update();

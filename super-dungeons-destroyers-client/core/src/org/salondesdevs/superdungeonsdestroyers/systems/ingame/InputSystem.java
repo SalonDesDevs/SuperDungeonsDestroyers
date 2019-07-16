@@ -5,17 +5,22 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.components.Position;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class InputSystem extends BaseSystem implements InputProcessor {
+public class InputSystem extends IteratingSystem implements InputProcessor {
 
     IntArray keys;
 
     @Inject
     CameraService cameraService;
+
+    public InputSystem() {
+        super(Aspect.all(Position.class));
+    }
 
     @Override
     public void initialize() {
@@ -26,24 +31,25 @@ public class InputSystem extends BaseSystem implements InputProcessor {
     //TODO: this is temporary
     static float speed = 2.0f;
 
+    @Inject
+    Mapper<Position> positionMapper;
+
     @Override
     //TODO: this is temporary
-    public void process() {
+    public void process(int entity) {
+        Position position = positionMapper.get(entity);
+
         if (keys.contains(Input.Keys.UP)) {
-            cameraService.camera.position.y += speed;
-            cameraService.camera.update();
+            position.y += speed;
         }
         if (keys.contains(Input.Keys.DOWN)) {
-            cameraService.camera.position.y -= speed;
-            cameraService.camera.update();
+            position.y -= speed;
         }
         if (keys.contains(Input.Keys.LEFT)) {
-            cameraService.camera.position.x -= speed;
-            cameraService.camera.update();
+            position.x -= speed;
         }
         if (keys.contains(Input.Keys.RIGHT)) {
-            cameraService.camera.position.x += speed;
-            cameraService.camera.update();
+            position.x += speed;
         }
     }
 

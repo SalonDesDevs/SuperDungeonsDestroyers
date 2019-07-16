@@ -5,23 +5,41 @@ package SDD.Pickable;
 import java.nio.*;
 import java.lang.*;
 import java.util.*;
+
 import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Vec2 extends Struct {
-  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public Vec2 __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+    public void __init(int _i, ByteBuffer _bb) {
+        __reset(_i, _bb);
+    }
 
-  public float x() { return bb.getFloat(bb_pos + 0); }
-  public void mutateX(float x) { bb.putFloat(bb_pos + 0, x); }
-  public float y() { return bb.getFloat(bb_pos + 4); }
-  public void mutateY(float y) { bb.putFloat(bb_pos + 4, y); }
+    public Vec2 __assign(int _i, ByteBuffer _bb) {
+        __init(_i, _bb);
+        return this;
+    }
 
-  public static int createVec2(FlatBufferBuilder builder, float x, float y) {
-    builder.prep(4, 8);
-    builder.putFloat(y);
-    builder.putFloat(x);
-    return builder.offset();
-  }
+    public float x() {
+        return bb.getFloat(bb_pos + 0);
+    }
+
+    public void mutateX(float x) {
+        bb.putFloat(bb_pos + 0, x);
+    }
+
+    public float y() {
+        return bb.getFloat(bb_pos + 4);
+    }
+
+    public void mutateY(float y) {
+        bb.putFloat(bb_pos + 4, y);
+    }
+
+    public static int createVec2(FlatBufferBuilder builder, float x, float y) {
+        builder.prep(4, 8);
+        builder.putFloat(y);
+        builder.putFloat(x);
+        return builder.offset();
+    }
 }
 

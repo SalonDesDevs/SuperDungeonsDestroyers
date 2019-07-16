@@ -25,6 +25,9 @@ public class Assets extends Service {
     @Asset(path = "testmap.tmx")
     public TiledMap testMap;
 
+    @Asset(path = "tiledmaps/dungeon_combined.png")
+    public Texture tileset;
+
     @Asset(path = "rooms/")
     public TiledMap[] rooms;
 
@@ -40,5 +43,6 @@ public class Assets extends Service {
      * A type class used to inform the {@link org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem}
      * to use the Field's type.
      */
-    public static final class UseFieldType {}
+    public static final class UseFieldType {
+    }
 }

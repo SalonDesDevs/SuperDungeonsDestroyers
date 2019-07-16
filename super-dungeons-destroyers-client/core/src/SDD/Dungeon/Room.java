@@ -5,35 +5,77 @@ package SDD.Dungeon;
 import java.nio.*;
 import java.lang.*;
 import java.util.*;
+
 import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Room extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_1_11_1(); }
-  public static Room getRootAsRoom(ByteBuffer _bb) { return getRootAsRoom(_bb, new Room()); }
-  public static Room getRootAsRoom(ByteBuffer _bb, Room obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public Room __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+    public static void ValidateVersion() {
+        Constants.FLATBUFFERS_1_11_1();
+    }
 
-  public byte contentType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  public boolean mutateContentType(byte content_type) { int o = __offset(4); if (o != 0) { bb.put(o + bb_pos, content_type); return true; } else { return false; } }
-  public Table content(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o) : null; }
+    public static Room getRootAsRoom(ByteBuffer _bb) {
+        return getRootAsRoom(_bb, new Room());
+    }
 
-  public static int createRoom(FlatBufferBuilder builder,
-      byte content_type,
-      int contentOffset) {
-    builder.startTable(2);
-    Room.addContent(builder, contentOffset);
-    Room.addContentType(builder, content_type);
-    return Room.endRoom(builder);
-  }
+    public static Room getRootAsRoom(ByteBuffer _bb, Room obj) {
+        _bb.order(ByteOrder.LITTLE_ENDIAN);
+        return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
+    }
 
-  public static void startRoom(FlatBufferBuilder builder) { builder.startTable(2); }
-  public static void addContentType(FlatBufferBuilder builder, byte contentType) { builder.addByte(0, contentType, 0); }
-  public static void addContent(FlatBufferBuilder builder, int contentOffset) { builder.addOffset(1, contentOffset, 0); }
-  public static int endRoom(FlatBufferBuilder builder) {
-    int o = builder.endTable();
-    return o;
-  }
+    public void __init(int _i, ByteBuffer _bb) {
+        __reset(_i, _bb);
+    }
+
+    public Room __assign(int _i, ByteBuffer _bb) {
+        __init(_i, _bb);
+        return this;
+    }
+
+    public byte contentType() {
+        int o = __offset(4);
+        return o != 0 ? bb.get(o + bb_pos) : 0;
+    }
+
+    public boolean mutateContentType(byte content_type) {
+        int o = __offset(4);
+        if (o != 0) {
+            bb.put(o + bb_pos, content_type);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Table content(Table obj) {
+        int o = __offset(6);
+        return o != 0 ? __union(obj, o) : null;
+    }
+
+    public static int createRoom(FlatBufferBuilder builder,
+                                 byte content_type,
+                                 int contentOffset) {
+        builder.startTable(2);
+        Room.addContent(builder, contentOffset);
+        Room.addContentType(builder, content_type);
+        return Room.endRoom(builder);
+    }
+
+    public static void startRoom(FlatBufferBuilder builder) {
+        builder.startTable(2);
+    }
+
+    public static void addContentType(FlatBufferBuilder builder, byte contentType) {
+        builder.addByte(0, contentType, 0);
+    }
+
+    public static void addContent(FlatBufferBuilder builder, int contentOffset) {
+        builder.addOffset(1, contentOffset, 0);
+    }
+
+    public static int endRoom(FlatBufferBuilder builder) {
+        int o = builder.endTable();
+        return o;
+    }
 }
 

@@ -5,8 +5,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 
 import javax.inject.Inject;
@@ -26,6 +29,9 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     @Inject
     CameraService cameraService;
 
+    @Inject
+    Assets assets;
+
     private String[] layersToRender;
 
     public MapLayerRenderSystem(String... layers) {
@@ -33,6 +39,32 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
         this.layersToRender = layers;
         renderers = new HashMap<>();
         this.layers = new HashMap<>();
+    }
+
+    @Override
+    public void initialize() {
+        this.createAndStoreRenderer(assets.testMap);
+        for (TiledMap tiledMap : assets.rooms) {
+            this.createAndStoreRenderer(tiledMap);
+        }
+    }
+
+    private void createAndStoreRenderer(TiledMap tiledMap) {
+        TiledMapRenderer tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+        IntList list = new IntArrayList();
+
+        Array<TiledMapTileLayer> allLayers = TiledMapUtils.getLayers(tiledMap);
+
+        for (int i = 0; i < allLayers.size; i++) {
+            TiledMapTileLayer layer = allLayers.get(i);
+            if (Arrays.binarySearch(layersToRender, layer.getName()) >= 0) {
+                list.add(i);
+            }
+        }
+
+        this.layers.put(tiledMap, list.toIntArray());
+        this.renderers.put(tiledMap, tiledMapRenderer);
     }
 
     private Map<TiledMap, TiledMapRenderer> renderers;
@@ -44,23 +76,8 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
 
         TiledMapRenderer tiledMapRenderer = this.renderers.get(terrain.tiledMap);
 
-        // TODO: this is ugly for debug proposes
         if (tiledMapRenderer == null) {
-            tiledMapRenderer = new OrthogonalTiledMapRenderer(terrain.tiledMap);
-            int[] array = new int[layersToRender.length];
-            int index = 0;
-
-            Array<TiledMapTileLayer> allLayers = TiledMapUtils.getLayers(terrain.tiledMap);
-
-            for (int i = 0; i < allLayers.size; i++) {
-                TiledMapTileLayer layer = allLayers.get(i);
-                if (Arrays.binarySearch(layersToRender, layer.getName()) >= 0) {
-                    array[index] = i;
-                    index++;
-                }
-            }
-
-            this.layers.put(terrain.tiledMap, array);
+            throw new IllegalStateException("Could not render " + terrain.tiledMap);
         }
 
         tiledMapRenderer.setView(cameraService.camera);

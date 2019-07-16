@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 public class TiledMapUtils {
 
     public static int getWidth(TiledMap tiledMap) {
-       return tiledMap.getProperties().get("width", Integer.class);
+        return tiledMap.getProperties().get("width", Integer.class);
     }
 
     public static int getHeight(TiledMap tiledMap) {
