@@ -2,11 +2,10 @@
 
 package SDD.Player;
 
-import java.nio.*;
-import java.lang.*;
-import java.util.*;
+import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.Struct;
 
-import com.google.flatbuffers.*;
+import java.nio.ByteBuffer;
 
 @SuppressWarnings("unused")
 public final class Vec3 extends Struct {
