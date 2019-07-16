@@ -1,3 +1,5 @@
+use crate::binding::common;
+
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -5,17 +7,23 @@ use tiled::{ parse_file, Map };
 
 use failure::Fallible;
 
-const TESTMAP: &'static str = "../../../commons/tiledmaps/testmap.tmx";
+const BOTTOM_MAP: &'static str = "../../../commons/rooms/bottom.tmx";
+const CAVE_MAP: &'static str = "../../../commons/rooms/cave.tmx";
+const TOP_MAP: &'static str = "../../../commons/rooms/top.tmx";
 
-#[derive(Eq, PartialEq, Hash)]
+#[derive(Eq, PartialEq, Hash, Clone)]
 pub enum RoomKind {
-    TestMap
+    Bottom,
+    Cave,
+    Top
 }
 
 impl AsRef<Path> for RoomKind {
     fn as_ref(&self) -> &Path {
         match self {
-            RoomKind::TestMap => Path::new(TESTMAP)
+            RoomKind::Bottom => Path::new(BOTTOM_MAP),
+            RoomKind::Cave => Path::new(CAVE_MAP),
+            RoomKind::Top => Path::new(TOP_MAP)
         }
     }
 }
@@ -28,6 +36,16 @@ impl Default for Loader {
     fn default() -> Self {
         Loader {
             rooms: HashMap::new()
+        }
+    }
+}
+
+impl Into<common::RoomKind> for RoomKind {
+    fn into(self) -> common::RoomKind {
+        match self {
+            RoomKind::Bottom => common::RoomKind::Bottom,
+            RoomKind::Cave => common::RoomKind::Cave,
+            RoomKind::Top => common::RoomKind::Top
         }
     }
 }
