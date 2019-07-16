@@ -4,7 +4,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import net.wytrem.ecs.*;
 
 public class Terrain implements Component {
-    public final TiledMap tiledMap;
+    public TiledMap tiledMap;
 
     public Terrain(TiledMap tiledMap) {
         this.tiledMap = tiledMap;

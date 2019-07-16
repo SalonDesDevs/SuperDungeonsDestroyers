@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.utils.LittleEndianInputStream;
 import com.google.flatbuffers.FlatBufferBuilder;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class NetworkSystem extends BaseSystem {
     private OutputStream outputStream;
 
     @Inject
-    NetworkHandler networkHandler;
+    NetworkHandlerSystem networkHandler;
 
     @Override
     public void initialize() {
@@ -61,7 +60,6 @@ public class NetworkSystem extends BaseSystem {
     BitmapFont font;
 
 
-    float remaining = 1;
 
     boolean test = true;
 
@@ -70,24 +68,23 @@ public class NetworkSystem extends BaseSystem {
         batch.begin();
     }
 
+    float remaining = 1;
+
     @Override
     public void process() {
         // Send enqueued packets, ...
 
         remaining -= world.getDelta();
 
-        if (remaining > 0)
-            font.draw(batch, "Sending in " + remaining, 100, 100);
-
-        if (remaining < 0 && test) {
-            System.err.println("SENT");
-            test = false;
-            request().addPingContent((byte) 21).addPingContent((byte) 123).writeAndFlush();
+        if (remaining > 0) {
+            font.draw(batch, "Ingame in " + remaining, 100, 100);
         }
 
-//        if (remaining < -3 && this.clientSocket.isConnected()) {
-//            this.clientSocket.dispose();
-//        }
+        if (remaining < 0 && test) {
+            test = false;
+//            request().addPingContent((byte) 21).addPingContent((byte) 123).writeAndFlush();
+            this.world.push(IngameState.class);
+        }
     }
 
     @Override

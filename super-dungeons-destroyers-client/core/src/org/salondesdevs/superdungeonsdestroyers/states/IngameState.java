@@ -2,12 +2,16 @@ package org.salondesdevs.superdungeonsdestroyers.states;
 
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
-import org.salondesdevs.superdungeonsdestroyers.systems.RenderingSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.MainMenuRenderer;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.CameraService;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.GroundRenderSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameNetHandler;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.InputSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.MapSwitcher;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.OverlayRenderSystem;
 
 import javax.inject.Inject;
@@ -22,6 +26,8 @@ public class IngameState extends GameState {
 
     @Inject
     World world;
+   @Inject
+    NetworkHandlerSystem networkHandlerSystem;
 
 
     public IngameState() {
@@ -29,9 +35,11 @@ public class IngameState extends GameState {
 
         // Be aware, the order matters.
         register(Assets.class);
+        register(NetworkSystem.class);
+        register(NetworkHandlerSystem.class);
+        register(MapSwitcher.class);
         register(CameraService.class);
         register(ClearScrenSystem.class);
-        register(RenderingSystem.class);
         register(GroundRenderSystem.class);
         register(OverlayRenderSystem.class);
         register(InputSystem.class);
@@ -39,6 +47,8 @@ public class IngameState extends GameState {
 
     @Override
     public void pushed() {
+        this.networkHandlerSystem.setCurrentHandler(IngameNetHandler.class);
+
         int terrain = world.createEntity();
         terrainMapper.set(terrain, new Terrain(assetService.testMap));
     }
