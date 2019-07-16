@@ -1,3 +1,5 @@
+use super::room::RoomKind;
+
 use crate::network::{ Tx, ServerMessages };
 
 use std::net::SocketAddr;
@@ -8,6 +10,12 @@ use failure::Fallible;
 #[derive(Default)]
 pub struct Shared {
     pub players: HashMap<SocketAddr, Player>,
+    pub rooms: HashMap<usize, Room>,
+}
+
+pub struct Room {
+    pub id: usize,
+    pub kind: RoomKind,
 }
 
 pub struct Player {

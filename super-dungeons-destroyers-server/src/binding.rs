@@ -2,4 +2,4 @@
 #[path = "../../target/flatbuffers/schema_generated.rs"]
 pub mod inner;
 
-pub use inner::sdd::{ mob, dungeon, pickable, client, server, player };
+pub use inner::sdd::{ mob, dungeon, pickable, client, server, player, common };
