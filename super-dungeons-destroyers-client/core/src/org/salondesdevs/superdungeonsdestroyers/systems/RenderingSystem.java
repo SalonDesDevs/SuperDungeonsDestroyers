@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.states.ConnectingToServer;
+import org.salondesdevs.superdungeonsdestroyers.states.ConnectedToServer;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 
 @Singleton
 public class RenderingSystem extends BaseSystem {
@@ -38,7 +39,7 @@ public class RenderingSystem extends BaseSystem {
         remaining -= world.getDelta();
 
         if (remaining < 0) {
-            world.push(ConnectingToServer.class);
+            world.push(ConnectedToServer.class);
         } else {
             // TODO: create a GuiSystem
             font.draw(batch, "Ceci est le menu principal. " +

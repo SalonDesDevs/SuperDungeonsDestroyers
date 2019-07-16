@@ -5,8 +5,8 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandler;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 
-public class ConnectingToServer extends GameState {
-    public ConnectingToServer() {
+public class ConnectedToServer extends GameState {
+    public ConnectedToServer() {
         super();
         register(ClearScrenSystem.class);
         register(NetworkSystem.class);
