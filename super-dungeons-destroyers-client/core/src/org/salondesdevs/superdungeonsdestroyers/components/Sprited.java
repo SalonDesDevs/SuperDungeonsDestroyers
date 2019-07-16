@@ -17,7 +17,8 @@ public class Sprited implements Component {
         IRON_CHEST_FULL(224, 208),
         GOLDEN_CHEST_CLOSED(240, 176),
         GOLDEN_CHEST_EMPTY(240, 192),
-        GOLDEN_CHEST_FULL(240, 208);
+        GOLDEN_CHEST_FULL(240, 208),
+        MAGE(144, 224);
 
         public final int x, y;
 

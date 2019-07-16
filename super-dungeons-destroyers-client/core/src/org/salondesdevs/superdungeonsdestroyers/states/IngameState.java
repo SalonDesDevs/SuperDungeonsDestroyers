@@ -69,16 +69,16 @@ public class IngameState extends GameState {
         int terrain = world.createEntity();
         terrainMapper.set(terrain, new Terrain(assetService.testMap));
 
-        int chestTest = world.createEntity();
-        entityCreator.addSprited(chestTest, Sprited.Sprites.IRON_CHEST_EMPTY);
+        int playerTest = world.createEntity();
+        entityCreator.addSprited(playerTest, Sprited.Sprites.MAGE);
 
         Position pos = new Position();
         pos.x = pos.y = 30;
 
-        positionMapper.set(chestTest, pos);
+        positionMapper.set(playerTest, pos);
 
 
-        cameraMapper.set(chestTest, Camera.INSTANCE);
+        cameraMapper.set(playerTest, Camera.INSTANCE);
 
     }
 }
