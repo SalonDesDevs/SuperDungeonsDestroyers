@@ -3,7 +3,7 @@ use crate::binding::client;
 use super::{ ClientMessages, ServerMessages };
 
 use tokio::codec::{ Encoder, Decoder };
-use bytes::{ BytesMut, BufMut };
+use bytes::BytesMut;
 
 use std::{ io, mem };
 use std::convert::TryInto;
@@ -52,8 +52,11 @@ impl Encoder for MessageCodec {
     type Error = io::Error;
 
     fn encode(&mut self, response: Self::Item, dst: &mut BytesMut) -> io::Result<()> {
-        dst.put_u32_le(response.bytes.len().try_into().unwrap());
-        dst.put(response.bytes);
+        let length: u32 = response.bytes.len().try_into().unwrap();
+        let length = length.to_le_bytes();
+
+        dst.extend(&length);
+        dst.extend(response.bytes);
 
         Ok(())
     }

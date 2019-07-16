@@ -32,7 +32,7 @@ impl GameLoop {
         self.update_location();
         self.send_environment()?;
 
-        eprintln!("Ticked in {:4}µs", instant.elapsed().as_micros());
+        eprintln!("Ticked in {:6}µs", instant.elapsed().as_micros());
 
         Ok(())
     }
