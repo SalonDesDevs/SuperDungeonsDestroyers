@@ -1,6 +1,8 @@
 namespace SDD.Common;
     enum RoomKind: uint8 {
-        TestMap
+        Bottom,
+        Cave,
+        Top
     }
 
     table Room {

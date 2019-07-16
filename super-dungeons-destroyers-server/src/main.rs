@@ -14,7 +14,7 @@ use tokio::timer::Interval;
 
 use failure::{ Fallible, Error };
 
-use std::sync::{ Arc, Mutex };
+use std::sync::Arc;
 use std::time::Duration;
 
 fn listener() -> Fallible<TcpListener> {
@@ -24,7 +24,7 @@ fn listener() -> Fallible<TcpListener> {
 }
 
 fn main() -> Fallible<()> {
-    let shared = Arc::new(Mutex::new(Shared::default()));
+    let shared = Arc::new(Shared::default());
     let shared_interval = shared.clone();
 
     let interval = Interval::new_interval(Duration::from_millis(1000))

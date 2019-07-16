@@ -9,7 +9,7 @@ use tokio::sync::mpsc;
 use tokio::net::TcpStream;
 use tokio::codec::Framed;
 
-use std::sync::{ Arc, Mutex };
+use std::sync::Arc;
 use std::net::SocketAddr;
 
 use failure::Error;
@@ -19,17 +19,17 @@ pub struct Connection {
 }
 
 pub struct Peer {
-    pub shared: Arc<Mutex<Shared>>,
+    pub shared: Arc<Shared>,
 
     pub address: SocketAddr,
     pub tx: Tx,
 }
 
 impl Peer {
-    fn new(address: SocketAddr, shared: Arc<Mutex<Shared>>, tx: Tx) -> Self {
+    fn new(address: SocketAddr, shared: Arc<Shared>, tx: Tx) -> Self {
         let player = Player::new(address.clone(), tx.clone());
 
-        shared.lock().unwrap().players.insert(address, player);
+        shared.players.lock().unwrap().insert(address, player);
 
         Peer {
             shared,
@@ -47,7 +47,7 @@ impl Connection {
         }
     }
 
-    pub fn process(self, shared: Arc<Mutex<Shared>>) -> impl Future<Item = (), Error = ()> {
+    pub fn process(self, shared: Arc<Shared>) -> impl Future<Item = (), Error = ()> {
         let address = self.socket.peer_addr().unwrap();
         let (tx, rx) = mpsc::unbounded_channel();
         let peer = Peer::new(address, shared.clone(), tx);
@@ -69,7 +69,7 @@ impl Connection {
             .and_then(move |_| {
                 eprintln!("Got disconnected");
 
-                shared.lock().unwrap().players.remove(&address);
+                shared.players.lock().unwrap().remove(&address);
 
                 Ok(())
             });
