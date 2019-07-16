@@ -32,7 +32,13 @@ impl GameLoop {
         self.update_location();
         self.send_environment()?;
 
-        eprintln!("Ticked in {:6}µs", instant.elapsed().as_micros());
+        let elapsed = instant.elapsed();
+
+        eprintln!("Ticked in {:6}µs", elapsed.as_micros());
+
+        if elapsed.as_millis() >= 75 {
+            eprintln!("[!] Last tick took too long!");
+        }
 
         Ok(())
     }
