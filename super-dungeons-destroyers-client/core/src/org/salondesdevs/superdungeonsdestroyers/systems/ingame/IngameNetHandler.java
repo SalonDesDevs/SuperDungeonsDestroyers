@@ -17,14 +17,15 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             case Content
                     .Environment:
                 this.handleEnvironment((Environment) message.content(new Environment()));
-            break;
+                break;
             case Content.Pong:
                 this.handlePong((Pong) message.content(new Pong()));
+                break;
         }
     }
 
     private void handlePong(Pong content) {
-        System.err.println("received pong fram ingamenethandler");
+        System.err.println("received pong fram ingamenethandler" + content.value());
     }
 
     @Inject
