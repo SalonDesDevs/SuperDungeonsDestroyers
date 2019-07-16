@@ -1,6 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
+import SDD.Common.Room;
 import SDD.Server.Content;
+import SDD.Server.Environment;
 import SDD.Server.Message;
 import SDD.Server.Messages;
 import SDD.Server.Pong;
@@ -39,8 +41,15 @@ public class NetworkHandler extends BaseSystem {
                 Pong pong = (Pong) message.content(new Pong());
                 System.out.println("Received Pong with value " + pong.value());
             break;
+            case Content.Environment:
+                this.handleEnvironment((Environment) message.content(new Environment()));
             default:
                 System.out.println("Received message with contentType" + message.contentType());
         }
+    }
+
+    private void handleEnvironment(Environment environment) {
+        Room room = environment.room();
+        int kind = room.kind();
     }
 }

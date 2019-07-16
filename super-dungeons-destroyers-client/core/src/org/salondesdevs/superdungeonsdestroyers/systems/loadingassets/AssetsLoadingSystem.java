@@ -2,6 +2,8 @@ package org.salondesdevs.superdungeonsdestroyers.systems.loadingassets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -48,9 +50,24 @@ public class AssetsLoadingSystem extends BaseSystem {
             if (field.isAnnotationPresent(Assets.Asset.class)) {
                 Assets.Asset assetAnnotation = field.getAnnotation(Assets.Asset.class);
 
-                Class<?> type =  assetAnnotation.type().equals(Assets.UseFieldType.class) ? field.getType() : assetAnnotation.type();
+                Class<?> type = assetAnnotation.type().equals(Assets.UseFieldType.class) ? field.getType() : assetAnnotation.type();
 //                System.out.println("Registering " + assetAnnotation.path() + " with type " + type);
-                this.assetManager.load(assetAnnotation.path(), type);
+
+                if (type.isArray()) {
+                    FileHandleResolver fileHandleResolver = this.assetManager.getFileHandleResolver();
+                    Class<?> componentType = type.getComponentType();
+                    FileHandle directory = fileHandleResolver.resolve(assetAnnotation.path());
+
+                    if (directory.isDirectory()) {
+                        for (FileHandle fileHandle : directory.list()) {
+                            this.assetManager.load(fileHandle.path(), componentType);
+                        }
+                    } else {
+                        // Wrong.
+                    }
+                } else {
+                    this.assetManager.load(assetAnnotation.path(), type);
+                }
             }
         }
     }
@@ -61,12 +78,34 @@ public class AssetsLoadingSystem extends BaseSystem {
             if (field.isAnnotationPresent(Assets.Asset.class)) {
                 Assets.Asset assetAnnotation = field.getAnnotation(Assets.Asset.class);
                 field.setAccessible(true);
+                Class<?> fieldType = field.getType();
 
                 try {
 //                   System.out.println("Setting " + assetAnnotation.path() + " to " + this.assetManager.get(assetAnnotation.path()));
-                    field.set(assets, this.assetManager.get(assetAnnotation.path()));
+                    if (field.getType().isArray()) {
+                        FileHandleResolver fileHandleResolver = this.assetManager.getFileHandleResolver();
+                        Class<?> componentType = fieldType.getComponentType();
+                        FileHandle directory = fileHandleResolver.resolve(assetAnnotation.path());
+
+
+
+                        if (directory.isDirectory()) {
+                            fieldType.getConstructor()
+                            fieldType.newInstance();
+
+                            for (FileHandle fileHandle : directory.list()) {
+                                this.assetManager.load(fileHandle.path(), componentType);
+                            }
+                        } else {
+                            // Wrong.
+                        }
+                    } else {
+                        field.set(assets, this.assetManager.get(assetAnnotation.path()));
+                    }
                 } catch (IllegalAccessException e) {
                     System.err.println("Could not load asset called " + assetAnnotation.path() + " with type " + assetAnnotation.type());
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
                     e.printStackTrace();
                 }
             }
@@ -83,8 +122,7 @@ public class AssetsLoadingSystem extends BaseSystem {
         if (this.assetManager.update()) {
             fillAssets();
             this.world.push(MainMenuState.class);
-        }
-        else {
+        } else {
             batch.draw(splash, (Gdx.graphics.getWidth() - splash.getWidth()) / 2, (Gdx.graphics.getHeight() - splash.getHeight()) / 2);
             font.draw(batch, "Loading assets: " + (this.assetManager.getProgress() * 100) + "%", 0, 20);
         }
