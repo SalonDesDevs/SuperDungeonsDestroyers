@@ -38,13 +38,13 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     MapSwitcher mapSwitcher;
 
     public void handleEnvironment(Environment environment) {
+        logger.trace("");
         Level level = environment.level();
         int kind = level.kind();
         mapSwitcher.scheduleChange(kind);
 
         for (int i = 0; i < environment.entitiesLength(); i++) {
             Entity entity = environment.entities(i);
-
         }
     }
 }

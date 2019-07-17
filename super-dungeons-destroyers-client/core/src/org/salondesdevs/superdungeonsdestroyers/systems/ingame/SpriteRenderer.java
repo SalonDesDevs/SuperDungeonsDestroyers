@@ -41,7 +41,7 @@ public class SpriteRenderer extends IteratingSystem {
         Sprited sprited = spritedMapper.get(entity);
         Position position = positionMapper.get(entity);
 
-        batch.draw(sprited.textureRegion, position.x, position.y);
+        batch.draw(sprited.textureRegion, position.x * 16, position.y * 16);
     }
 
     @Override
