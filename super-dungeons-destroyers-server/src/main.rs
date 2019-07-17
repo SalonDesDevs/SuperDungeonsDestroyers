@@ -3,9 +3,10 @@
 pub mod network;
 pub mod game;
 pub mod binding;
+pub mod utils;
 
 use crate::network::Connection;
-use crate::game::shared::Shared;
+use crate::game::structure::Shared;
 use crate::game::game_loop::GameLoop;
 
 use tokio::prelude::*;

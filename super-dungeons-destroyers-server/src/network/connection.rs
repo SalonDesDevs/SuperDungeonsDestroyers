@@ -1,7 +1,7 @@
 use super::Tx;
 use super::codec::MessageCodec;
 
-use crate::game::shared::{ Shared, Player };
+use crate::game::structure::{ Shared, Player };
 use crate::game::listener::Listener;
 
 use tokio::prelude::*;

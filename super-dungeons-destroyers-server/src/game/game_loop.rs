@@ -1,15 +1,16 @@
-use super::shared::{ Shared, Room, Location };
-use super::room;
+use super::structure::{ Shared, Room, Location, RoomKind };
 
 use crate::binding::{ server, common };
 use crate::network::ServerMessages;
+use crate::utils::WriteToBuilder;
 
 use failure::Fallible;
 
 use std::sync::Arc;
 use std::time::Instant;
+use std::convert::TryInto;
 
-use flatbuffers::FlatBufferBuilder;
+use flatbuffers::{ FlatBufferBuilder, WIPOffset };
 
 pub struct GameLoop {
     shared: Arc<Shared>,
@@ -26,7 +27,7 @@ impl GameLoop {
 
     pub fn tick(&mut self, instant: Instant) -> Fallible<()> {
         if !self.initialized {
-            self.initialization();
+            self.initialization()?;
         }
 
         self.update_location();
@@ -43,18 +44,22 @@ impl GameLoop {
         Ok(())
     }
 
-    fn initialization(&mut self) {
+    fn initialization(&mut self) -> Fallible<()> {
         let mut rooms = self.shared.rooms.lock().unwrap();
 
         let lines = vec![
-            room::RoomKind::Top,
-            room::RoomKind::Bottom,
-            room::RoomKind::Cave
+            RoomKind::Top,
+            RoomKind::Bottom,
+            RoomKind::Cave
         ];
 
         for (id, kind) in lines.into_iter().enumerate() {
+            let id = id.try_into()?;
+
             rooms.insert(id, Room { id, kind });
         }
+
+        Ok(())
     }
 
     fn update_location(&mut self) {
@@ -84,46 +89,25 @@ impl GameLoop {
             let mut builder = FlatBufferBuilder::new();
 
             let location = player.location.unwrap();
-            let room = rooms.get(&location.room).unwrap();
 
-            let room = common::Room::create(
-                &mut builder,
-                &common::RoomArgs {
-                    kind: room.kind.clone().into()
-                }
-            );
+            let room = rooms
+                .get(&location.room)
+                .unwrap()
+                .write(&mut builder)?;
 
             let entities = players_clone
                 .values()
                 .filter(|target| target.location.map(|target_location| target_location.room == location.room).unwrap_or(false))
-                .map(|target| {
+                .map(|target| target.write(&mut builder))
+                .collect::<Fallible<Vec<WIPOffset<common::Entity>>>>()?;
 
-                    let Location { room, x, y } = target.location.unwrap();
-
-                    let name = builder.create_string(&target.name);
-                    let target = common::Player::create(
-                        &mut builder,
-                        &common::PlayerArgs {
-                            name: Some(name),
-                            location: Some(&common::Location::new(room as u8, x as u8, y as u8))
-                        }
-                    );
-
-                    let entity = common::Entity::create(
-                        &mut builder,
-                        &common::EntityArgs {
-                            kind: Some(target.as_union_value()),
-                            kind_type: common::EntityKind::Player
-                        }
-                    );
-
-                });
+            let entities = builder.create_vector(&entities);
 
             let environment = server::Environment::create(
                 &mut builder,
                 &server::EnvironmentArgs {
                     room: Some(room),
-                    entities: None
+                    entities: Some(entities)
                 }
             );
 
