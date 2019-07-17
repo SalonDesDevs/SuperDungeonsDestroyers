@@ -1,16 +1,16 @@
 namespace SDD.Common;
-    enum RoomKind: uint8 {
+    enum LevelKind: uint8 {
         Bottom,
         Cave,
         Top
     }
 
-    table Room {
-        kind: RoomKind;
+    table Level {
+        kind: LevelKind;
     }
 
     struct Location {
-        room: uint8;
+        level: uint8;
         x: uint8;
         y: uint8;
     }
@@ -53,7 +53,7 @@ namespace SDD.Server;
     }
 
     table Environment {
-        room: SDD.Common.Room;
+        level: SDD.Common.Level;
         entities: [SDD.Common.Entity];
     }
 

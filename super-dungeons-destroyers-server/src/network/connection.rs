@@ -29,7 +29,7 @@ impl Peer {
     fn new(address: SocketAddr, shared: Arc<Shared>, tx: Tx) -> Self {
         let player = Player::new(address.clone(), tx.clone());
 
-        shared.players.lock().unwrap().insert(address, player);
+        shared.players.write().unwrap().insert(address, player);
 
         Peer {
             shared,
@@ -69,7 +69,7 @@ impl Connection {
             .and_then(move |_| {
                 eprintln!("Got disconnected");
 
-                shared.players.lock().unwrap().remove(&address);
+                shared.players.write().unwrap().remove(&address);
 
                 Ok(())
             });
