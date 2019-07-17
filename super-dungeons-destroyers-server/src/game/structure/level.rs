@@ -1,7 +1,7 @@
 use crate::binding::common;
 use crate::utils::WriteToBuilder;
 
-use super::{ Shared, Location };
+use super::{ Shared, Location, StaticSolid };
 
 use std::sync::Arc;
 use std::path::Path;
@@ -23,6 +23,7 @@ pub struct Level {
     pub level: u8,
     pub kind: LevelKind,
     pub spawnpoints: Vec<Location>,
+    pub edges: Vec<StaticSolid>,
 
     _map: Map,
     _shared: Arc<Shared>
@@ -44,11 +45,12 @@ impl Level {
     pub fn new(level: u8, kind: LevelKind, shared: Arc<Shared>) -> Fallible<Self> {
         let map = tiled::parse_file(kind.as_ref())?;
         let spawnpoints = Level::spawnpoints(level, &map)?;
-
+        let edges = Level::edges(level, &map)?;
         let level = Level {
             level,
             kind,
             spawnpoints,
+            edges,
 
             _map: map,
             _shared: shared
@@ -76,6 +78,30 @@ impl Level {
             .collect();
 
         Ok(spawnpoints)
+    }
+
+    fn edges(level:u8, map: &Map) -> Fallible<Vec<StaticSolid>> {
+        let Map { object_groups, tile_width, tile_height, .. } = map;
+
+        let group = object_groups
+            .iter()
+            .find(|group| group.name == "objects")
+            .ok_or(failure::err_msg("Missing objects in map"))?;
+
+        let edges = group.objects
+            .iter()
+            .filter(|object| object.properties.get("solid").map(|value| value == &PropertyValue::BoolValue(true)).unwrap_or(false))
+            .map(|object| StaticSolid {
+                location: Location {
+                    level,
+                    x: ((object.x as u32) / tile_width) as u8,
+                    y: ((object.y as u32) / tile_height) as u8,
+                },
+                solidType: SolidType::WALL
+                
+            })
+            .collect();
+        Ok(edges)
     }
 }
 

@@ -1,6 +1,7 @@
 pub mod player;
 pub mod location;
 pub mod level;
+pub mod staticSolid;
 
 use crate::network::ServerMessages;
 

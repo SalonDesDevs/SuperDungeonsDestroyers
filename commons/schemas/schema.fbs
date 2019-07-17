@@ -26,11 +26,10 @@ namespace SDD.Common;
         name: string;
         location: Location;
     }
-
     union EntityKind {
-        Player
+        Player,
     }
-
+    
     table Entity {
         entity_id: uint64;
         kind: EntityKind;
