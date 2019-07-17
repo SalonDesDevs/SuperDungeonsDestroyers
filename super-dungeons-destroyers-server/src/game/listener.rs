@@ -7,6 +7,8 @@ use failure::Fallible;
 
 use flatbuffers::{ WIPOffset, FlatBufferBuilder };
 
+use log::debug;
+
 pub struct Listener;
 
 type ServerMessage<'b> = WIPOffset<server::Message<'b>>;
@@ -52,7 +54,7 @@ impl Listener {
             Content::Ping => {
                 let message = message.content_as_ping().unwrap();
 
-                dbg!(message.value());
+                debug!("{}", message.value());
 
                 let pong = server::Pong::create(
                     &mut builder,
@@ -74,7 +76,7 @@ impl Listener {
 
             Content::Move => {
                 unimplemented!()
-            }
+            },
 
             Content::NONE => {
                 Err(io::Error::from(io::ErrorKind::InvalidData))?

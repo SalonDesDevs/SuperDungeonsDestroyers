@@ -17,7 +17,7 @@ use failure::{ Fallible, Error };
 
 use std::sync::Arc;
 use std::time::Duration;
-use log::{ info, error, warn };
+use log::{ info, error };
 
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
