@@ -1,15 +1,13 @@
 use crate::utils::WriteToBuilder;
 use crate::binding::common;
 
-use super::room::RoomId;
-
 use flatbuffers::FlatBufferBuilder;
 
 use failure::Fallible;
 
 #[derive(Clone, Copy)]
 pub struct Location {
-    pub room: RoomId,
+    pub level: u8,
     pub x: u8,
     pub y: u8,
 }
@@ -18,7 +16,7 @@ pub struct Location {
 impl Default for Location {
     fn default() -> Self {
         Location {
-            room: 0,
+            level: 0,
             x: 0,
             y: 0
         }
@@ -27,8 +25,8 @@ impl Default for Location {
 
 impl<'b> WriteToBuilder<'b, common::Location> for Location {
     fn write(&self, _: &mut FlatBufferBuilder<'b>) -> Fallible<common::Location> {
-        let Location { room, x, y } = self;
+        let Location { level, x, y } = self;
 
-        Ok(common::Location::new(*room, *x, *y))
+        Ok(common::Location::new(*level, *x, *y))
     }
 }

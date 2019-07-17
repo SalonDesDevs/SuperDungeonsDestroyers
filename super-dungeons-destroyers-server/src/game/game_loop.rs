@@ -1,4 +1,4 @@
-use super::structure::{ Shared, Room, Location, RoomKind };
+use super::structure::{ Shared, Level, Location, LevelKind };
 
 use crate::binding::{ server, common };
 use crate::network::ServerMessages;
@@ -8,7 +8,6 @@ use failure::Fallible;
 
 use std::sync::Arc;
 use std::time::Instant;
-use std::convert::TryInto;
 
 use flatbuffers::{ FlatBufferBuilder, WIPOffset };
 
@@ -45,43 +44,33 @@ impl GameLoop {
     }
 
     fn initialization(&mut self) -> Fallible<()> {
-        let mut rooms = self.shared.rooms.lock().unwrap();
+        let mut levels = self.shared.levels.write().unwrap();
 
-        let lines = vec![
-            RoomKind::Top,
-            RoomKind::Bottom,
-            RoomKind::Cave
-        ];
-
-        for (id, kind) in lines.into_iter().enumerate() {
-            let id = id.try_into()?;
-
-            rooms.insert(id, Room { id, kind });
-        }
+        levels.push(Level::new(0, LevelKind::Top, self.shared.clone())?);
 
         Ok(())
     }
 
     fn update_location(&mut self) {
-        let mut players = self.shared.players.lock().unwrap();
-        let rooms = self.shared.rooms.lock().unwrap();
+        let mut players = self.shared.players.write().unwrap();
+        let levels = self.shared.levels.read().unwrap();
 
         for (_, player) in players.iter_mut() {
-            let room = if rooms.is_empty() { None } else { Some(()) };
+            let level = if levels.is_empty() { None } else { Some(()) };
             let player_location = player.location
                 .map_or(Location::default(), |location| Location {
-                    room: 0,
+                    level: 0,
                     x: (location.x + 1) % 10,
                     y: (location.y + 1) % 10
                 });
 
-            player.location = room.and(Some(player_location));
+            player.location = level.and(Some(player_location));
         }
     }
 
     fn send_environment(&mut self) -> Fallible<()> {
-        let mut players = self.shared.players.lock().unwrap();
-        let rooms = self.shared.rooms.lock().unwrap();
+        let mut players = self.shared.players.write().unwrap();
+        let levels = self.shared.levels.read().unwrap();
 
         let players_clone = players.clone();
 
@@ -90,14 +79,14 @@ impl GameLoop {
 
             let location = player.location.unwrap();
 
-            let room = rooms
-                .get(&location.room)
+            let level = levels
+                .get(location.level as usize)
                 .unwrap()
                 .write(&mut builder)?;
 
             let entities = players_clone
                 .values()
-                .filter(|target| target.location.map(|target_location| target_location.room == location.room).unwrap_or(false))
+                .filter(|target| target.location.map(|target_location| target_location.level == location.level).unwrap_or(false))
                 .map(|target| target.write(&mut builder))
                 .collect::<Fallible<Vec<WIPOffset<common::Entity>>>>()?;
 
@@ -106,7 +95,7 @@ impl GameLoop {
             let environment = server::Environment::create(
                 &mut builder,
                 &server::EnvironmentArgs {
-                    room: Some(room),
+                    level: Some(level),
                     entities: Some(entities)
                 }
             );
