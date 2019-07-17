@@ -15,6 +15,13 @@ namespace SDD.Common;
         y: uint8;
     }
 
+    enum Direction: uint8 {
+        Right,
+        Left,
+        Down,
+        Up
+    }
+
     table Player {
         name: string;
         location: Location;
@@ -34,7 +41,14 @@ namespace SDD.Client;
         value: byte;
     }
 
-    union Content { Ping }
+    table Move {
+        direction: SDD.Common.Direction;
+    }
+
+    union Content {
+        Ping,
+        Move
+    }
 
     table Message {
         content: Content;

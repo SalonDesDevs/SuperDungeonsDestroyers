@@ -72,6 +72,10 @@ impl Listener {
                 Ok(vec![response])
             },
 
+            Content::Move => {
+                unimplemented!()
+            }
+
             Content::NONE => {
                 Err(io::Error::from(io::ErrorKind::InvalidData))?
             }
