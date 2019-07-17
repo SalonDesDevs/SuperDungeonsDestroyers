@@ -13,6 +13,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.states.MainMenuState;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,6 +30,8 @@ import java.util.List;
  * Detects {@link Assets} fields to be loaded and run an {@link AssetManager}.
  */
 public class AssetsLoadingSystem extends BaseSystem {
+
+    private static final Logger logger = LoggerFactory.getLogger( AssetsLoadingSystem.class );
 
     private AssetManager assetManager;
 
@@ -47,6 +51,7 @@ public class AssetsLoadingSystem extends BaseSystem {
         splash = new Texture("splash.png");
         font = new BitmapFont();
         font.setColor(Color.BLACK);
+        logger.info("Loading assets");
     }
 
     private void registerAssets() {
@@ -128,6 +133,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     @Override
     public void process() {
         if (this.assetManager.update()) {
+            logger.info("Assets successfully loaded");
             fillAssets();
             this.world.push(MainMenuState.class);
         } else {

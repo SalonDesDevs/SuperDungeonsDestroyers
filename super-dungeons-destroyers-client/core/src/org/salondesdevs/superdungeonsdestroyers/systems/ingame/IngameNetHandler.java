@@ -1,15 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import SDD.Common.Room;
+import SDD.Common.Entity;
+import SDD.Common.Level;
 import SDD.Server.Content;
 import SDD.Server.Environment;
 import SDD.Server.Message;
 import SDD.Server.Pong;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
 public class IngameNetHandler implements NetworkHandlerSystem.Handler {
+
+    private static final Logger logger = LoggerFactory.getLogger( IngameNetHandler.class );
 
     @Override
     public void handle(Message message) {
@@ -33,8 +38,13 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     MapSwitcher mapSwitcher;
 
     public void handleEnvironment(Environment environment) {
-        Room room = environment.room();
-        int kind = room.kind();
+        Level level = environment.level();
+        int kind = level.kind();
         mapSwitcher.scheduleChange(kind);
+
+        for (int i = 0; i < environment.entitiesLength(); i++) {
+            Entity entity = environment.entities(i);
+
+        }
     }
 }

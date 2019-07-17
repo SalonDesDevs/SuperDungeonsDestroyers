@@ -77,7 +77,7 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
         TiledMapRenderer tiledMapRenderer = this.renderers.get(terrain.tiledMap);
 
         if (tiledMapRenderer == null) {
-            throw new IllegalStateException("Could not render " + terrain.tiledMap);
+            throw new IllegalStateException("Renderer not registered for map " + terrain.tiledMap);
         }
 
         tiledMapRenderer.setView(cameraService.camera);

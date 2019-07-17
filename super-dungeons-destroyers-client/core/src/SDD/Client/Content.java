@@ -6,8 +6,9 @@ public final class Content {
   private Content() { }
   public static final byte NONE = 0;
   public static final byte Ping = 1;
+  public static final byte Move = 2;
 
-  public static final String[] names = { "NONE", "Ping", };
+  public static final String[] names = { "NONE", "Ping", "Move", };
 
   public static String name(int e) { return names[e]; }
 }

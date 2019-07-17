@@ -5,6 +5,8 @@ import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoadingAssets extends GameState {
     public LoadingAssets() {
@@ -14,6 +16,9 @@ public class LoadingAssets extends GameState {
         register(AssetsLoadingSystem.class);
     }
 
+    @Override
+    public void pushed() {
+    }
 
     @Override
     public void poped() {

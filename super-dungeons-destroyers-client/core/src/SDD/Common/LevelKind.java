@@ -2,8 +2,8 @@
 
 package SDD.Common;
 
-public final class RoomKind {
-  private RoomKind() { }
+public final class LevelKind {
+  private LevelKind() { }
   public static final byte Bottom = 0;
   public static final byte Cave = 1;
   public static final byte Top = 2;

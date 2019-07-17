@@ -3,6 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 import SDD.Client.Content;
 import SDD.Client.Message;
 import SDD.Client.Messages;
+import SDD.Client.Move;
 import SDD.Client.Ping;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.net.SocketHints;
 import com.google.flatbuffers.FlatBufferBuilder;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,6 +34,8 @@ import java.util.function.Function;
 @Singleton
 public class NetworkSystem extends BaseSystem {
 
+    private static final Logger logger = LoggerFactory.getLogger( NetworkSystem.class );
+
     private Socket clientSocket;
 
     private ListenThread listenThread;
@@ -41,6 +46,8 @@ public class NetworkSystem extends BaseSystem {
 
     @Override
     public void initialize() {
+        logger.info("Connecting to server");
+
         Gdx.net = new NetImpl();
         this.clientSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, "localhost", 9000, new SocketHints());
 
@@ -128,6 +135,10 @@ public class NetworkSystem extends BaseSystem {
         public void clear() {
             this.pairs.clear();
             builder.clear();
+        }
+
+        public RequestBuilder addMoveContent(final byte direction) {
+            return this.addContent(Content.Move, fbb -> Move.createMove(fbb, direction));
         }
 
         public RequestBuilder addPingContent(final byte number) {

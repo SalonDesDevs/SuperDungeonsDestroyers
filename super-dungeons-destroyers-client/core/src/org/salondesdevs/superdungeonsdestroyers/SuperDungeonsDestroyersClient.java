@@ -5,27 +5,34 @@ import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.states.LoadingAssets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class SuperDungeonsDestroyers extends ApplicationAdapter {
+public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
+
+    private static final Logger logger = LoggerFactory.getLogger(SuperDungeonsDestroyersClient.class);
+
     World world;
 
     private Set<Runnable> resizeListeners = new HashSet<Runnable>();
 
     @Override
     public void create() {
+        logger.info("Starting SDDClient v1.0");
         WorldConfiguration worldConfiguration = new WorldConfiguration();
         worldConfiguration.getExtraModules().add(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(SuperDungeonsDestroyers.class).toInstance(SuperDungeonsDestroyers.this);
+                bind(SuperDungeonsDestroyersClient.class).toInstance(SuperDungeonsDestroyersClient.this);
             }
         });
 
         world = new World(worldConfiguration);
         world.initialize();
+
 
         world.push(LoadingAssets.class);
     }

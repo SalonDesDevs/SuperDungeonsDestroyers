@@ -3,7 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyers;
+import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyersClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,7 +16,7 @@ public class CameraService extends Service {
     public final float zoom;
 
     @Inject
-    SuperDungeonsDestroyers sdd;
+    SuperDungeonsDestroyersClient sdd;
 
     public CameraService() {
         this.zoom = 2.f;

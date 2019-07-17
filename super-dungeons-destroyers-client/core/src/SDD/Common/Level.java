@@ -8,26 +8,26 @@ import java.util.*;
 import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
-public final class Room extends Table {
+public final class Level extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_1_11_1(); }
-  public static Room getRootAsRoom(ByteBuffer _bb) { return getRootAsRoom(_bb, new Room()); }
-  public static Room getRootAsRoom(ByteBuffer _bb, Room obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static Level getRootAsLevel(ByteBuffer _bb) { return getRootAsLevel(_bb, new Level()); }
+  public static Level getRootAsLevel(ByteBuffer _bb, Level obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public Room __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public Level __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public int kind() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public boolean mutateKind(int kind) { int o = __offset(4); if (o != 0) { bb.put(o + bb_pos, (byte)kind); return true; } else { return false; } }
 
-  public static int createRoom(FlatBufferBuilder builder,
+  public static int createLevel(FlatBufferBuilder builder,
       int kind) {
     builder.startTable(1);
-    Room.addKind(builder, kind);
-    return Room.endRoom(builder);
+    Level.addKind(builder, kind);
+    return Level.endLevel(builder);
   }
 
-  public static void startRoom(FlatBufferBuilder builder) { builder.startTable(1); }
+  public static void startLevel(FlatBufferBuilder builder) { builder.startTable(1); }
   public static void addKind(FlatBufferBuilder builder, int kind) { builder.addByte(0, (byte)kind, (byte)0); }
-  public static int endRoom(FlatBufferBuilder builder) {
+  public static int endLevel(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
   }

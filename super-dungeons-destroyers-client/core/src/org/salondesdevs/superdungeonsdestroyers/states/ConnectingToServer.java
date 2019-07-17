@@ -22,7 +22,6 @@ public class ConnectingToServer extends GameState {
 
     @Override
     public void pushed() {
-
         this.networkHandlerSystem.setCurrentHandler(ConnectingToServerNetHandler.class);
     }
 }

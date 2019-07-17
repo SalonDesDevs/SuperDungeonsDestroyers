@@ -4,5 +4,5 @@ import net.wytrem.ecs.*;
 
 public class Position implements Component {
 
-    public float x, y;
+    public int x, y;
 }
