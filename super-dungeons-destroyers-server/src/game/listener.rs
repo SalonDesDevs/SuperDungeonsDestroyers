@@ -1,5 +1,5 @@
 use crate::network::{ ClientMessages, ServerMessages, Peer };
-use crate::binding::{ client, server };
+use crate::binding::{ client, server, common };
 
 use std::io;
 
@@ -8,6 +8,8 @@ use failure::Fallible;
 use flatbuffers::{ WIPOffset, FlatBufferBuilder };
 
 use log::debug;
+
+use std::cmp::min;
 
 pub struct Listener;
 
@@ -47,7 +49,7 @@ impl Listener {
         Ok(())
     }
 
-    pub fn handle_message<'b>(_peer: &Peer, message: client::Message, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<Vec<ServerMessage<'b>>> {
+    pub fn handle_message<'b>(peer: &Peer, message: client::Message, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<Vec<ServerMessage<'b>>> {
         use client::Content;
 
         match message.content_type() {
@@ -75,7 +77,32 @@ impl Listener {
             },
 
             Content::Move => {
-                unimplemented!()
+                let message = message.content_as_move().unwrap();
+                let direction = message.direction();
+
+                debug!("{} moved {:?}", peer.address, direction);
+
+                let mut players = peer.shared.players.write().unwrap();
+                let player = players.get_mut(&peer.address).unwrap();
+
+                if let Some(mut location) = player.location {
+                    let x_move = match direction {
+                        common::Direction::Right => 1,
+                        common::Direction::Left => -1,
+                        _ => 0,
+                    };
+
+                    let y_move = match direction {
+                        common::Direction::Down => 1,
+                        common::Direction::Up => -1,
+                        _ => 0,
+                    };
+
+                    location.x = min(location.x as i16 + x_move, 0) as u8;
+                    location.y = min(location.y as i16 + y_move, 0) as u8;
+                }
+
+                Ok(Vec::new())
             },
 
             Content::NONE => {
