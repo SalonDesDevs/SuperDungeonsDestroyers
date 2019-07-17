@@ -10,7 +10,7 @@ use std::sync::Arc;
 use std::time::Instant;
 
 use flatbuffers::{ FlatBufferBuilder, WIPOffset };
-
+use log::{ info, error, warn };
 pub struct GameLoop {
     shared: Arc<Shared>,
     initialized: bool
@@ -34,10 +34,10 @@ impl GameLoop {
 
         let elapsed = instant.elapsed();
 
-        eprintln!("Ticked in {:6}µs", elapsed.as_micros());
+        info!("Ticked in {:6}µs", elapsed.as_micros());
 
         if elapsed.as_millis() >= 75 {
-            eprintln!("[!] Last tick took too long!");
+            warn!("[!] Last tick took too long!");
         }
 
         Ok(())

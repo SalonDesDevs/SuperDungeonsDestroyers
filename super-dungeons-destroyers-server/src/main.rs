@@ -17,7 +17,7 @@ use failure::{ Fallible, Error };
 
 use std::sync::Arc;
 use std::time::Duration;
-
+use log::{ info, error, warn };
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
 
@@ -25,6 +25,8 @@ fn listener() -> Fallible<TcpListener> {
 }
 
 fn main() -> Fallible<()> {
+    pretty_env_logger::init();
+
     let shared = Arc::new(Shared::default());
 
     let mut game_loop = GameLoop::new(shared.clone());
@@ -37,7 +39,7 @@ fn main() -> Fallible<()> {
         .incoming()
         .map_err(Error::from)
         .for_each(move |socket| {
-            eprintln!("New socket");
+            info!("New socket");
 
             let connection = Connection::new(socket);
 
@@ -46,14 +48,13 @@ fn main() -> Fallible<()> {
             Ok(())
         });
 
-    eprintln!("Server is listening!");
-
+    info!("Server is listening!");
     let game = server
         .join(interval)
         .map(|_| ())
         .map_err(|error| {
             for cause in error.as_fail().iter_causes() {
-                eprintln!("{}", cause);
+                error!("{}", cause);
             }
         });
 

@@ -15,5 +15,11 @@ super-dungeons-destroyer-client/gradlew desktop:run
 ```
 cargo +nightly run
 ```
-
+if you want to use the logging facilities,
+you need to set the `RUST_LOG` variable before cargo run.
+## example
+```
+RUST_LOG=info cargo +nightly run
+```
+this example will only display the info logs.
 
