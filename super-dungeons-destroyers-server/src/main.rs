@@ -18,6 +18,7 @@ use failure::{ Fallible, Error };
 use std::sync::Arc;
 use std::time::Duration;
 use log::{ info, error, warn };
+
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
 
@@ -33,7 +34,7 @@ fn main() -> Fallible<()> {
 
     let interval = Interval::new_interval(Duration::from_millis(100))
         .map_err(Error::from)
-        .for_each(move |instant| game_loop.tick(instant));
+        .for_each(move |instant| Ok(game_loop.tick(instant)?));
 
     let server = listener()?
         .incoming()
@@ -49,14 +50,11 @@ fn main() -> Fallible<()> {
         });
 
     info!("Server is listening!");
+
     let game = server
         .join(interval)
         .map(|_| ())
-        .map_err(|error| {
-            for cause in error.as_fail().iter_causes() {
-                error!("{}", cause);
-            }
-        });
+        .map_err(|error| error!("{}", error));
 
     tokio::run(game);
 

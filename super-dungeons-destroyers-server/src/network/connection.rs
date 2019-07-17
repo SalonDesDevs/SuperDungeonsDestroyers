@@ -14,6 +14,8 @@ use std::net::SocketAddr;
 
 use failure::Error;
 
+use log::error;
+
 pub struct Connection {
     socket: TcpStream
 }
@@ -76,10 +78,6 @@ impl Connection {
 
         to_client.join(from_client)
             .map(|_| ())
-            .map_err(|error| {
-                for cause in error.as_fail().iter_causes() {
-                    eprintln!("{}", cause);
-                }
-            })
+            .map_err(|error| error!("{}", error))
     }
 }

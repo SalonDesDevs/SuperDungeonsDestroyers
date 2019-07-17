@@ -31,9 +31,9 @@ pub struct Level {
 impl AsRef<Path> for LevelKind {
     fn as_ref(&self) -> &Path {
         let path = match self {
-            LevelKind::Bottom => "../../../../commons/rooms/bottom.tmx",
-            LevelKind::Cave => "../../../../commons/rooms/cave.tmx",
-            LevelKind::Top => "../../../../commons/rooms/top.tmx",
+            LevelKind::Bottom => "./commons/rooms/bottom.tmx",
+            LevelKind::Cave => "./commons/rooms/cave.tmx",
+            LevelKind::Top => "./commons/rooms/top.tmx",
         };
 
         Path::new(path)
