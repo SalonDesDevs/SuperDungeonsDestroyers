@@ -1,4 +1,4 @@
-use super::structure::{ Shared, Level, Location, LevelKind };
+use super::structure::{ Shared, Level, LevelKind };
 
 use crate::binding::{ server, common };
 use crate::network::ServerMessages;
@@ -55,16 +55,17 @@ impl GameLoop {
         let mut players = self.shared.players.write().unwrap();
         let levels = self.shared.levels.read().unwrap();
 
-        for (_, player) in players.iter_mut() {
-            let level = if levels.is_empty() { None } else { Some(()) };
-            let player_location = player.location
-                .map_or(Location::default(), |location| Location {
-                    level: 0,
-                    x: (location.x + 1) % 10,
-                    y: (location.y + 1) % 10
-                });
+        let level = match levels.get(0) {
+            Some(level) => level,
+            None => return
+        };
 
-            player.location = level.and(Some(player_location));
+        for player in players.values_mut() {
+            if player.location.is_some() {
+                continue;
+            }
+
+            player.location = level.spawnpoints.get(0).cloned();
         }
     }
 
