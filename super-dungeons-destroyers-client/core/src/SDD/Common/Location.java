@@ -12,18 +12,18 @@ public final class Location extends Struct {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Location __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int room() { return bb.get(bb_pos + 0) & 0xFF; }
-  public void mutateRoom(int room) { bb.put(bb_pos + 0, (byte)room); }
+  public int level() { return bb.get(bb_pos + 0) & 0xFF; }
+  public void mutateLevel(int level) { bb.put(bb_pos + 0, (byte)level); }
   public int x() { return bb.get(bb_pos + 1) & 0xFF; }
   public void mutateX(int x) { bb.put(bb_pos + 1, (byte)x); }
   public int y() { return bb.get(bb_pos + 2) & 0xFF; }
   public void mutateY(int y) { bb.put(bb_pos + 2, (byte)y); }
 
-  public static int createLocation(FlatBufferBuilder builder, int room, int x, int y) {
+  public static int createLocation(FlatBufferBuilder builder, int level, int x, int y) {
     builder.prep(1, 3);
     builder.putByte((byte)y);
     builder.putByte((byte)x);
-    builder.putByte((byte)room);
+    builder.putByte((byte)level);
     return builder.offset();
   }
 }

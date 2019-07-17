@@ -65,14 +65,14 @@ public class IngameState extends GameState {
     public void pushed() {
         this.networkHandlerSystem.setCurrentHandler(IngameNetHandler.class);
 
-        int terrain = world.createEntity();
+        int terrain = -1;
         terrainMapper.set(terrain, new Terrain(assetService.testMap));
 
         int playerTest = world.createEntity();
         entityCreator.addSprited(playerTest, Sprited.Sprites.MAGE);
 
         Position pos = new Position();
-        pos.x = pos.y = 30;
+        pos.x = pos.y = 1;
 
         positionMapper.set(playerTest, pos);
 

@@ -23,8 +23,8 @@ public class CameraSyncSystem extends IteratingSystem {
     @Override
     public void process(int entity) {
         Position position = positionMapper.get(entity);
-        cameraService.camera.position.x = position.x;
-        cameraService.camera.position.y = position.y;
+        cameraService.camera.position.x = position.x * 16.f;
+        cameraService.camera.position.y = position.y * 16.f;
         cameraService.camera.update();
     }
 }

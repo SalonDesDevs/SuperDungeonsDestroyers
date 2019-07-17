@@ -1,14 +1,18 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
+import SDD.Common.Direction;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.TimeUtils;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.naming.directory.DirContext;
 
 @Singleton
 public class InputSystem extends IteratingSystem implements InputProcessor {
@@ -17,6 +21,9 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
 
     @Inject
     CameraService cameraService;
+
+    @Inject
+    NetworkSystem networkSystem;
 
     public InputSystem() {
         super(Aspect.all(Position.class));
@@ -28,28 +35,39 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
         Gdx.input.setInputProcessor(this);
     }
 
-    //TODO: this is temporary
-    static float speed = 2.0f;
-
     @Inject
     Mapper<Position> positionMapper;
+
+    long lastMoved = 0l, now;
+
+    private static final long delay = 500l;
 
     @Override
     //TODO: this is temporary
     public void process(int entity) {
         Position position = positionMapper.get(entity);
 
-        if (keys.contains(Input.Keys.UP)) {
-            position.y += speed;
-        }
-        if (keys.contains(Input.Keys.DOWN)) {
-            position.y -= speed;
-        }
-        if (keys.contains(Input.Keys.LEFT)) {
-            position.x -= speed;
-        }
-        if (keys.contains(Input.Keys.RIGHT)) {
-            position.x += speed;
+        now = TimeUtils.millis();
+
+        if (now - lastMoved > delay) {
+            lastMoved = now;
+
+            if (keys.contains(Input.Keys.UP)) {
+                position.y++;
+                networkSystem.request().addMoveContent(Direction.Up).writeAndFlush();
+            }
+            if (keys.contains(Input.Keys.DOWN)) {
+                position.y--;
+                networkSystem.request().addMoveContent(Direction.Down).writeAndFlush();
+            }
+            if (keys.contains(Input.Keys.LEFT)) {
+                position.x--;
+                networkSystem.request().addMoveContent(Direction.Left).writeAndFlush();
+            }
+            if (keys.contains(Input.Keys.RIGHT)) {
+                position.x++;
+                networkSystem.request().addMoveContent(Direction.Right).writeAndFlush();
+            }
         }
     }
 
