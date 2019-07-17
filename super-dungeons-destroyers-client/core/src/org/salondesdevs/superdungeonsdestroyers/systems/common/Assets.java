@@ -28,6 +28,9 @@ public class Assets extends Service {
     @Asset(path = "tiledmaps/dungeon_combined.png")
     public Texture tileset;
 
+    @Asset(path = "player.png")
+    public Texture player;
+
     @Asset(path = "rooms/")
     public TiledMap[] rooms;
 

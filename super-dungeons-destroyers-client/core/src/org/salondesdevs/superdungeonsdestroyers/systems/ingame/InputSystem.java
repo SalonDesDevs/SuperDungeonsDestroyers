@@ -40,7 +40,7 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
 
     long lastMoved = 0l, now;
 
-    private static final long delay = 500l;
+    private static final long delay = 200l;
 
     @Override
     //TODO: this is temporary
@@ -80,6 +80,7 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         keys.removeValue(keycode);
+        lastMoved = 0;
         return false;
     }
 

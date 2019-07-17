@@ -15,22 +15,27 @@ public final class Entity extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Entity __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte kindType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  public boolean mutateKindType(byte kind_type) { int o = __offset(4); if (o != 0) { bb.put(o + bb_pos, kind_type); return true; } else { return false; } }
-  public Table kind(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o) : null; }
+  public long entityId() { int o = __offset(4); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public boolean mutateEntityId(long entity_id) { int o = __offset(4); if (o != 0) { bb.putLong(o + bb_pos, entity_id); return true; } else { return false; } }
+  public byte kindType() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public boolean mutateKindType(byte kind_type) { int o = __offset(6); if (o != 0) { bb.put(o + bb_pos, kind_type); return true; } else { return false; } }
+  public Table kind(Table obj) { int o = __offset(8); return o != 0 ? __union(obj, o) : null; }
 
   public static int createEntity(FlatBufferBuilder builder,
+      long entity_id,
       byte kind_type,
       int kindOffset) {
-    builder.startTable(2);
+    builder.startTable(3);
+    Entity.addEntityId(builder, entity_id);
     Entity.addKind(builder, kindOffset);
     Entity.addKindType(builder, kind_type);
     return Entity.endEntity(builder);
   }
 
-  public static void startEntity(FlatBufferBuilder builder) { builder.startTable(2); }
-  public static void addKindType(FlatBufferBuilder builder, byte kindType) { builder.addByte(0, kindType, 0); }
-  public static void addKind(FlatBufferBuilder builder, int kindOffset) { builder.addOffset(1, kindOffset, 0); }
+  public static void startEntity(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void addEntityId(FlatBufferBuilder builder, long entityId) { builder.addLong(0, entityId, 0L); }
+  public static void addKindType(FlatBufferBuilder builder, byte kindType) { builder.addByte(1, kindType, 0); }
+  public static void addKind(FlatBufferBuilder builder, int kindOffset) { builder.addOffset(2, kindOffset, 0); }
   public static int endEntity(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
