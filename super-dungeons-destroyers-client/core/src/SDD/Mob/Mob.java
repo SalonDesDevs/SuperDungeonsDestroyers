@@ -2,112 +2,37 @@
 
 package SDD.Mob;
 
-import com.google.flatbuffers.Constants;
-import com.google.flatbuffers.FlatBufferBuilder;
-import com.google.flatbuffers.Table;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.*;
+import java.lang.*;
+import java.util.*;
+import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Mob extends Table {
-    public static void ValidateVersion() {
-        Constants.FLATBUFFERS_1_11_1();
-    }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_11_1(); }
+  public static Mob getRootAsMob(ByteBuffer _bb) { return getRootAsMob(_bb, new Mob()); }
+  public static Mob getRootAsMob(ByteBuffer _bb, Mob obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
+  public Mob __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-    public static Mob getRootAsMob(ByteBuffer _bb) {
-        return getRootAsMob(_bb, new Mob());
-    }
+  public SDD.Mob.Vec3 location() { return location(new SDD.Mob.Vec3()); }
+  public SDD.Mob.Vec3 location(SDD.Mob.Vec3 obj) { int o = __offset(4); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
+  public short hp() { int o = __offset(6); return o != 0 ? bb.getShort(o + bb_pos) : 0; }
+  public boolean mutateHp(short hp) { int o = __offset(6); if (o != 0) { bb.putShort(o + bb_pos, hp); return true; } else { return false; } }
+  public String name() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer nameAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer nameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public byte state() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public boolean mutateState(byte state) { int o = __offset(10); if (o != 0) { bb.put(o + bb_pos, state); return true; } else { return false; } }
 
-    public static Mob getRootAsMob(ByteBuffer _bb, Mob obj) {
-        _bb.order(ByteOrder.LITTLE_ENDIAN);
-        return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
-    }
-
-    public void __init(int _i, ByteBuffer _bb) {
-        __reset(_i, _bb);
-    }
-
-    public Mob __assign(int _i, ByteBuffer _bb) {
-        __init(_i, _bb);
-        return this;
-    }
-
-    public SDD.Mob.Vec3 location() {
-        return location(new SDD.Mob.Vec3());
-    }
-
-    public SDD.Mob.Vec3 location(SDD.Mob.Vec3 obj) {
-        int o = __offset(4);
-        return o != 0 ? obj.__assign(o + bb_pos, bb) : null;
-    }
-
-    public short hp() {
-        int o = __offset(6);
-        return o != 0 ? bb.getShort(o + bb_pos) : 0;
-    }
-
-    public boolean mutateHp(short hp) {
-        int o = __offset(6);
-        if (o != 0) {
-            bb.putShort(o + bb_pos, hp);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public String name() {
-        int o = __offset(8);
-        return o != 0 ? __string(o + bb_pos) : null;
-    }
-
-    public ByteBuffer nameAsByteBuffer() {
-        return __vector_as_bytebuffer(8, 1);
-    }
-
-    public ByteBuffer nameInByteBuffer(ByteBuffer _bb) {
-        return __vector_in_bytebuffer(_bb, 8, 1);
-    }
-
-    public byte state() {
-        int o = __offset(10);
-        return o != 0 ? bb.get(o + bb_pos) : 0;
-    }
-
-    public boolean mutateState(byte state) {
-        int o = __offset(10);
-        if (o != 0) {
-            bb.put(o + bb_pos, state);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static void startMob(FlatBufferBuilder builder) {
-        builder.startTable(4);
-    }
-
-    public static void addLocation(FlatBufferBuilder builder, int locationOffset) {
-        builder.addStruct(0, locationOffset, 0);
-    }
-
-    public static void addHp(FlatBufferBuilder builder, short hp) {
-        builder.addShort(1, hp, 0);
-    }
-
-    public static void addName(FlatBufferBuilder builder, int nameOffset) {
-        builder.addOffset(2, nameOffset, 0);
-    }
-
-    public static void addState(FlatBufferBuilder builder, byte state) {
-        builder.addByte(3, state, 0);
-    }
-
-    public static int endMob(FlatBufferBuilder builder) {
-        int o = builder.endTable();
-        return o;
-    }
+  public static void startMob(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void addLocation(FlatBufferBuilder builder, int locationOffset) { builder.addStruct(0, locationOffset, 0); }
+  public static void addHp(FlatBufferBuilder builder, short hp) { builder.addShort(1, hp, 0); }
+  public static void addName(FlatBufferBuilder builder, int nameOffset) { builder.addOffset(2, nameOffset, 0); }
+  public static void addState(FlatBufferBuilder builder, byte state) { builder.addByte(3, state, 0); }
+  public static int endMob(FlatBufferBuilder builder) {
+    int o = builder.endTable();
+    return o;
+  }
 }
 

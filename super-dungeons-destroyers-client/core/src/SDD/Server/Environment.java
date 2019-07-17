@@ -2,64 +2,42 @@
 
 package SDD.Server;
 
-import com.google.flatbuffers.Constants;
-import com.google.flatbuffers.FlatBufferBuilder;
-import com.google.flatbuffers.Table;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.*;
+import java.lang.*;
+import java.util.*;
+import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Environment extends Table {
-    public static void ValidateVersion() {
-        Constants.FLATBUFFERS_1_11_1();
-    }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_11_1(); }
+  public static Environment getRootAsEnvironment(ByteBuffer _bb) { return getRootAsEnvironment(_bb, new Environment()); }
+  public static Environment getRootAsEnvironment(ByteBuffer _bb, Environment obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
+  public Environment __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-    public static Environment getRootAsEnvironment(ByteBuffer _bb) {
-        return getRootAsEnvironment(_bb, new Environment());
-    }
+  public SDD.Common.Room room() { return room(new SDD.Common.Room()); }
+  public SDD.Common.Room room(SDD.Common.Room obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SDD.Common.Entity entities(int j) { return entities(new SDD.Common.Entity(), j); }
+  public SDD.Common.Entity entities(SDD.Common.Entity obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int entitiesLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
 
-    public static Environment getRootAsEnvironment(ByteBuffer _bb, Environment obj) {
-        _bb.order(ByteOrder.LITTLE_ENDIAN);
-        return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
-    }
+  public static int createEnvironment(FlatBufferBuilder builder,
+      int roomOffset,
+      int entitiesOffset) {
+    builder.startTable(2);
+    Environment.addEntities(builder, entitiesOffset);
+    Environment.addRoom(builder, roomOffset);
+    return Environment.endEnvironment(builder);
+  }
 
-    public void __init(int _i, ByteBuffer _bb) {
-        __reset(_i, _bb);
-    }
-
-    public Environment __assign(int _i, ByteBuffer _bb) {
-        __init(_i, _bb);
-        return this;
-    }
-
-    public SDD.Common.Room room() {
-        return room(new SDD.Common.Room());
-    }
-
-    public SDD.Common.Room room(SDD.Common.Room obj) {
-        int o = __offset(4);
-        return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null;
-    }
-
-    public static int createEnvironment(FlatBufferBuilder builder,
-                                        int roomOffset) {
-        builder.startTable(1);
-        Environment.addRoom(builder, roomOffset);
-        return Environment.endEnvironment(builder);
-    }
-
-    public static void startEnvironment(FlatBufferBuilder builder) {
-        builder.startTable(1);
-    }
-
-    public static void addRoom(FlatBufferBuilder builder, int roomOffset) {
-        builder.addOffset(0, roomOffset, 0);
-    }
-
-    public static int endEnvironment(FlatBufferBuilder builder) {
-        int o = builder.endTable();
-        return o;
-    }
+  public static void startEnvironment(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void addRoom(FlatBufferBuilder builder, int roomOffset) { builder.addOffset(0, roomOffset, 0); }
+  public static void addEntities(FlatBufferBuilder builder, int entitiesOffset) { builder.addOffset(1, entitiesOffset, 0); }
+  public static int createEntitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEntitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int endEnvironment(FlatBufferBuilder builder) {
+    int o = builder.endTable();
+    return o;
+  }
 }
 
