@@ -1,4 +1,4 @@
-use super::shared::{ Shared, Room };
+use super::shared::{ Shared, Room, Location };
 use super::room;
 
 use crate::binding::{ server, common };
@@ -63,10 +63,14 @@ impl GameLoop {
 
         for (_, player) in players.iter_mut() {
             let room = if rooms.is_empty() { None } else { Some(()) };
-            let player_room = player.room
-                .map_or(0, |x| (x + 1) % rooms.len());
+            let player_location = player.location
+                .map_or(Location::default(), |location| Location {
+                    room: 0,
+                    x: location.x + 1 % 10,
+                    y: location.y + 1 % 10
+                });
 
-            player.room = room.and(Some(player_room));
+            player.location = room.and(Some(player_location));
         }
     }
 
@@ -74,10 +78,13 @@ impl GameLoop {
         let mut players = self.shared.players.lock().unwrap();
         let rooms = self.shared.rooms.lock().unwrap();
 
+        let players_clone = players.clone();
+
         for (_, player) in players.iter_mut() {
             let mut builder = FlatBufferBuilder::new();
 
-            let room = rooms.get(&player.room.unwrap()).unwrap();
+            let location = player.location.unwrap();
+            let room = rooms.get(&location.room).unwrap();
 
             let room = common::Room::create(
                 &mut builder,
@@ -86,10 +93,37 @@ impl GameLoop {
                 }
             );
 
+            let entities = players_clone
+                .values()
+                .filter(|target| target.location.map(|target_location| target_location.room == location.room).unwrap_or(false))
+                .map(|target| {
+
+                    let Location { room, x, y } = target.location.unwrap();
+
+                    let name = builder.create_string(&target.name);
+                    let target = common::Player::create(
+                        &mut builder,
+                        &common::PlayerArgs {
+                            name: Some(name),
+                            location: Some(&common::Location::new(room as u8, x as u8, y as u8))
+                        }
+                    );
+
+                    let entity = common::Entity::create(
+                        &mut builder,
+                        &common::EntityArgs {
+                            kind: Some(target.as_union_value()),
+                            kind_type: common::EntityKind::Player
+                        }
+                    );
+
+                });
+
             let environment = server::Environment::create(
                 &mut builder,
                 &server::EnvironmentArgs {
-                    room: Some(room)
+                    room: Some(room),
+                    entities: None
                 }
             );
 

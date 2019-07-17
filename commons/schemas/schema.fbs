@@ -9,6 +9,25 @@ namespace SDD.Common;
         kind: RoomKind;
     }
 
+    struct Location {
+        room: uint8;
+        x: uint8;
+        y: uint8;
+    }
+
+    table Player {
+        name: string;
+        location: Location;
+    }
+
+    union EntityKind {
+        Player
+    }
+
+    table Entity {
+        kind: EntityKind;
+    }
+
 namespace SDD.Client;
 
     table Ping {
@@ -35,6 +54,7 @@ namespace SDD.Server;
 
     table Environment {
         room: SDD.Common.Room;
+        entities: [SDD.Common.Entity];
     }
 
     union Content {
@@ -68,21 +88,6 @@ namespace SDD.Mob;
 
     root_type Mob;
 
-namespace SDD.Player;
-
-    struct Vec3 {
-        x: float;
-        y: float;
-        z: float;
-    }
-
-    table Player {
-        name: string (required);
-        location: Vec3 (required);
-    }
-
-    root_type Player;
-
 namespace SDD.Pickable;
 
     struct Vec2 {
@@ -104,7 +109,7 @@ namespace SDD.Pickable;
 
 namespace SDD.Dungeon;
 
-    union Content { SDD.Mob.Mob, SDD.Player.Player, SDD.Pickable.Pickable }
+    union Content { SDD.Mob.Mob, SDD.Pickable.Pickable }
 
     table Room {
         content: Content;

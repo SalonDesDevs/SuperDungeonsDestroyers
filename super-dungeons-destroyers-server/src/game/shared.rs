@@ -19,9 +19,28 @@ pub struct Room {
     pub kind: RoomKind,
 }
 
+#[derive(Clone, Copy)]
+pub struct Location {
+    pub room: usize,
+    pub x: usize,
+    pub y: usize
+}
+
+// TODO: Remove
+impl Default for Location {
+    fn default() -> Self {
+        Location {
+            room: 0,
+            x: 0,
+            y: 0
+        }
+    }
+}
+
+#[derive(Clone)]
 pub struct Player {
     pub name: String,
-    pub room: Option<usize>,
+    pub location: Option<Location>,
 
     pub tx: Tx,
     pub address: SocketAddr,
@@ -31,7 +50,7 @@ impl Player {
     pub fn new(address: SocketAddr, tx: Tx) -> Self {
         Player {
             name: String::from("VF > *"),
-            room: None,
+            location: None,
             tx,
             address
         }
