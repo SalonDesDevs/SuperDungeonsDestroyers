@@ -32,6 +32,7 @@ namespace SDD.Common;
     }
 
     table Entity {
+        entity_id: uint64;
         kind: EntityKind;
     }
 

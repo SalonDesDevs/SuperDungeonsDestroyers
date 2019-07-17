@@ -4,7 +4,7 @@ pub mod level;
 
 use crate::network::ServerMessages;
 
-use std::sync::RwLock;
+use std::sync::{ Mutex, RwLock };
 use std::collections::HashMap;
 use std::net::SocketAddr;
 
@@ -18,6 +18,8 @@ use failure::Fallible;
 pub struct Shared {
     pub players: RwLock<HashMap<SocketAddr, Player>>,
     pub levels: RwLock<Vec<Level>>,
+
+    last_entity_id: Mutex<u64>
 }
 
 impl Shared {
@@ -27,5 +29,11 @@ impl Shared {
         }
 
         Ok(())
+    }
+
+    pub fn next_entity_id(&self) -> u64 {
+        let mut id = self.last_entity_id.lock().unwrap();
+        *id += 1;
+        *id - 1
     }
 }

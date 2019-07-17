@@ -2,30 +2,37 @@ use crate::utils::WriteToBuilder;
 use crate::binding::common;
 use crate::network::Tx;
 
-use super::location::Location;
+use super::{ Shared, Location };
 
 use flatbuffers::{ WIPOffset, FlatBufferBuilder };
 
 use failure::Fallible;
 
 use std::net::SocketAddr;
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct Player {
     pub name: String,
     pub location: Option<Location>,
+    pub entity_id: u64,
 
     pub tx: Tx,
     pub address: SocketAddr,
+    pub shared: Arc<Shared>
 }
 
 impl Player {
-    pub fn new(address: SocketAddr, tx: Tx) -> Self {
+    pub fn new(address: SocketAddr, tx: Tx, shared: Arc<Shared>) -> Self {
+        let entity_id = shared.next_entity_id();
+
         Player {
             name: ":upside_down:".into(),
             location: None,
             tx,
-            address
+            address,
+            shared,
+            entity_id
         }
     }
 }
@@ -59,6 +66,7 @@ impl<'b> WriteToBuilder<'b, WIPOffset<common::Entity<'b>>> for Player {
         let entity = common::Entity::create(
             &mut builder,
             &common::EntityArgs {
+                entity_id: self.entity_id,
                 kind: Some(player.as_union_value()),
                 kind_type: common::EntityKind::Player
             }

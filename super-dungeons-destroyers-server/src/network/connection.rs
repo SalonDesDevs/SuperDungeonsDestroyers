@@ -29,7 +29,7 @@ pub struct Peer {
 
 impl Peer {
     fn new(address: SocketAddr, shared: Arc<Shared>, tx: Tx) -> Self {
-        let player = Player::new(address.clone(), tx.clone());
+        let player = Player::new(address.clone(), tx.clone(), shared.clone());
 
         shared.players.write().unwrap().insert(address, player);
 
