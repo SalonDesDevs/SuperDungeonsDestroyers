@@ -14,7 +14,7 @@ use std::net::SocketAddr;
 
 use failure::Error;
 
-use log::error;
+use log::{ error, warn, info } ;
 
 pub struct Connection {
     socket: TcpStream
