@@ -33,7 +33,6 @@ impl GameLoop {
         self.send_environment()?;
 
         let elapsed = instant.elapsed();
-
         info!("Ticked in {:6}µs", elapsed.as_micros());
 
         if elapsed.as_millis() >= 75 {

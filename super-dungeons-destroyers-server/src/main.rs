@@ -21,7 +21,7 @@ use log::{ info, error, warn };
 
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
-
+    info!("listening on 127.0.0.1:9000");
     Ok(TcpListener::bind(&address)?)
 }
 
