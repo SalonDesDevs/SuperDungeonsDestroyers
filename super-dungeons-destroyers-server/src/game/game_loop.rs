@@ -71,8 +71,8 @@ impl GameLoop {
             let player_location = player.location
                 .map_or(Location::default(), |location| Location {
                     room: 0,
-                    x: location.x + 1 % 10,
-                    y: location.y + 1 % 10
+                    x: (location.x + 1) % 10,
+                    y: (location.y + 1) % 10
                 });
 
             player.location = room.and(Some(player_location));
