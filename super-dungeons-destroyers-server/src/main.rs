@@ -22,6 +22,8 @@ use log::{ info, error };
 fn listener() -> Fallible<TcpListener> {
     let address = "127.0.0.1:9000".parse()?;
 
+    info!("Server listening on {}", address);
+
     Ok(TcpListener::bind(&address)?)
 }
 
@@ -48,8 +50,6 @@ fn main() -> Fallible<()> {
 
             Ok(())
         });
-
-    info!("Server is listening!");
 
     let game = server
         .join(interval)

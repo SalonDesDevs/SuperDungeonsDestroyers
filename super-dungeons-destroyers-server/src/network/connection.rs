@@ -14,7 +14,7 @@ use std::net::SocketAddr;
 
 use failure::Error;
 
-use log::error;
+use log::{ error, warn, info } ;
 
 pub struct Connection {
     socket: TcpStream
@@ -57,19 +57,19 @@ impl Connection {
 
         let to_client = rx
             .map_err(Error::from)
-            .inspect(|_| eprintln!("Sending message(s) to the client."))
+            .inspect(|_| info!("Sending message(s) to the client."))
             .forward(sink)
             .map_err(Error::from);
 
         let from_client = stream
             .map_err(Error::from)
             .for_each(move |messages| {
-                eprintln!("Received message(s) from the client.");
+                info!("Received message(s) from the client.");
 
                 Listener::handle_messages(&peer, messages)
             })
             .and_then(move |_| {
-                eprintln!("Got disconnected");
+                warn!("Got disconnected");
 
                 shared.players.write().unwrap().remove(&address);
 
