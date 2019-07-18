@@ -6,14 +6,14 @@ pub enum Direction {
 }
 
 pub struct Player {
-    name: String,
-    location: Location,
+    pub name: String,
+    pub location: Location,
 }
 
 pub struct Location {
-    level: u8,
-    x: u8,
-    y: u8
+    pub level: u8,
+    pub x: u8,
+    pub y: u8
 }
 
 pub enum EntityKind {
@@ -21,8 +21,8 @@ pub enum EntityKind {
 }
 
 pub struct Entity {
-    entity_id: usize,
-    kind: EntityKind,
+    pub entity_id: u64,
+    pub kind: EntityKind,
 }
 
 pub enum LevelEnvironment {
