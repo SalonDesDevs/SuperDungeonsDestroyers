@@ -14,7 +14,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
-import org.salondesdevs.superdungeonsdestroyers.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
@@ -50,7 +51,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
 
     @Inject
-    Mapper<Position> positionMapper;
+    Mapper<TilePosition> positionMapper;
 
     @Inject
     Mapper<Camera> cameraMapper;
@@ -60,6 +61,9 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
     @Inject
     Mapper<Terrain> terrainMapper;
+
+    @Inject
+    Mapper<Offset> offsetMapper;
 
     @Inject
     Assets assetService;
@@ -102,12 +106,13 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
             animatedMapper.set(playerTest, new Animated(walkAnimation));
 
-            Position pos = new Position();
-            pos.x = pos.y = 1;
+            TilePosition pos = new TilePosition(1, 1);
 
             positionMapper.set(playerTest, pos);
 
             cameraMapper.set(playerTest, Camera.INSTANCE);
+
+            offsetMapper.set(playerTest, new Offset());
         }
 
         Level level = environment.level();
@@ -122,7 +127,10 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             if (entity.kindType() == EntityKind.Player) {
                 Player playerMessage = (Player) entity.kind(new Player());
                 if (positionMapper.has(id)) {
-                    positionMapper.get(id).set(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y() - 1);
+//                    positionMapper.get(id).set(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y() - 1);
+                }
+                else {
+                    positionMapper.set(id, new TilePosition(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y()));
                 }
             }
         }

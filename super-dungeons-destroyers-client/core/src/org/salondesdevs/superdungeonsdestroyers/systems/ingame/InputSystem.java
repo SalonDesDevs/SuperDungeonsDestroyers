@@ -7,11 +7,16 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.TimeUtils;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Interpolators;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.function.Consumer;
 
 @Singleton
 public class InputSystem extends IteratingSystem implements InputProcessor {
@@ -25,7 +30,7 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     NetworkSystem networkSystem;
 
     public InputSystem() {
-        super(Aspect.all(Position.class));
+        super(Aspect.all(TilePosition.class, Offset.class));
     }
 
     @Override
@@ -35,37 +40,61 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     }
 
     @Inject
-    Mapper<Position> positionMapper;
+    Mapper<TilePosition> positionMapper;
+
+    @Inject
+    Mapper<Offset> offsetMapper;
+
+    @Inject
+    Animator animator;
 
     long lastMoved = 0l, now;
 
-    private static final long delay = 200l;
+    private static final long delay = 500l;
 
     @Override
     //TODO: this is temporary
     public void process(int entity) {
-        Position position = positionMapper.get(entity);
+        TilePosition tilePosition = positionMapper.get(entity);
+        Offset offset = offsetMapper.get(entity);
 
         now = TimeUtils.millis();
 
         if (now - lastMoved > delay) {
-            lastMoved = now;
+            Runnable onEnd = null;
+            float start = 0;
+            Consumer<Float> setter = null;
 
             if (keys.contains(Input.Keys.UP)) {
-                position.y++;
-                networkSystem.request().addMoveContent(Direction.Up).writeAndFlush();
+                start = -16.0f;
+                tilePosition.y++;
+                setter = offset::setY;
+                onEnd = () -> networkSystem.request().addMoveContent(Direction.Up).writeAndFlush();
             }
             if (keys.contains(Input.Keys.DOWN)) {
-                position.y--;
-                networkSystem.request().addMoveContent(Direction.Down).writeAndFlush();
+                start = 16.0f;
+                tilePosition.y--;
+                setter = offset::setY;
+                onEnd = () -> networkSystem.request().addMoveContent(Direction.Down).writeAndFlush();
             }
             if (keys.contains(Input.Keys.LEFT)) {
-                position.x--;
-                networkSystem.request().addMoveContent(Direction.Left).writeAndFlush();
+                start = 16.0f;
+                tilePosition.x--;
+                setter = offset::setX;
+                onEnd = () -> networkSystem.request().addMoveContent(Direction.Left).writeAndFlush();
             }
             if (keys.contains(Input.Keys.RIGHT)) {
-                position.x++;
-                networkSystem.request().addMoveContent(Direction.Right).writeAndFlush();
+                start = -16.0f;
+                tilePosition.x++;
+                setter = offset::setX;
+                onEnd = () -> networkSystem.request().addMoveContent(Direction.Right).writeAndFlush();
+            }
+
+            if (onEnd != null && now - lastMoved > delay) {
+                lastMoved = now;
+
+                Animation<Float> animation = new Animation<>(0.25f, start, 0.0f, Interpolators.LINEAR_FLOAT, setter, onEnd);
+                animator.submit(animation);
             }
         }
     }

@@ -2,9 +2,14 @@ package org.salondesdevs.superdungeonsdestroyers.components;
 
 import net.wytrem.ecs.*;
 
-public class Position implements Component {
+public class TilePosition implements Component {
 
     public int x, y;
+
+    public TilePosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public void setX(int x) {
         this.x = x;

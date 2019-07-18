@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyersClient;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
-import org.salondesdevs.superdungeonsdestroyers.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,13 +19,16 @@ public class CameraSystem extends IteratingSystem {
 
 
     @Inject
-    Mapper<Position> positionMapper;
+    Mapper<TilePosition> positionMapper;
+
+    @Inject
+    Mapper<Offset> offsetMapper;
 
     @Inject
     SuperDungeonsDestroyersClient sdd;
 
     public CameraSystem() {
-        super(Aspect.all(Position.class, Camera.class));
+        super(Aspect.all(TilePosition.class, Camera.class));
         this.zoom = 2.f;
     }
 
@@ -37,9 +41,15 @@ public class CameraSystem extends IteratingSystem {
 
     @Override
     public void process(int entity) {
-        Position position = positionMapper.get(entity);
-        camera.position.x = position.x * 16.f;
-        camera.position.y = position.y * 16.f;
+        TilePosition tilePosition = positionMapper.get(entity);
+        camera.position.x = tilePosition.x * 16.f;
+        camera.position.y = tilePosition.y * 16.f;
+
+        if (offsetMapper.has(entity)) {
+            Offset offset = offsetMapper.get(entity);
+            camera.position.x += offset.x;
+            camera.position.y += offset.y;
+        }
         camera.update();
     }
 
