@@ -49,7 +49,8 @@ fn main() -> Fallible<()> {
 
             let connection = Connection::new(socket);
 
-            tokio::spawn(connection.process(context.clone())?);
+            tokio::spawn(connection.process(context.clone())?
+                .map_err(|x| println!("x")));
 
             Ok(())
         });

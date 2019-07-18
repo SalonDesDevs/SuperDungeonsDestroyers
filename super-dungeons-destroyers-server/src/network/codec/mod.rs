@@ -3,6 +3,7 @@ mod reader;
 
 use crate::events;
 use crate::binding;
+use crate::error::NoneError;
 
 use self::writer::FlatWrite;
 use self::reader::FlatRead;
@@ -10,7 +11,7 @@ use self::reader::FlatRead;
 use tokio::codec::{ Encoder, Decoder };
 use bytes::BytesMut;
 
-use std::{ io, mem };
+use std::{ io, mem, panic };
 use std::convert::TryInto;
 
 use flatbuffers::{ FlatBufferBuilder, get_root, WIPOffset as W };
@@ -27,6 +28,7 @@ impl Decoder for MessageCodec {
     type Error = Error;
 
     fn decode(&mut self, src: &mut BytesMut) -> Fallible<Option<Self::Item>> {
+        println!("before size");
         if self.size.is_none() {
             if src.len() < mem::size_of::<u32>() {
                 return Ok(None);
@@ -40,16 +42,25 @@ impl Decoder for MessageCodec {
         }
 
         let size = self.size.unwrap() as usize;
+        println!("after size");
 
         if src.len() < size {
             Ok(None)
         } else {
+            println!("A");
             let bytes = src.split_to(size).freeze();
+            println!("B");
             let events = get_root::<binding::client::Events>(&bytes).events();
-            let events = (0..events.len())
+            println!("C");
+            let events: Vec<_> = (0..events.len())
                 .map(|event| events.get(event))
-                .map(|event| events::client::Event::read(event))
-                .collect::<Fallible<_>>()?;
+                .inspect(|x| println!("{:?}", x))
+                .map(|event| panic::catch_unwind(|| events::client::Event::read(event)).map_err(|_| Error::from(NoneError)))
+                .inspect(|x| println!("{:?}", x))
+                .collect::<Fallible<Fallible<_>>>()??;
+
+            println!("{:?}", events);
+            println!("D");
 
             self.size = None;
             Ok(Some(events))
