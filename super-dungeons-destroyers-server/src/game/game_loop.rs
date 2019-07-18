@@ -1,4 +1,4 @@
-use super::structure::{ Shared, Level, LevelKind };
+use super::structure::Context;
 
 use crate::binding::{ server, common };
 use crate::network::ServerMessages;
@@ -13,24 +13,17 @@ use flatbuffers::{ FlatBufferBuilder, WIPOffset };
 use log::{ warn, debug };
 
 pub struct GameLoop {
-    shared: Arc<Shared>,
-    initialized: bool
+    context: Arc<Context>
 }
 
 impl GameLoop {
-    pub fn new(shared: Arc<Shared>) -> Self {
+    pub fn new(context: Arc<Context>) -> Self {
         GameLoop {
-            shared,
-            initialized: false,
+            context
         }
     }
 
     pub fn tick(&mut self, instant: Instant) -> Fallible<()> {
-        if !self.initialized {
-            self.initialization()?;
-        }
-
-        self.update_location();
         self.send_environment()?;
 
         let elapsed = instant.elapsed();
@@ -44,52 +37,23 @@ impl GameLoop {
         Ok(())
     }
 
-    fn initialization(&mut self) -> Fallible<()> {
-        let mut levels = self.shared.levels.write().unwrap();
-
-        levels.push(Level::new(0, LevelKind::Top, self.shared.clone())?);
-        self.initialized = true;
-
-        Ok(())
-    }
-
-    fn update_location(&mut self) {
-        let mut players = self.shared.players.write().unwrap();
-        let levels = self.shared.levels.read().unwrap();
-
-        let level = match levels.get(0) {
-            Some(level) => level,
-            None => return
-        };
-
-        for player in players.values_mut() {
-            if player.location.is_some() {
-                continue;
-            }
-
-            player.location = level.spawnpoints.get(0).cloned();
-        }
-    }
-
     fn send_environment(&mut self) -> Fallible<()> {
-        let mut players = self.shared.players.write().unwrap();
-        let levels = self.shared.levels.read().unwrap();
+        let mut players = self.context.players.write().unwrap();
+        let levels = self.context.levels.read().unwrap();
 
         let players_clone = players.clone();
 
         for (_, player) in players.iter_mut() {
             let mut builder = FlatBufferBuilder::new();
 
-            let location = player.location.unwrap();
-
             let level = levels
-                .get(location.level as usize)
+                .get(player.location.level as usize)
                 .unwrap()
                 .write(&mut builder)?;
 
             let entities = players_clone
                 .values()
-                .filter(|target| target.location.map(|target_location| target_location.level == location.level).unwrap_or(false))
+                .filter(|target| target.location.level == player.location.level)
                 .map(|target| target.write(&mut builder))
                 .collect::<Fallible<Vec<WIPOffset<common::Entity>>>>()?;
 

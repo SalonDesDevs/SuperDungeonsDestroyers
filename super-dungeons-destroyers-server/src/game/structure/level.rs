@@ -1,9 +1,8 @@
 use crate::binding::common;
 use crate::utils::WriteToBuilder;
 
-use super::{ Shared, Location };
+use super::Location;
 
-use std::sync::Arc;
 use std::path::Path;
 
 use failure::Fallible;
@@ -26,8 +25,6 @@ pub struct Level {
     pub spawnpoints: Vec<Location>,
     pub solid_locations: Vec<Location>,
     pub inner_map: Map,
-
-    _shared: Arc<Shared>
 }
 
 impl AsRef<Path> for LevelKind {
@@ -44,7 +41,7 @@ impl AsRef<Path> for LevelKind {
 }
 
 impl Level {
-    pub fn new(level: u8, kind: LevelKind, shared: Arc<Shared>) -> Fallible<Self> {
+    pub fn new(level: u8, kind: LevelKind) -> Fallible<Self> {
         let inner_map = tiled::parse_file(kind.as_ref())?;
         let spawnpoints = Level::spawnpoints(level, &inner_map)?;
         let solid_locations = Level::solid_locations(level, &inner_map)?;
@@ -55,8 +52,6 @@ impl Level {
             spawnpoints,
             solid_locations,
             inner_map,
-
-            _shared: shared
         };
 
         Ok(level)

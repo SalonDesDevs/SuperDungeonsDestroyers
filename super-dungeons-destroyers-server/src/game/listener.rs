@@ -8,7 +8,7 @@ use failure::Fallible;
 
 use flatbuffers::{ WIPOffset, FlatBufferBuilder };
 
-use log::{ debug, info };
+use log::debug;
 
 use std::cmp::{ max, min };
 
@@ -83,37 +83,37 @@ impl Listener {
 
                 debug!("{} moved {:?}", peer.address, direction);
 
-                let mut players = peer.shared.players.write().unwrap();
+                let mut players = peer.context.players.write().unwrap();
+                let levels = peer.context.levels.read().unwrap();
+
                 let player = players.get_mut(&peer.address).unwrap();
 
-                if let Some(ref mut location) = player.location {
-                    let levels = peer.shared.levels.read().unwrap();
+                let x_move = match direction {
+                    common::Direction::Right => 1,
+                    common::Direction::Left => -1,
+                    _ => 0,
+                };
 
-                    let x_move = match direction {
-                        common::Direction::Right => 1,
-                        common::Direction::Left => -1,
-                        _ => 0,
-                    };
+                let y_move = match direction {
+                    common::Direction::Down => 1,
+                    common::Direction::Up => -1,
+                    _ => 0,
+                };
 
-                    let y_move = match direction {
-                        common::Direction::Down => 1,
-                        common::Direction::Up => -1,
-                        _ => 0,
-                    };
+                let current_level = levels.get(player.location.level as usize).unwrap();
 
-                    let current_level = levels.get(location.level as usize).unwrap();
+                let future_location = Location {
+                    level: player.location.level,
+                    x: min(max(player.location.x as i32 + x_move, 0), (current_level.inner_map.width - 1) as i32) as u8,
+                    y: min(max(player.location.y as i32 + y_move, 0), (current_level.inner_map.height - 1) as i32) as u8
+                };
 
-                    let future_location = Location {
-                        level: location.level,
-                        x: min(max(location.x as i32 + x_move, 0), (current_level.inner_map.width - 1) as i32) as u8,
-                        y: min(max(location.y as i32 + y_move, 0), (current_level.inner_map.height - 1) as i32) as u8
-                    };
+                let can_move = !current_level.solid_locations.contains(&future_location);
 
-                    info!("Move? {:?} {:?} {:?}", location, future_location, !current_level.solid_locations.contains(&future_location));
+                debug!("Move? {:?} {:?} {:?}", player.location, future_location, can_move);
 
-                    if !current_level.solid_locations.contains(&future_location) {
-                        *location = future_location;
-                    }
+                if can_move {
+                    player.location = future_location;
                 }
 
                 Ok(Vec::new())
