@@ -1,26 +1,26 @@
 use super::common::{ Player, Location, Entity, LevelEnvironment };
 
 pub struct Connect {
-    my_entity_id: u64,
+    pub my_entity_id: u64,
 }
 
 pub struct Join {
-    player: Player,
+    pub player: Player,
 }
 
 pub struct Leave {
-    player: Player,
+    pub player: Player,
 }
 
 pub struct EntityMove {
-    entity_id: u64,
-    location: Location,
+    pub entity_id: u64,
+    pub location: Location,
 }
 
 pub struct ZoneInfo {
-    level: u8,
-    environment: LevelEnvironment,
-    entities: Vec<Entity>
+    pub level: u8,
+    pub environment: LevelEnvironment,
+    pub entities: Vec<Entity>
 }
 
 pub enum Event {
