@@ -16,7 +16,9 @@ use events::client::Move as EMove;
 
 impl<'b> FlatRead<'b, BMove<'b>> for EMove {
     fn read(item: BMove<'b>) -> Fallible<Self> {
+        println!("move");
         let direction = EDirection::read(item.direction())?;
+        println!("direction");
         let move_event = EMove {
             direction
         };
@@ -30,10 +32,15 @@ use events::client::Event as EEvent;
 
 impl<'b> FlatRead<'b, BEvent<'b>> for EEvent {
     fn read(item: BEvent<'b>) -> Fallible<Self> {
+        println!("read");
+
         let event = match item.event_type() {
             BEventUnion::Move => EEvent::Move(EMove::read(item.event_as_move().ok_or(NoneError)?)?),
-            BEventUnion::NONE => Err(UnionNoneError)?
+            BEventUnion::NONE => Err(UnionNoneError)?,
+            _ => panic!("other :thinking:")
         };
+
+        println!("post move");
 
         Ok(event)
     }
@@ -46,6 +53,8 @@ use events::common::Direction as EDirection;
 
 impl FlatRead<'_, BDirection> for EDirection {
     fn read(item: BDirection) -> Fallible<Self> {
+        println!("direction");
+
         let direction = match item {
             BDirection::Right => EDirection::Right,
             BDirection::Left => EDirection::Left,
