@@ -11,15 +11,31 @@ pub trait FlatRead<'b, Item> where Self: Sized {
 
 // Client implementations
 
-impl<'b> FlatRead<'b, binding::client::Move<'b>> for events::client::Move {
-    fn read(item: binding::client::Move<'b>) -> Fallible<Self> {
-        unimplemented!()
+use binding::client::Move as BMove;
+use events::client::Move as EMove;
+
+impl<'b> FlatRead<'b, BMove<'b>> for EMove {
+    fn read(item: BMove<'b>) -> Fallible<Self> {
+        let direction = EDirection::read(item.direction())?;
+        let move_event = EMove {
+            direction
+        };
+
+        Ok(move_event)
     }
 }
 
-impl<'b> FlatRead<'b, binding::client::Event<'b>> for events::client::Event {
-    fn read(item: binding::client::Event<'b>) -> Fallible<Self> {
-        unimplemented!()
+use binding::client::{ Event as BEvent, EventUnion as BEventUnion };
+use events::client::Event as EEvent;
+
+impl<'b> FlatRead<'b, BEvent<'b>> for EEvent {
+    fn read(item: BEvent<'b>) -> Fallible<Self> {
+        let event = match item.event_type() {
+            BEventUnion::Move => EEvent::Move(EMove::read(item.event_as_move().ok_or(NoneError)?)?),
+            BEventUnion::NONE => Err(UnionNoneError)?
+        };
+
+        Ok(event)
     }
 }
 
