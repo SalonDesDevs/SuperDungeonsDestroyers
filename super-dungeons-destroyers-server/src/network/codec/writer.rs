@@ -2,47 +2,129 @@ use crate::events;
 use crate::binding;
 
 use flatbuffers::{ FlatBufferBuilder, WIPOffset as W };
-use failure::Fallible;
+use failure::Fallible as F;
 
 pub trait FlatWrite<'b, Item> {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<Item>;
+    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> F<Item>;
 }
 
 // Server implementations
 
-impl<'b> FlatWrite<'b, W<binding::server::Connect<'b>>> for events::server::Connect {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::server::Connect<'b>>> {
-        unimplemented!()
+use binding::server::Connect as BConnect;
+use events::server::Connect as EConnect;
+
+impl<'b> FlatWrite<'b, W<BConnect<'b>>> for EConnect {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BConnect<'b>>> {
+        let connect = BConnect::create(
+            &mut builder,
+            &binding::server::ConnectArgs {
+                my_entity_id: self.my_entity_id
+            }
+        );
+
+        Ok(connect)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::server::Join<'b>>> for events::server::Join {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::server::Join<'b>>> {
-        unimplemented!()
+use binding::server::Join as BJoin;
+use events::server::Join as EJoin;
+
+impl<'b> FlatWrite<'b, W<BJoin<'b>>> for EJoin {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BJoin<'b>>> {
+        let player = self.player.write(&mut builder)?;
+        let join = BJoin::create(
+            &mut builder,
+            &binding::server::JoinArgs {
+                player: Some(player)
+            }
+        );
+
+        Ok(join)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::server::Leave<'b>>> for events::server::Leave {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::server::Leave<'b>>> {
-        unimplemented!()
+use binding::server::Leave as BLeave;
+use events::server::Leave as ELeave;
+
+impl<'b> FlatWrite<'b, W<BLeave<'b>>> for ELeave {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BLeave<'b>>> {
+        let player = self.player.write(&mut builder)?;
+        let leave = BLeave::create(
+            &mut builder,
+            &binding::server::LeaveArgs {
+                player: Some(player)
+            }
+        );
+
+        Ok(leave)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::server::ZoneInfo<'b>>> for events::server::ZoneInfo {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::server::ZoneInfo<'b>>> {
-        unimplemented!()
+use binding::server::ZoneInfo as BZoneInfo;
+use events::server::ZoneInfo as EZoneInfo;
+
+impl<'b> FlatWrite<'b, W<BZoneInfo<'b>>> for EZoneInfo {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BZoneInfo<'b>>> {
+        let environment = self.environment.write(&mut builder)?;
+        let entities: Vec<_> = self.entities
+            .iter()
+            .map(|entity| entity.write(&mut builder))
+            .collect::<F<_>>()?;
+        let entities = builder.create_vector(&entities);
+
+        let zone_info = BZoneInfo::create(
+            &mut builder,
+            &binding::server::ZoneInfoArgs {
+                level: self.level,
+                environment: environment,
+                entities: Some(entities)
+            }
+        );
+
+        Ok(zone_info)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::server::EntityMove<'b>>> for events::server::EntityMove {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::server::EntityMove<'b>>> {
-        unimplemented!()
+use binding::server::EntityMove as BEntityMove;
+use events::server::EntityMove as EEntityMove;
+
+impl<'b> FlatWrite<'b, W<BEntityMove<'b>>> for EEntityMove {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BEntityMove<'b>>> {
+        let location = self.location.write(&mut builder)?;
+        let entity_move = BEntityMove::create(
+            &mut builder,
+            &binding::server::EntityMoveArgs {
+                location: Some(&location),
+                entity_id: self.entity_id
+            }
+        );
+
+        Ok(entity_move)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::server::Event<'b>>> for events::server::Event {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::server::Event<'b>>> {
-        unimplemented!()
+use binding::server::{ Event as BEvent, EventUnion as BEventUnion };
+use events::server::Event as EEvent;
+
+impl<'b> FlatWrite<'b, W<BEvent<'b>>> for EEvent {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BEvent<'b>>> {
+        let (event_type, event) = match self {
+            EEvent::Connect(connect) => (BEventUnion::Connect, connect.write(&mut builder)?.as_union_value()),
+            EEvent::Join(join) => (BEventUnion::Join, join.write(&mut builder)?.as_union_value()),
+            EEvent::Leave(leave) => (BEventUnion::Leave, leave.write(&mut builder)?.as_union_value()),
+            EEvent::EntityMove(entity_move) => (BEventUnion::EntityMove, entity_move.write(&mut builder)?.as_union_value()),
+            EEvent::ZoneInfo(zone_info) => (BEventUnion::ZoneInfo, zone_info.write(&mut builder)?.as_union_value()),
+        };
+
+        let event = BEvent::create(
+            &mut builder,
+            &binding::server::EventArgs {
+                event_type,
+                event: Some(event)
+            }
+        );
+
+        Ok(event)
     }
 }
 
@@ -52,7 +134,7 @@ use binding::common::Direction as BDirection;
 use events::common::Direction as EDirection;
 
 impl FlatWrite<'_, BDirection> for EDirection {
-    fn write(&self, _: &mut FlatBufferBuilder) -> Fallible<BDirection> {
+    fn write(&self, _: &mut FlatBufferBuilder) -> F<BDirection> {
         let direction = match self {
             EDirection::Up => BDirection::Up,
             EDirection::Down => BDirection::Down,
@@ -68,7 +150,7 @@ use binding::common::Player as BPlayer;
 use events::common::Player as EPlayer;
 
 impl<'b> FlatWrite<'b, W<BPlayer<'b>>> for EPlayer {
-    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<BPlayer<'b>>> {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BPlayer<'b>>> {
         let name = builder.create_string(&self.name);
         let location = self.location.write(&mut builder)?;
 
@@ -88,7 +170,7 @@ use binding::common::Location as BLocation;
 use events::common::Location as ELocation;
 
 impl FlatWrite<'_, BLocation> for ELocation {
-    fn write(&self, _: &mut FlatBufferBuilder) -> Fallible<BLocation> {
+    fn write(&self, _: &mut FlatBufferBuilder) -> F<BLocation> {
         let location = BLocation::new(self.level, self.x, self.y);
 
         Ok(location)
@@ -99,16 +181,16 @@ use binding::common::{ Entity as BEntity, EntityKind as BEntityKind };
 use events::common::{ Entity as EEntity, EntityKind as EEntityKind };
 
 impl<'b> FlatWrite<'b, W<BEntity<'b>>> for EEntity {
-    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<BEntity<'b>>> {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BEntity<'b>>> {
         let (kind_type, kind) = match &self.kind {
-            EEntityKind::Player(player) => (BEntityKind::Player, player.write(&mut builder)?)
+            EEntityKind::Player(player) => (BEntityKind::Player, player.write(&mut builder)?.as_union_value())
         };
 
         let entity = BEntity::create(
             &mut builder,
             &binding::common::EntityArgs {
                 entity_id: self.entity_id,
-                kind: Some(kind.as_union_value()),
+                kind: Some(kind),
                 kind_type
             }
         );
@@ -121,7 +203,7 @@ use binding::common::LevelEnvironment as BLevelEnvironment;
 use events::common::LevelEnvironment as ELevelEnvironment;
 
 impl FlatWrite<'_, BLevelEnvironment> for ELevelEnvironment {
-    fn write(&self, _: &mut FlatBufferBuilder) -> Fallible<BLevelEnvironment> {
+    fn write(&self, _: &mut FlatBufferBuilder) -> F<BLevelEnvironment> {
         let environment = match self {
             ELevelEnvironment::Bottom => BLevelEnvironment::Bottom,
             ELevelEnvironment::Cave => BLevelEnvironment::Cave,
