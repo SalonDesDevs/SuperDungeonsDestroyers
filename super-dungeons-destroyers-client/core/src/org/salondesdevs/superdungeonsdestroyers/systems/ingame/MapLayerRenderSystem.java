@@ -55,7 +55,6 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     }
 
     private void createAndStoreRenderer(TiledMap tiledMap) {
-        logger.debug("Creating renderer for {} with layers {}", tiledMap, Arrays.toString(this.layersToRender));
         TiledMapRenderer tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
         IntList list = new IntArrayList();
@@ -70,6 +69,9 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
             }
         }
 
+
+        logger.info("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(this.layersToRender), list.toArray());
+
         this.layers.put(tiledMap, list.toIntArray());
         this.renderers.put(tiledMap, tiledMapRenderer);
     }
@@ -81,7 +83,6 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     public void process(int entity) {
         Terrain terrain = terrainMapper.get(entity);
         this.render(terrain);
-
     }
 
     public void render(Terrain terrain) {
@@ -90,6 +91,8 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
         if (tiledMapRenderer == null) {
             throw new IllegalStateException("Renderer not registered for map " + terrain.tiledMap);
         }
+
+        logger.info("rendering {}={}", Arrays.toString(this.layersToRender), this.layers.get(terrain.tiledMap));
 
         tiledMapRenderer.setView(cameraService.camera);
         tiledMapRenderer.render(this.layers.get(terrain.tiledMap));

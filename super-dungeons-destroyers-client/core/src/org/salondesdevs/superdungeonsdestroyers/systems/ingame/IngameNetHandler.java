@@ -102,7 +102,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             }
 
             // Initialize the Animation with the frame interval and array of frames
-            Animation<TextureRegion> walkAnimation = new Animation<>(0.025f, walkFrames);
+            Animation<TextureRegion> walkAnimation = new Animation<>(0.07f, walkFrames);
 
             animatedMapper.set(playerTest, new Animated(walkAnimation));
 
