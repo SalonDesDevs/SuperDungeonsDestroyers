@@ -14,18 +14,29 @@ pub use self::location::Location;
 
 use failure::Fallible;
 
-#[derive(Default)]
-pub struct Shared {
+pub struct Context {
     pub players: RwLock<HashMap<SocketAddr, Player>>,
     pub levels: RwLock<Vec<Level>>,
 
     last_entity_id: Mutex<u64>
 }
 
-impl Shared {
+impl Context {
+    pub fn new() -> Fallible<Self> {
+        let players = HashMap::new();
+        let levels = vec![Level::new(0, LevelKind::Top)?];
+        let context = Context {
+            players: RwLock::new(players),
+            levels: RwLock::new(levels),
+            last_entity_id: Mutex::new(0)
+        };
+
+        Ok(context)
+    }
+
     pub fn broadcast(&self, message: ServerMessages) -> Fallible<()> {
         for (_, player) in self.players.read().unwrap().iter() {
-            player.tx.clone().try_send(message.clone())?;
+            player.send(message.clone())?;
         }
 
         Ok(())

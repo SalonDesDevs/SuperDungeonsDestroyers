@@ -6,7 +6,7 @@ pub mod binding;
 pub mod utils;
 
 use crate::network::Connection;
-use crate::game::structure::Shared;
+use crate::game::structure::Context;
 use crate::game::game_loop::GameLoop;
 
 use tokio::prelude::*;
@@ -30,9 +30,9 @@ fn listener() -> Fallible<TcpListener> {
 fn main() -> Fallible<()> {
     pretty_env_logger::init();
 
-    let shared = Arc::new(Shared::default());
+    let context = Arc::new(Context::new()?);
 
-    let mut game_loop = GameLoop::new(shared.clone());
+    let mut game_loop = GameLoop::new(context.clone());
 
     let interval = Interval::new_interval(Duration::from_millis(100))
         .map_err(Error::from)
@@ -46,7 +46,7 @@ fn main() -> Fallible<()> {
 
             let connection = Connection::new(socket);
 
-            tokio::spawn(connection.process(shared.clone()));
+            tokio::spawn(connection.process(context.clone())?);
 
             Ok(())
         });

@@ -2,7 +2,7 @@ use crate::utils::WriteToBuilder;
 use crate::binding::common;
 use crate::network::Tx;
 
-use super::{ Shared, Location };
+use super::{ Context, Location, ServerMessages };
 
 use flatbuffers::{ WIPOffset, FlatBufferBuilder };
 
@@ -14,26 +14,32 @@ use std::sync::Arc;
 #[derive(Clone)]
 pub struct Player {
     pub name: String,
-    pub location: Option<Location>,
+    pub location: Location,
     pub entity_id: u64,
 
     pub tx: Tx,
     pub address: SocketAddr,
-    pub shared: Arc<Shared>
+    pub context: Arc<Context>
 }
 
 impl Player {
-    pub fn new(address: SocketAddr, tx: Tx, shared: Arc<Shared>) -> Self {
-        let entity_id = shared.next_entity_id();
-
-        Player {
+    pub fn new(address: SocketAddr, tx: Tx, context: Arc<Context>) -> Fallible<Self> {
+        let entity_id = context.next_entity_id();
+        let location = *context.levels.read().unwrap().get(0).unwrap().spawnpoints.get(0).unwrap();
+        let player = Player {
             name: ":upside_down:".into(),
-            location: None,
+            location,
             tx,
             address,
-            shared,
+            context,
             entity_id
-        }
+        };
+
+        Ok(player)
+    }
+
+    pub fn send(&self, message: ServerMessages) -> Fallible<()> {
+        Ok(self.tx.clone().try_send(message)?)
     }
 }
 
@@ -42,16 +48,13 @@ impl<'b> WriteToBuilder<'b, WIPOffset<common::Player<'b>>> for Player {
         let Player { name, location, .. } = self;
 
         let name = builder.create_string(&name);
-        let location = location
-            .as_ref()
-            .map(|location| location.write(builder))
-            .transpose()?;
+        let location = location.write(builder)?;
 
         let player = common::Player::create(
             &mut builder,
             &common::PlayerArgs {
                 name: Some(name),
-                location: location.as_ref()
+                location: Some(&location)
             }
         );
 

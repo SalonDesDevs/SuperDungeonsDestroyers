@@ -1,7 +1,7 @@
 use super::Tx;
 use super::codec::MessageCodec;
 
-use crate::game::structure::{ Shared, Player };
+use crate::game::structure::{ Context, Player };
 use crate::game::listener::Listener;
 
 use tokio::prelude::*;
@@ -12,7 +12,7 @@ use tokio::codec::Framed;
 use std::sync::Arc;
 use std::net::SocketAddr;
 
-use failure::Error;
+use failure::{ Error, Fallible };
 
 use log::{ error, warn, debug } ;
 
@@ -21,23 +21,23 @@ pub struct Connection {
 }
 
 pub struct Peer {
-    pub shared: Arc<Shared>,
+    pub context: Arc<Context>,
 
     pub address: SocketAddr,
     pub tx: Tx,
 }
 
 impl Peer {
-    fn new(address: SocketAddr, shared: Arc<Shared>, tx: Tx) -> Self {
-        let player = Player::new(address.clone(), tx.clone(), shared.clone());
+    fn new(address: SocketAddr, context: Arc<Context>, tx: Tx) -> Fallible<Self> {
+        let player = Player::new(address.clone(), tx.clone(), context.clone())?;
 
-        shared.players.write().unwrap().insert(address, player);
+        context.players.write().unwrap().insert(address, player);
 
-        Peer {
-            shared,
+        Ok(Peer {
+            context,
             address,
             tx,
-        }
+        })
     }
 }
 
@@ -49,10 +49,10 @@ impl Connection {
         }
     }
 
-    pub fn process(self, shared: Arc<Shared>) -> impl Future<Item = (), Error = ()> {
+    pub fn process(self, context: Arc<Context>) -> Fallible<impl Future<Item = (), Error = ()>> {
         let address = self.socket.peer_addr().unwrap();
         let (tx, rx) = mpsc::unbounded_channel();
-        let peer = Peer::new(address, shared.clone(), tx);
+        let peer = Peer::new(address, context.clone(), tx)?;
         let (sink, stream) = Framed::new(self.socket, MessageCodec::default()).split();
 
         let to_client = rx
@@ -71,13 +71,15 @@ impl Connection {
             .and_then(move |_| {
                 warn!("Got disconnected");
 
-                shared.players.write().unwrap().remove(&address);
+                context.players.write().unwrap().remove(&address);
 
                 Ok(())
             });
 
-        to_client.join(from_client)
+        let future = to_client.join(from_client)
             .map(|_| ())
-            .map_err(|error| error!("{}", error))
+            .map_err(|error| error!("{}", error));
+
+        Ok(future)
     }
 }
