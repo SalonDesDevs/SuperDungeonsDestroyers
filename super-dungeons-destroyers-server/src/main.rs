@@ -6,6 +6,7 @@ pub mod network;
 pub mod game;
 pub mod utils;
 pub mod events;
+pub mod error;
 
 use crate::network::Connection;
 use crate::game::structure::Context;
