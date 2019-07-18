@@ -1,5 +1,6 @@
 use crate::events;
 use crate::binding;
+use crate::error::{ NoneError, UnionNoneError };
 
 use flatbuffers::{ FlatBufferBuilder, WIPOffset as W };
 use failure::Fallible;
@@ -24,38 +25,85 @@ impl<'b> FlatRead<'b, binding::client::Event<'b>> for events::client::Event {
 
 // Common implementations
 
-impl FlatRead<'_, binding::common::Direction> for events::common::Direction {
-    fn read(item: binding::common::Direction) -> Fallible<Self> {
-        unimplemented!()
+use binding::common::Direction as BDirection;
+use events::common::Direction as EDirection;
+
+impl FlatRead<'_, BDirection> for EDirection {
+    fn read(item: BDirection) -> Fallible<Self> {
+        let direction = match item {
+            BDirection::Right => EDirection::Right,
+            BDirection::Left => EDirection::Left,
+            BDirection::Up => EDirection::Up,
+            BDirection::Down => EDirection::Down
+        };
+
+        Ok(direction)
     }
 }
 
-impl<'b> FlatRead<'b, binding::common::Player<'b>> for events::common::Player {
-    fn read(item: binding::common::Player<'b>) -> Fallible<Self> {
-        unimplemented!()
+use binding::common::Player as BPlayer;
+use events::common::Player as EPlayer;
+
+impl<'b> FlatRead<'b, BPlayer<'b>> for EPlayer {
+    fn read(item: BPlayer<'b>) -> Fallible<Self> {
+        let name = item.name().ok_or(NoneError)?.to_string();
+        let location = ELocation::read(*item.location().ok_or(NoneError)?)?;
+
+        let player = EPlayer {
+            name,
+            location
+        };
+
+        Ok(player)
     }
 }
 
-impl FlatRead<'_, binding::common::Location> for events::common::Location {
-    fn read(item: binding::common::Location) -> Fallible<Self> {
-        unimplemented!()
+use binding::common::Location as BLocation;
+use events::common::Location as ELocation;
+
+impl FlatRead<'_, BLocation> for ELocation {
+    fn read(item: BLocation) -> Fallible<Self> {
+        let location = ELocation {
+            level: item.level(),
+            x: item.x(),
+            y: item.y(),
+        };
+
+        Ok(location)
     }
 }
 
-impl FlatRead<'_, binding::common::EntityKind> for events::common::EntityKind {
-    fn read(item: binding::common::EntityKind) -> Fallible<Self> {
-        unimplemented!()
+use binding::common::{ Entity as BEntity, EntityKind as BEntityKind };
+use events::common::{ Entity as EEntity, EntityKind as EEntityKind };
+
+impl<'b> FlatRead<'b, BEntity<'b>> for EEntity {
+    fn read(item: BEntity<'b>) -> Fallible<Self> {
+        let kind = match item.kind_type() {
+            BEntityKind::Player => EEntityKind::Player(EPlayer::read(item.kind_as_player().ok_or(NoneError)?)?),
+            BEntityKind::NONE => Err(UnionNoneError)?
+        };
+
+        let entity = EEntity {
+            entity_id: item.entity_id(),
+            kind
+        };
+
+        Ok(entity)
     }
 }
 
-impl<'b> FlatRead<'b, binding::common::Entity<'b>> for events::common::Entity {
-    fn read(item: binding::common::Entity<'b>) -> Fallible<Self> {
-        unimplemented!()
-    }
-}
+use binding::common::LevelEnvironment as BLevelEnvironment;
+use events::common::LevelEnvironment as ELevelEnvironment;
 
-impl FlatRead<'_, binding::common::LevelEnvironment> for events::common::LevelEnvironment {
-    fn read(item: binding::common::LevelEnvironment) -> Fallible<Self> {
-        unimplemented!()
+impl FlatRead<'_, BLevelEnvironment> for ELevelEnvironment {
+    fn read(item: BLevelEnvironment) -> Fallible<Self> {
+        let environment = match item {
+            BLevelEnvironment::Bottom => ELevelEnvironment::Bottom,
+            BLevelEnvironment::Cave => ELevelEnvironment::Cave,
+            BLevelEnvironment::Top => ELevelEnvironment::Top,
+            BLevelEnvironment::CollisionsTester => ELevelEnvironment::CollisionsTester
+        };
+
+        Ok(environment)
     }
 }
