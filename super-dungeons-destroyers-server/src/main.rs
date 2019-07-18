@@ -1,9 +1,11 @@
 #![feature(async_await, vec_remove_item)]
+#![allow(warnings)]
 
+pub mod binding;
 pub mod network;
 pub mod game;
-pub mod binding;
 pub mod utils;
+pub mod events;
 
 use crate::network::Connection;
 use crate::game::structure::Context;

@@ -1,5 +1,4 @@
 use crate::binding::common;
-use crate::utils::WriteToBuilder;
 
 use super::Location;
 
@@ -111,26 +110,27 @@ impl Level {
     }
 }
 
-impl Into<common::LevelKind> for LevelKind {
-    fn into(self) -> common::LevelKind {
-        match self {
-            LevelKind::Bottom => common::LevelKind::Bottom,
-            LevelKind::Cave => common::LevelKind::Cave,
-            LevelKind::Top => common::LevelKind::Top,
-            LevelKind::CollisionsTester => common::LevelKind::CollisionsTester
-        }
-    }
-}
+// impl Into<common::LevelKind> for LevelKind {
+//     fn into(self) -> common::LevelKind {
+//         match self {
+//             LevelKind::Bottom => common::LevelKind::Bottom,
+//             LevelKind::Cave => common::LevelKind::Cave,
+//             LevelKind::Top => common::LevelKind::Top,
+//             LevelKind::CollisionsTester => common::LevelKind::CollisionsTester
+//         }
+//     }
+// }
 
-impl<'b> WriteToBuilder<'b, WIPOffset<common::Level<'b>>> for Level {
-    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<WIPOffset<common::Level<'b>>> {
-        let room = common::Level::create(
-            &mut builder,
-            &common::LevelArgs {
-                kind: self.kind.clone().into()
-            }
-        );
-
-        Ok(room)
-    }
-}
+// impl<'b> FlatWrite<'b, WIPOffset<common::Level<'b>>> for Level {
+//     fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<WIPOffset<common::Level<'b>>> {
+//         let room = common::Level::create(
+//             &mut builder,
+//             &common::LevelArgs {
+//                 kind: self.kind.clone().into()
+//             }
+//         );
+//
+//         Ok(room)
+//     }
+// }
+//
