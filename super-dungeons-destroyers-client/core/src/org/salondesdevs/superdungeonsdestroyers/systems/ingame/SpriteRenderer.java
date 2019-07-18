@@ -28,7 +28,7 @@ public class SpriteRenderer extends IteratingSystem {
     Mapper<Position> positionMapper;
 
     @Inject
-    CameraService cameraService;
+    CameraSystem cameraService;
 
     @Override
     public void begin() {

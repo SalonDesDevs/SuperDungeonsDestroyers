@@ -12,7 +12,6 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSy
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.naming.directory.DirContext;
 
 @Singleton
 public class InputSystem extends IteratingSystem implements InputProcessor {
@@ -20,7 +19,7 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     IntArray keys;
 
     @Inject
-    CameraService cameraService;
+    CameraSystem cameraService;
 
     @Inject
     NetworkSystem networkSystem;

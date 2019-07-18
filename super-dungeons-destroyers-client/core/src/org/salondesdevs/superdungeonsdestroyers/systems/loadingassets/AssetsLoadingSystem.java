@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.loadingassets;
 
+import SDD.Common.LevelKind;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -71,18 +72,27 @@ public class AssetsLoadingSystem extends BaseSystem {
                         List<FileHandle> handles = Arrays.asList(directory.list());
                         Collections.sort(handles, Comparator.comparing(FileHandle::name));
 
-
                         for (FileHandle fileHandle : handles) {
-                            this.assetManager.load(fileHandle.path(), componentType);
+                            this.load(fileHandle.path(), componentType);
                         }
                     } else {
                         // Wrong.
                     }
                 } else {
-                    this.assetManager.load(assetAnnotation.path(), type);
+                    this.load(assetAnnotation.path(), type);
                 }
             }
         }
+    }
+
+    private void load(String path, Class<?> type) {
+//        if (type == TiledMap.class) {
+//            TmxMapLoader.Parameters parameters = new TmxMapLoader.Parameters();
+//            this.assetManager.load(path, TiledMap.class, parameters);
+//        }
+//        else {
+            this.assetManager.load(path, type);
+//        }
     }
 
 
@@ -123,6 +133,12 @@ public class AssetsLoadingSystem extends BaseSystem {
                 }
             }
         }
+
+        assets.rooms = new TiledMap[4];
+        assets.rooms[LevelKind.Bottom] = assets.bottom;
+        assets.rooms[LevelKind.Cave] = assets.cave;
+        assets.rooms[LevelKind.Top] = assets.top;
+        assets.rooms[LevelKind.CollisionsTester] = assets.collisionsTester;
     }
 
     @Override

@@ -7,8 +7,9 @@ public final class LevelKind {
   public static final byte Bottom = 0;
   public static final byte Cave = 1;
   public static final byte Top = 2;
+  public static final byte CollisionsTester = 3;
 
-  public static final String[] names = { "Bottom", "Cave", "Top", };
+  public static final String[] names = { "Bottom", "Cave", "Top", "CollisionsTester", };
 
   public static String name(int e) { return names[e]; }
 }

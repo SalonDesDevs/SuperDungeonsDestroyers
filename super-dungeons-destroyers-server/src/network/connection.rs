@@ -14,7 +14,7 @@ use std::net::SocketAddr;
 
 use failure::Error;
 
-use log::{ error, warn, info } ;
+use log::{ error, warn, debug } ;
 
 pub struct Connection {
     socket: TcpStream
@@ -57,14 +57,14 @@ impl Connection {
 
         let to_client = rx
             .map_err(Error::from)
-            .inspect(|_| info!("Sending message(s) to the client."))
+            .inspect(|_| debug!("Sending message(s) to the client."))
             .forward(sink)
             .map_err(Error::from);
 
         let from_client = stream
             .map_err(Error::from)
             .for_each(move |messages| {
-                info!("Received message(s) from the client.");
+                debug!("Received message(s) from the client.");
 
                 Listener::handle_messages(&peer, messages)
             })

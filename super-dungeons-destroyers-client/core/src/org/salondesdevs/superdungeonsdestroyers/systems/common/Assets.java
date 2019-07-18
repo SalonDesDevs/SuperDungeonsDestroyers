@@ -19,6 +19,8 @@ import java.lang.annotation.Target;
  * To register an asset, simply create a public field and annotate it with {@link Assets.Asset}.
  */
 public class Assets extends Service {
+
+    public static final String ROOMS_FOLDER = "rooms/";
     @Asset(path = "title.png")
     public Texture title;
 
@@ -31,7 +33,18 @@ public class Assets extends Service {
     @Asset(path = "player.png")
     public Texture player;
 
-    @Asset(path = "rooms/")
+    @Asset(path = ROOMS_FOLDER + "bottom.tmx")
+    public TiledMap bottom;
+
+    @Asset(path = ROOMS_FOLDER + "top.tmx")
+    public TiledMap top;
+
+    @Asset(path = ROOMS_FOLDER + "cave.tmx")
+    public TiledMap cave;
+
+    @Asset(path = ROOMS_FOLDER + "collisions_tester.tmx")
+    public TiledMap collisionsTester;
+
     public TiledMap[] rooms;
 
     @Retention(RetentionPolicy.RUNTIME)

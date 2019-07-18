@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="5">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="8">
  <tileset firstgid="1" source="../tiledmaps/dungeon_combined.tsx"/>
  <layer id="1" name="ground" width="16" height="16">
   <data encoding="csv">
-65,66,66,66,66,66,66,272,272,66,66,66,66,66,66,67,
+771,66,66,66,66,66,66,272,272,66,66,66,66,66,66,67,
 65,195,195,195,195,195,195,195,195,195,195,195,195,195,195,67,
 65,195,195,195,195,195,195,195,195,195,195,195,195,195,195,67,
 65,195,195,195,195,195,195,195,195,195,195,195,195,195,195,67,
@@ -21,10 +21,10 @@
 210,210,210,210,210,210,151,152,153,154,210,210,210,210,210,210
 </data>
  </layer>
- <objectgroup id="3" name="objects">
+ <objectgroup id="3" name="objects" visible="0">
   <object id="1" name="spawn" x="128" y="224" width="16" height="16">
    <properties>
-    <property name="spawn" type="bool" value="true"/>
+    <property name="spawn" type="bool" value="false"/>
    </properties>
   </object>
   <object id="2" name="spawn" x="112" y="224" width="16" height="16">
@@ -34,16 +34,17 @@
   </object>
   <object id="3" name="spawn" x="112" y="208" width="16" height="16">
    <properties>
-    <property name="spawn" type="bool" value="true"/>
+    <property name="spawn" type="bool" value="false"/>
    </properties>
   </object>
   <object id="4" name="spawn" x="128" y="208" width="16" height="16">
    <properties>
-    <property name="spawn" type="bool" value="true"/>
+    <property name="spawn" type="bool" value="false"/>
    </properties>
   </object>
+  <object id="7" name="zerozero" gid="771" x="0" y="0" width="16" height="16"/>
  </objectgroup>
- <layer id="2" name="overlay" width="16" height="16">
+ <layer id="2" name="overlay" width="16" height="16" visible="0">
   <data encoding="csv">
 0,18,18,18,18,18,18,18,18,18,18,18,18,18,18,0,
 0,147,0,0,0,0,0,0,0,0,0,0,0,0,0,84,

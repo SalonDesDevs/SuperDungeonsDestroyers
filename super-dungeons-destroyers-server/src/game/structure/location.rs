@@ -5,7 +5,7 @@ use flatbuffers::FlatBufferBuilder;
 
 use failure::Fallible;
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Location {
     pub level: u8,
     pub x: u8,

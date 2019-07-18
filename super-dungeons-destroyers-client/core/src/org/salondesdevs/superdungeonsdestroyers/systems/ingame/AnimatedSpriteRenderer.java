@@ -26,7 +26,7 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
     Mapper<Position> positionMapper;
 
     @Inject
-    CameraService cameraService;
+    CameraSystem cameraService;
 
     float stateTime = 0.0f;
 

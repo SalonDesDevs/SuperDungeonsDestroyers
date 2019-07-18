@@ -66,9 +66,7 @@ impl GameLoop {
             if player.location.is_some() {
                 continue;
             }
-            if level.edges.map(|location| location == player.location).enumerate() > 0 {
-                continue;
-            }
+
             player.location = level.spawnpoints.get(0).cloned();
         }
     }
@@ -101,7 +99,8 @@ impl GameLoop {
                 &mut builder,
                 &server::EnvironmentArgs {
                     level: Some(level),
-                    entities: Some(entities)
+                    entities: Some(entities),
+                    me: player.entity_id
                 }
             );
 

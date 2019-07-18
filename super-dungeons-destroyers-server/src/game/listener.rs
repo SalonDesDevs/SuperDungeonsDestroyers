@@ -1,5 +1,6 @@
 use crate::network::{ ClientMessages, ServerMessages, Peer };
 use crate::binding::{ client, server, common };
+use crate::game::structure::{ Location };
 
 use std::io;
 
@@ -7,9 +8,9 @@ use failure::Fallible;
 
 use flatbuffers::{ WIPOffset, FlatBufferBuilder };
 
-use log::debug;
+use log::{ debug, info };
 
-use std::cmp::min;
+use std::cmp::{ max, min };
 
 pub struct Listener;
 
@@ -85,7 +86,9 @@ impl Listener {
                 let mut players = peer.shared.players.write().unwrap();
                 let player = players.get_mut(&peer.address).unwrap();
 
-                if let Some(mut location) = player.location {
+                if let Some(ref mut location) = player.location {
+                    let levels = peer.shared.levels.read().unwrap();
+
                     let x_move = match direction {
                         common::Direction::Right => 1,
                         common::Direction::Left => -1,
@@ -98,8 +101,19 @@ impl Listener {
                         _ => 0,
                     };
 
-                    location.x = min(location.x as i16 + x_move, 0) as u8;
-                    location.y = min(location.y as i16 + y_move, 0) as u8;
+                    let current_level = levels.get(location.level as usize).unwrap();
+
+                    let future_location = Location {
+                        level: location.level,
+                        x: min(max(location.x as i32 + x_move, 0), (current_level.inner_map.width - 1) as i32) as u8,
+                        y: min(max(location.y as i32 + y_move, 0), (current_level.inner_map.height - 1) as i32) as u8
+                    };
+
+                    info!("Move? {:?} {:?} {:?}", location, future_location, !current_level.solid_locations.contains(&future_location));
+
+                    if !current_level.solid_locations.contains(&future_location) {
+                        *location = future_location;
+                    }
                 }
 
                 Ok(Vec::new())

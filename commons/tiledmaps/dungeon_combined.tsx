@@ -200,4 +200,9 @@
    <frame tileid="655" duration="130"/>
   </animation>
  </tile>
+ <tile id="770">
+  <properties>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
+ </tile>
 </tileset>

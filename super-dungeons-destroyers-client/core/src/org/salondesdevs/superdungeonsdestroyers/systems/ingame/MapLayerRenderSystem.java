@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -11,6 +12,8 @@ import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -23,11 +26,13 @@ import java.util.Map;
  */
 public abstract class MapLayerRenderSystem extends IteratingSystem {
 
+    private static final Logger logger = LoggerFactory.getLogger( MapLayerRenderSystem.class );
+
     @Inject
     Mapper<Terrain> terrainMapper;
 
     @Inject
-    CameraService cameraService;
+    CameraSystem cameraService;
 
     @Inject
     Assets assets;
@@ -50,6 +55,7 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     }
 
     private void createAndStoreRenderer(TiledMap tiledMap) {
+        logger.debug("Creating renderer for {} with layers {}", tiledMap, Arrays.toString(this.layersToRender));
         TiledMapRenderer tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
         IntList list = new IntArrayList();
@@ -58,6 +64,7 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
 
         for (int i = 0; i < allLayers.size; i++) {
             TiledMapTileLayer layer = allLayers.get(i);
+
             if (Arrays.binarySearch(layersToRender, layer.getName()) >= 0) {
                 list.add(i);
             }

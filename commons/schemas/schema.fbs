@@ -2,7 +2,8 @@ namespace SDD.Common;
     enum LevelKind: uint8 {
         Bottom,
         Cave,
-        Top
+        Top,
+        CollisionsTester
     }
 
     table Level {
@@ -29,7 +30,7 @@ namespace SDD.Common;
     union EntityKind {
         Player,
     }
-    
+
     table Entity {
         entity_id: uint64;
         kind: EntityKind;
@@ -69,6 +70,7 @@ namespace SDD.Server;
     table Environment {
         level: SDD.Common.Level;
         entities: [SDD.Common.Entity];
+        me: uint64;
     }
 
     union Content {

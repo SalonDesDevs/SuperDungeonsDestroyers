@@ -1,7 +1,7 @@
 use crate::binding::common;
 use crate::utils::WriteToBuilder;
 
-use super::{ Shared, Location, StaticSolid };
+use super::{ Shared, Location };
 
 use std::sync::Arc;
 use std::path::Path;
@@ -16,16 +16,17 @@ use tiled::{ Map, PropertyValue };
 pub enum LevelKind {
     Bottom,
     Cave,
-    Top
+    Top,
+    CollisionsTester
 }
 
 pub struct Level {
     pub level: u8,
     pub kind: LevelKind,
     pub spawnpoints: Vec<Location>,
-    pub edges: Vec<StaticSolid>,
+    pub solid_locations: Vec<Location>,
+    pub inner_map: Map,
 
-    _map: Map,
     _shared: Arc<Shared>
 }
 
@@ -35,6 +36,7 @@ impl AsRef<Path> for LevelKind {
             LevelKind::Bottom => "./commons/rooms/bottom.tmx",
             LevelKind::Cave => "./commons/rooms/cave.tmx",
             LevelKind::Top => "./commons/rooms/top.tmx",
+            LevelKind::CollisionsTester => "./commons/rooms/collisions_tester.tmx",
         };
 
         Path::new(path)
@@ -43,16 +45,17 @@ impl AsRef<Path> for LevelKind {
 
 impl Level {
     pub fn new(level: u8, kind: LevelKind, shared: Arc<Shared>) -> Fallible<Self> {
-        let map = tiled::parse_file(kind.as_ref())?;
-        let spawnpoints = Level::spawnpoints(level, &map)?;
-        let edges = Level::edges(level, &map)?;
+        let inner_map = tiled::parse_file(kind.as_ref())?;
+        let spawnpoints = Level::spawnpoints(level, &inner_map)?;
+        let solid_locations = Level::solid_locations(level, &inner_map)?;
+
         let level = Level {
             level,
             kind,
             spawnpoints,
-            edges,
+            solid_locations,
+            inner_map,
 
-            _map: map,
             _shared: shared
         };
 
@@ -80,28 +83,36 @@ impl Level {
         Ok(spawnpoints)
     }
 
-    fn edges(level:u8, map: &Map) -> Fallible<Vec<StaticSolid>> {
-        let Map { object_groups, tile_width, tile_height, .. } = map;
+    fn solid_locations(level:u8, map: &Map) -> Fallible<Vec<Location>> {
+        let Map { tilesets, layers, .. } = map;
 
-        let group = object_groups
+        let solid_tileset = tilesets
             .iter()
-            .find(|group| group.name == "objects")
-            .ok_or(failure::err_msg("Missing objects in map"))?;
+            .find(|set| set.name == "dungeon_combined")
+            .ok_or(failure::err_msg("Can't find the tileset"))?;
 
-        let edges = group.objects
+        let solid_tileset: Vec<u32> = solid_tileset.tiles
             .iter()
-            .filter(|object| object.properties.get("solid").map(|value| value == &PropertyValue::BoolValue(true)).unwrap_or(false))
-            .map(|object| StaticSolid {
-                location: Location {
-                    level,
-                    x: ((object.x as u32) / tile_width) as u8,
-                    y: ((object.y as u32) / tile_height) as u8,
-                },
-                solidType: SolidType::WALL
-                
-            })
+            .filter(|tile| tile.properties.get("solid").map(
+                |value| value == &PropertyValue::BoolValue(true)).unwrap_or(false)
+            )
+            .map(|tile| tile.id + solid_tileset.first_gid)
             .collect();
-        Ok(edges)
+
+        let tiles: Vec<Location> = layers
+            .iter()
+            .flat_map(|layer| layer.tiles.iter().enumerate().flat_map(
+                |(y, lines)| lines.iter().enumerate().map(move |(x, tile)| (x, y, tile))
+            ))
+            .filter(|(_, _, tile)| solid_tileset.contains(tile))
+            .map(|(x, y, _)| Location {
+                level,
+                x: x as u8,
+                y: y as u8
+            })
+            .collect::<Vec<Location>>();
+
+        Ok(tiles)
     }
 }
 
@@ -110,7 +121,8 @@ impl Into<common::LevelKind> for LevelKind {
         match self {
             LevelKind::Bottom => common::LevelKind::Bottom,
             LevelKind::Cave => common::LevelKind::Cave,
-            LevelKind::Top => common::LevelKind::Top
+            LevelKind::Top => common::LevelKind::Top,
+            LevelKind::CollisionsTester => common::LevelKind::CollisionsTester
         }
     }
 }
