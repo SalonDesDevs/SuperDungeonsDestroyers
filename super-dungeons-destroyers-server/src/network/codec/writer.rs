@@ -48,38 +48,87 @@ impl<'b> FlatWrite<'b, W<binding::server::Event<'b>>> for events::server::Event 
 
 // Common implementations
 
-impl FlatWrite<'_, binding::common::Direction> for events::common::Direction {
-    fn write(&self, builder: &mut FlatBufferBuilder) -> Fallible<binding::common::Direction> {
-        unimplemented!()
+use binding::common::Direction as BDirection;
+use events::common::Direction as EDirection;
+
+impl FlatWrite<'_, BDirection> for EDirection {
+    fn write(&self, _: &mut FlatBufferBuilder) -> Fallible<BDirection> {
+        let direction = match self {
+            EDirection::Up => BDirection::Up,
+            EDirection::Down => BDirection::Down,
+            EDirection::Right => BDirection::Right,
+            EDirection::Left => BDirection::Left
+        };
+
+        Ok(direction)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::common::Player<'b>>> for events::common::Player {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::common::Player<'b>>> {
-        unimplemented!()
+use binding::common::Player as BPlayer;
+use events::common::Player as EPlayer;
+
+impl<'b> FlatWrite<'b, W<BPlayer<'b>>> for EPlayer {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<BPlayer<'b>>> {
+        let name = builder.create_string(&self.name);
+        let location = self.location.write(&mut builder)?;
+
+        let player = BPlayer::create(
+            &mut builder,
+            &binding::common::PlayerArgs {
+                name: Some(name),
+                location: Some(&location)
+            }
+        );
+
+        Ok(player)
     }
 }
 
-impl FlatWrite<'_, binding::common::Location> for events::common::Location {
-    fn write(&self, builder: &mut FlatBufferBuilder) -> Fallible<binding::common::Location> {
-        unimplemented!()
+use binding::common::Location as BLocation;
+use events::common::Location as ELocation;
+
+impl FlatWrite<'_, BLocation> for ELocation {
+    fn write(&self, _: &mut FlatBufferBuilder) -> Fallible<BLocation> {
+        let location = BLocation::new(self.level, self.x, self.y);
+
+        Ok(location)
     }
 }
 
-impl FlatWrite<'_, binding::common::EntityKind> for events::common::EntityKind {
-    fn write(&self, builder: &mut FlatBufferBuilder) -> Fallible<binding::common::EntityKind> {
-        unimplemented!()
+use binding::common::{ Entity as BEntity, EntityKind as BEntityKind };
+use events::common::{ Entity as EEntity, EntityKind as EEntityKind };
+
+impl<'b> FlatWrite<'b, W<BEntity<'b>>> for EEntity {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<BEntity<'b>>> {
+        let (kind_type, kind) = match &self.kind {
+            EEntityKind::Player(player) => (BEntityKind::Player, player.write(&mut builder)?)
+        };
+
+        let entity = BEntity::create(
+            &mut builder,
+            &binding::common::EntityArgs {
+                entity_id: self.entity_id,
+                kind: Some(kind.as_union_value()),
+                kind_type
+            }
+        );
+
+        Ok(entity)
     }
 }
 
-impl<'b> FlatWrite<'b, W<binding::common::Entity<'b>>> for events::common::Entity {
-    fn write(&self, builder: &mut FlatBufferBuilder<'b>) -> Fallible<W<binding::common::Entity<'b>>> {
-        unimplemented!()
-    }
-}
+use binding::common::LevelEnvironment as BLevelEnvironment;
+use events::common::LevelEnvironment as ELevelEnvironment;
 
-impl FlatWrite<'_, binding::common::LevelEnvironment> for events::common::LevelEnvironment {
-    fn write(&self, builder: &mut FlatBufferBuilder) -> Fallible<binding::common::LevelEnvironment> {
-        unimplemented!()
+impl FlatWrite<'_, BLevelEnvironment> for ELevelEnvironment {
+    fn write(&self, _: &mut FlatBufferBuilder) -> Fallible<BLevelEnvironment> {
+        let environment = match self {
+            ELevelEnvironment::Bottom => BLevelEnvironment::Bottom,
+            ELevelEnvironment::Cave => BLevelEnvironment::Cave,
+            ELevelEnvironment::Top => BLevelEnvironment::Top,
+            ELevelEnvironment::CollisionsTester => BLevelEnvironment::CollisionsTester,
+        };
+
+        Ok(environment)
     }
 }
