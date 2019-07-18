@@ -1,10 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -24,12 +23,8 @@ import java.util.Map;
  * If a {@link org.salondesdevs.superdungeonsdestroyers.components.Terrain} entity is present, will use it to render the
  * specified map layers.
  */
-public abstract class MapLayerRenderSystem extends IteratingSystem {
-
-    private static final Logger logger = LoggerFactory.getLogger( MapLayerRenderSystem.class );
-
-    @Inject
-    Mapper<Terrain> terrainMapper;
+public class MapLayerRenderer {
+    private static final Logger logger = LoggerFactory.getLogger( MapLayerRenderer.class );
 
     @Inject
     CameraSystem cameraService;
@@ -37,40 +32,34 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     @Inject
     Assets assets;
 
-    private String[] layersToRender;
-
-    public MapLayerRenderSystem(String... layers) {
-        super(Aspect.all(Terrain.class));
-        this.layersToRender = layers;
+    public MapLayerRenderer() {
         renderers = new HashMap<>();
-        this.layers = new HashMap<>();
+        layers = new HashMap<>();
     }
 
-    @Override
-    public void initialize() {
-        this.createAndStoreRenderer(assets.testMap);
+    public void initialize(String... layersToRender) {
+        this.createAndStoreRenderer(assets.testMap, layersToRender);
         for (TiledMap tiledMap : assets.rooms) {
-            this.createAndStoreRenderer(tiledMap);
+            this.createAndStoreRenderer(tiledMap, layersToRender);
         }
     }
 
-    private void createAndStoreRenderer(TiledMap tiledMap) {
+    private void createAndStoreRenderer(TiledMap tiledMap, String... layersToRender) {
         TiledMapRenderer tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
         IntList list = new IntArrayList();
 
-        Array<TiledMapTileLayer> allLayers = TiledMapUtils.getLayers(tiledMap);
+        Array<MapLayer> allLayers = TiledMapUtils.getAllLayers(tiledMap);
 
         for (int i = 0; i < allLayers.size; i++) {
-            TiledMapTileLayer layer = allLayers.get(i);
+            MapLayer layer = allLayers.get(i);
 
             if (Arrays.binarySearch(layersToRender, layer.getName()) >= 0) {
                 list.add(i);
             }
         }
 
-
-        logger.info("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(this.layersToRender), list.toArray());
+        logger.debug("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(layersToRender), list.toArray());
 
         this.layers.put(tiledMap, list.toIntArray());
         this.renderers.put(tiledMap, tiledMapRenderer);
@@ -79,20 +68,12 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     private Map<TiledMap, TiledMapRenderer> renderers;
     private Map<TiledMap, int[]> layers;
 
-    @Override
-    public void process(int entity) {
-        Terrain terrain = terrainMapper.get(entity);
-        this.render(terrain);
-    }
-
     public void render(Terrain terrain) {
         TiledMapRenderer tiledMapRenderer = this.renderers.get(terrain.tiledMap);
 
         if (tiledMapRenderer == null) {
             throw new IllegalStateException("Renderer not registered for map " + terrain.tiledMap);
         }
-
-        logger.info("rendering {}={}", Arrays.toString(this.layersToRender), this.layers.get(terrain.tiledMap));
 
         tiledMapRenderer.setView(cameraService.camera);
         tiledMapRenderer.render(this.layers.get(terrain.tiledMap));

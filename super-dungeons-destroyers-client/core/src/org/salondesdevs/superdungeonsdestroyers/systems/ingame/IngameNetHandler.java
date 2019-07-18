@@ -15,6 +15,7 @@ import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
@@ -69,6 +70,9 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     Assets assetService;
 
     @Inject
+    Mapper<Size> sizeMapper;
+
+    @Inject
     World world;
 
     private static final int FRAME_COLS = 4, FRAME_ROWS = 1;
@@ -113,6 +117,8 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             cameraMapper.set(playerTest, Camera.INSTANCE);
 
             offsetMapper.set(playerTest, new Offset());
+
+            sizeMapper.set(playerTest, new Size(15, 20));
         }
 
         Level level = environment.level();
