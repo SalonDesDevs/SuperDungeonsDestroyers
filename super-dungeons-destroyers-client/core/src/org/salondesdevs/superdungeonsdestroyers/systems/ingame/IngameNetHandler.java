@@ -127,7 +127,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             if (entity.kindType() == EntityKind.Player) {
                 Player playerMessage = (Player) entity.kind(new Player());
                 if (positionMapper.has(id)) {
-//                    positionMapper.get(id).set(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y() - 1);
+                    positionMapper.get(id).set(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y() - 1);
                 }
                 else {
                     positionMapper.set(id, new TilePosition(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y()));

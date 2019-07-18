@@ -50,53 +50,69 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
 
     long lastMoved = 0l, now;
 
-    private static final long delay = 500l;
+    private static final long delay = 300l;
 
     @Override
     //TODO: this is temporary
     public void process(int entity) {
-        TilePosition tilePosition = positionMapper.get(entity);
-        Offset offset = offsetMapper.get(entity);
+
 
         now = TimeUtils.millis();
 
         if (now - lastMoved > delay) {
-            Runnable onEnd = null;
-            float start = 0;
-            Consumer<Float> setter = null;
+
+            byte direction = -1;
+
+            boolean pressedMoveKey = false;
+
 
             if (keys.contains(Input.Keys.UP)) {
-                start = -16.0f;
-                tilePosition.y++;
-                setter = offset::setY;
-                onEnd = () -> networkSystem.request().addMoveContent(Direction.Up).writeAndFlush();
+                direction = Direction.Up;
+                pressedMoveKey = true;
             }
             if (keys.contains(Input.Keys.DOWN)) {
-                start = 16.0f;
-                tilePosition.y--;
-                setter = offset::setY;
-                onEnd = () -> networkSystem.request().addMoveContent(Direction.Down).writeAndFlush();
+                direction = Direction.Down;
+                pressedMoveKey = true;
             }
             if (keys.contains(Input.Keys.LEFT)) {
-                start = 16.0f;
-                tilePosition.x--;
-                setter = offset::setX;
-                onEnd = () -> networkSystem.request().addMoveContent(Direction.Left).writeAndFlush();
+                direction = Direction.Left;
+                pressedMoveKey = true;
             }
             if (keys.contains(Input.Keys.RIGHT)) {
-                start = -16.0f;
-                tilePosition.x++;
-                setter = offset::setX;
-                onEnd = () -> networkSystem.request().addMoveContent(Direction.Right).writeAndFlush();
+                direction = Direction.Right;
+                pressedMoveKey = true;
             }
 
-            if (onEnd != null && now - lastMoved > delay) {
+            if (pressedMoveKey) {
+                TilePosition tilePosition = positionMapper.get(entity);
+                Offset offset = offsetMapper.get(entity);
                 lastMoved = now;
 
-                Animation<Float> animation = new Animation<>(0.25f, start, 0.0f, Interpolators.LINEAR_FLOAT, setter, onEnd);
-                animator.submit(animation);
+                switch (direction) {
+                    case Direction.Up:
+                        tilePosition.y++;
+                        break;
+                    case Direction.Down:
+                        tilePosition.y--;
+                        break;
+                    case Direction.Left:
+                        tilePosition.x--;
+                        break;
+                    case Direction.Right:
+                        tilePosition.x++;
+                        break;
+                }
+
+
+                networkSystem.request().addMoveContent(direction).writeAndFlush();
+
+                Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction);
+
+                animator.play(walkAnimation);
             }
         }
+
+
     }
 
     @Override

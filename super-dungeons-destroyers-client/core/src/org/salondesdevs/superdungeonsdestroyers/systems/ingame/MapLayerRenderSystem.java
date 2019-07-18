@@ -80,7 +80,11 @@ public abstract class MapLayerRenderSystem extends IteratingSystem {
     @Override
     public void process(int entity) {
         Terrain terrain = terrainMapper.get(entity);
+        this.render(terrain);
 
+    }
+
+    public void render(Terrain terrain) {
         TiledMapRenderer tiledMapRenderer = this.renderers.get(terrain.tiledMap);
 
         if (tiledMapRenderer == null) {
