@@ -1,4 +1,3 @@
-use crate::utils::WriteToBuilder;
 use crate::binding::common;
 
 use flatbuffers::FlatBufferBuilder;
@@ -23,10 +22,10 @@ impl Default for Location {
     }
 }
 
-impl<'b> WriteToBuilder<'b, common::Location> for Location {
-    fn write(&self, _: &mut FlatBufferBuilder<'b>) -> Fallible<common::Location> {
-        let Location { level, x, y } = self;
-
-        Ok(common::Location::new(*level, *x, *y))
-    }
-}
+// impl<'b> FlatWrite<'b, common::Location> for Location {
+//     fn write(&self, _: &mut FlatBufferBuilder<'b>) -> Fallible<common::Location> {
+//         let Location { level, x, y } = self;
+//
+//         Ok(common::Location::new(*level, *x, *y))
+//     }
+// }

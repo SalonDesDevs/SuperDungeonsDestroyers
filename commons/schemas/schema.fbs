@@ -1,14 +1,14 @@
 namespace SDD.Common;
-    enum LevelKind: uint8 {
+    enum LevelEnvironment: uint8 {
         Bottom,
         Cave,
         Top,
         CollisionsTester
     }
 
-    table Level {
-        kind: LevelKind;
-    }
+    // table Level {
+    //     kind: LevelKind;
+    // }
 
     struct Location {
         level: uint8;
@@ -38,55 +38,77 @@ namespace SDD.Common;
 
 namespace SDD.Client;
 
-    table Ping {
-        value: byte;
-    }
-
     table Move {
         direction: SDD.Common.Direction;
     }
 
-    union Content {
-        Ping,
+    union EventUnion {
         Move
     }
 
-    table Message {
-        content: Content;
+    table Event {
+        event: EventUnion;
     }
 
-    table Messages {
-        messages: [Message] (required);
+    table Events {
+        events: [Event] (required);
     }
 
-    root_type Messages;
+    root_type Events;
 
 namespace SDD.Server;
-
-    table Pong {
-        value: byte;
+    table Connect {
+        my_entity_id: uint64;
     }
 
-    table Environment {
-        level: SDD.Common.Level;
+    table Join {
+        player: SDD.Common.Player;
+    }
+
+    table Leave {
+        player: SDD.Common.Player;
+    }
+
+    table EntityMove {
+        entity_id: uint64;
+        location: SDD.Common.Location;
+    }
+
+    table ZoneInfo {
+        level: uint8;
+        environment: SDD.Common.LevelEnvironment;
         entities: [SDD.Common.Entity];
-        me: uint64;
     }
 
-    union Content {
-        Pong,
-        Environment
+    union EventUnion {
+        /// When you're successfully connected.
+        Connect,
+
+        /// When someone join the game.
+        Join,
+
+        /// When someone leave the game.
+        Leave,
+
+        /// When a entity move.
+        EntityMove,
+
+        /// When an entity was created.
+        EntityCreate: SDD.Common.Entity,
+
+        /// When you enter a new area.
+        ZoneInfo
     }
 
-    table Message {
-        content: Content;
+    table Event {
+        event: EventUnion;
     }
 
-    table Messages {
-        messages: [Message] (required);
+    table Events {
+        events: [Event] (required);
     }
 
-    root_type Messages;
+    root_type Events;
 
 namespace SDD.Mob;
 

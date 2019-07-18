@@ -2,8 +2,6 @@ pub mod player;
 pub mod location;
 pub mod level;
 
-use crate::network::ServerMessages;
-
 use std::sync::{ Mutex, RwLock };
 use std::collections::HashMap;
 use std::net::SocketAddr;
@@ -34,13 +32,13 @@ impl Context {
         Ok(context)
     }
 
-    pub fn broadcast(&self, message: ServerMessages) -> Fallible<()> {
-        for (_, player) in self.players.read().unwrap().iter() {
-            player.send(message.clone())?;
-        }
+    // pub fn broadcast(&self, message: ServerMessages) -> Fallible<()> {
+    //     for (_, player) in self.players.read().unwrap().iter() {
+    //         // TODO: player.send(message.clone())?;
+    //     }
 
-        Ok(())
-    }
+    //     Ok(())
+    // }
 
     pub fn next_entity_id(&self) -> u64 {
         let mut id = self.last_entity_id.lock().unwrap();
