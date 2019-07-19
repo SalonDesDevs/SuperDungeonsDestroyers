@@ -62,6 +62,7 @@ impl Ticker {
     fn send_events(&self) -> Fallible<()> {
         let events = self.context.consume_events();
         let clients = self.context.clients();
+        let entities = self.context.entities();
 
         let mut message_cache = MessageCache::default();
 
@@ -77,16 +78,36 @@ impl Ticker {
                     message_cache.push(&identifier, Event::Welcome(welcome));
                 },
 
-                Event::Join(_) => {
-                    unimplemented!()
+                Event::Join(join) => {
+                    for (identifier, _) in clients.iter() {
+                        message_cache.register(identifier.clone());
+                        message_cache.push(&identifier, Event::Join(join.clone()))
+                    }
                 },
 
-                Event::Leave(_) => {
-                    unimplemented!()
+                Event::Leave(leave) => {
+                    for (identifier, _) in clients.iter() {
+                        message_cache.register(identifier.clone());
+                        message_cache.push(&identifier, Event::Leave(leave.clone()))
+                    }
                 },
 
-                Event::EntityMove(_) => {
-                    unimplemented!()
+                Event::EntityMove(r#move) => {
+                    use crate::events::server::EntityMove;
+                    use crate::events::common::EntityKind;
+
+                    let EntityMove { location, .. } = r#move;
+
+                    for (identifier, _) in clients.iter() {
+                        let player = entities.get(&identifier.entity_id).ok_or(NoneError)?;
+
+                        if let EntityKind::Player(player) = &player.kind {
+                            if player.location.level == location.level {
+                                message_cache.register(identifier.clone());
+                                message_cache.push(&identifier, Event::EntityMove(r#move.clone()))
+                            }
+                        }
+                    }
                 },
 
                 Event::ZoneInfo(_) => {

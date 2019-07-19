@@ -12,7 +12,7 @@ pub struct Player {
     pub location: Location,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Location {
     pub level: u8,
     pub x: u8,

@@ -9,11 +9,12 @@ use std::sync::{ Mutex, Arc, RwLock, RwLockReadGuard };
 use std::collections::HashMap;
 
 type Clients = HashMap<network::ClientIdentifier, network::Client>;
+type Entities = HashMap<EntityId, Entity>;
 
 #[derive(Default)]
 struct InnerContext {
     id_counter: Mutex<EntityId>,
-    entities: RwLock<HashMap<EntityId, Entity>>,
+    entities: RwLock<Entities>,
     events: RwLock<Vec<server::Event>>,
     clients: RwLock<Clients>
 }
@@ -32,5 +33,9 @@ impl Context {
 
     pub fn clients(&self) -> RwLockReadGuard<Clients> {
         self.0.clients.read().unwrap()
+    }
+
+    pub fn entities(&self) -> RwLockReadGuard<Entities> {
+        self.0.entities.read().unwrap()
     }
 }
