@@ -3,7 +3,7 @@ mod reader;
 
 use crate::events;
 use crate::binding;
-use crate::error::NoneError;
+use crate::error::CorruptedError;
 
 use self::writer::FlatWrite;
 use self::reader::FlatRead;
@@ -51,7 +51,7 @@ impl Decoder for MessageCodec {
             let events = get_root::<binding::client::Events>(&bytes).events();
             let events: Vec<_> = (0..events.len())
                 .map(|event| events.get(event))
-                .map(|event| panic::catch_unwind(|| events::client::Event::read(event)).map_err(|_| Error::from(NoneError)))
+                .map(|event| panic::catch_unwind(|| events::client::Event::read(event)).map_err(|_| Error::from(CorruptedError)))
                 .collect::<Fallible<Fallible<_>>>()??;
 
             Ok(Some(events))
