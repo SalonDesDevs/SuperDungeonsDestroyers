@@ -7,6 +7,7 @@ import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyersClient;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("SuperDungeonsDestroyers v" + SuperDungeonsDestroyersClient.VERSION);
         new Lwjgl3Application(new SuperDungeonsDestroyersClient(), config);
     }
 }
