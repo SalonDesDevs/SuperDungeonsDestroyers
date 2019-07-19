@@ -28,7 +28,6 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     private List<Event> eventsToPost;
 
-
     @Override
     public void initialize() {
         eventsToPost = new ArrayList<>();
@@ -39,6 +38,8 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     @Override
     public void process() {
+        // Necessary because the InputProcessor methods are called by libgdx itself, outside of the World::process, so
+        // the systems order is not respected.
         eventsToPost.forEach(this.eventBus::post);
         eventsToPost.clear();
 
