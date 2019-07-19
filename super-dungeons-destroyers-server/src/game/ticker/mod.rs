@@ -110,8 +110,14 @@ impl Ticker {
                     }
                 },
 
-                Event::ZoneInfo(_) => {
-                    unimplemented!()
+                Event::ZoneInfo(zone_info) => {
+                    let (identifier, _) = clients
+                        .iter()
+                        .find(|&(identifier, _)| identifier == &zone_info.me)
+                        .ok_or(NoneError)?;
+
+                    message_cache.register(identifier.clone());
+                    message_cache.push(&identifier, Event::ZoneInfo(zone_info))
                 }
             }
         }
