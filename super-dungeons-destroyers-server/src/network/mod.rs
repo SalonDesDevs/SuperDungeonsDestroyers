@@ -6,8 +6,6 @@ use crate::events::server::Event;
 
 use tokio::sync::mpsc;
 
-use bytes::Bytes;
-
 use std::net::SocketAddr;
 
 pub use connection::{ Connection, Client };

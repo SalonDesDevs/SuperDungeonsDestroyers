@@ -76,7 +76,22 @@ impl Ticker {
                     message_cache.register(identifier.clone());
                     message_cache.push(&identifier, Event::Welcome(welcome));
                 },
-                _ => unimplemented!()
+
+                Event::Join(_) => {
+                    unimplemented!()
+                },
+
+                Event::Leave(_) => {
+                    unimplemented!()
+                },
+
+                Event::EntityMove(_) => {
+                    unimplemented!()
+                },
+
+                Event::ZoneInfo(_) => {
+                    unimplemented!()
+                }
             }
         }
 

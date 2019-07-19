@@ -3,7 +3,6 @@
 pub mod binding;
 pub mod network;
 pub mod game;
-pub mod utils;
 pub mod events;
 pub mod error;
 

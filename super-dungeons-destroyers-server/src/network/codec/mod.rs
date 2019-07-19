@@ -11,7 +11,7 @@ use self::reader::FlatRead;
 use tokio::codec::{ Encoder, Decoder };
 use bytes::BytesMut;
 
-use std::{ io, mem, panic };
+use std::{ mem, panic };
 use std::convert::TryInto;
 
 use flatbuffers::{ FlatBufferBuilder, get_root, WIPOffset as W };

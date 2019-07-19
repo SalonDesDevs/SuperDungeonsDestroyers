@@ -1,14 +1,12 @@
 mod id_counter;
 mod registration;
 
-use crate::events::common::{ Entity, EntityKind, EntityId, Player, Location };
+use crate::events::common::{ Entity, EntityId };
 use crate::events::server;
 use crate::network;
 
-use std::sync::{ Mutex, Arc, RwLock, RwLockReadGuard, RwLockWriteGuard };
+use std::sync::{ Mutex, Arc, RwLock, RwLockReadGuard };
 use std::collections::HashMap;
-
-use failure::Fallible;
 
 type Clients = HashMap<network::ClientIdentifier, network::Client>;
 

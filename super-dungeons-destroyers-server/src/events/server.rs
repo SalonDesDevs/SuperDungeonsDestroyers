@@ -1,4 +1,4 @@
-use super::common::{ Player, Location, Entity, LevelEnvironment, EntityId };
+use super::common::{ Location, Entity, LevelEnvironment, EntityId };
 
 #[derive(Debug, Clone)]
 pub struct Welcome {

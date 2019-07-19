@@ -1,22 +1,14 @@
 use crate::network::{ Client };
 use crate::events::client;
 
-use std::io;
-
 use failure::Fallible;
-
-use flatbuffers::{ WIPOffset, FlatBufferBuilder };
-
-use log::debug;
-
-use std::cmp::{ max, min };
 
 pub struct Listener;
 
 // type ServerMessage<'b> = WIPOffset<server::Message<'b>>;
 
 impl Listener {
-    pub fn handle_messages(peer: &Client, events: Vec<client::Event>) -> Fallible<()> {
+    pub fn handle_messages(_peer: &Client, _events: Vec<client::Event>) -> Fallible<()> {
         // let ClientMessages { messages, .. } = messages;
         // let messages = messages.messages();
 

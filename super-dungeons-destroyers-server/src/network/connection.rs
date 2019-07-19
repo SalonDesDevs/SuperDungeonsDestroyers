@@ -1,21 +1,19 @@
-use super::Sender;
-use super::codec::MessageCodec;
-
 use crate::game::Context;
 use crate::game::listener::Listener;
-use crate::events::server::{ Event, Welcome };
+
+use super::Sender;
+use super::codec::MessageCodec;
 
 use tokio::prelude::*;
 use tokio::sync::mpsc;
 use tokio::net::TcpStream;
 use tokio::codec::Framed;
 
-use std::sync::Arc;
 use std::net::SocketAddr;
 
 use failure::{ Error, Fallible };
 
-use log::{ error, warn, debug, info } ;
+use log::{ error, debug, info } ;
 
 pub struct Connection {
     socket: TcpStream
