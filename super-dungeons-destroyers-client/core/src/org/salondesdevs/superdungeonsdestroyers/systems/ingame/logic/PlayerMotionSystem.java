@@ -7,6 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.ints.Int2ByteArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ByteMap;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
@@ -32,6 +33,9 @@ public class PlayerMotionSystem extends Service {
     Mapper<Offset> offsetMapper;
 
     @Inject
+    Mapper<ActionState> actionStateMapper;
+
+    @Inject
     Animator animator;
 
     @Inject
@@ -51,6 +55,10 @@ public class PlayerMotionSystem extends Service {
 
     @Subscribe
     public void keyPressed(KeyPressedEvent keyPressedEvent) {
+        ActionState state = actionStateMapper.get(playerIdHolder.getEntityId());
+        if (state == ActionState.MOVING) {
+            return;
+        }
 
         if (keysToDirection.keySet().contains(keyPressedEvent.getKeycode())) {
             long now = TimeUtils.millis();
@@ -60,8 +68,9 @@ public class PlayerMotionSystem extends Service {
             }
             lastMoved = now;
 
-            byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
+            actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
 
+            byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
 
             TilePosition tilePosition = positionMapper.get(playerIdHolder.getEntityId());
             Offset offset = offsetMapper.get(playerIdHolder.getEntityId());
@@ -84,7 +93,9 @@ public class PlayerMotionSystem extends Service {
 
             networkSystem.request().addMoveContent(direction).writeAndFlush();
 
-            Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction);
+            Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction, () -> {
+                actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);
+            });
 
             animator.play(walkAnimation);
         }
