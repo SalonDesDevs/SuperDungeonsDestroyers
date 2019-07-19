@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.IntArray;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.input.MouseScrolledEvent;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.EventBus;
 
 import javax.inject.Inject;
@@ -29,7 +30,7 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     @Override
     public void process() {
-
+        // TODO: If repeated events are enabled, loop through the pressedKeys and repeat the pressed.
     }
 
     @Override
@@ -41,8 +42,8 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        pressedKeys.removeValue(keycode);
         this.eventBus.post(new KeyReleasedEvent(keycode));
+        pressedKeys.removeValue(keycode);
         return false;
     }
 
@@ -73,6 +74,7 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        eventBus.post(new MouseScrolledEvent(amount));
         return false;
     }
 }

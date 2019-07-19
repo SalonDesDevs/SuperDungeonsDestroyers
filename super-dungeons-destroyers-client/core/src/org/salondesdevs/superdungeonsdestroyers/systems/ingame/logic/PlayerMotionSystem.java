@@ -39,7 +39,7 @@ public class PlayerMotionSystem extends Service {
 
     private long lastMoved = 0L;
 
-    private static final long delay = 300L;
+    private static final long delay = 500L;
 
     @Override
     public void initialize() {
@@ -60,7 +60,7 @@ public class PlayerMotionSystem extends Service {
             }
             lastMoved = now;
 
-            byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
+            final byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
 
 
             TilePosition tilePosition = positionMapper.get(playerIdHolder.getEntityId());
@@ -80,6 +80,7 @@ public class PlayerMotionSystem extends Service {
                     tilePosition.x++;
                     break;
             }
+
 
 
             networkSystem.request().addMoveContent(direction).writeAndFlush();
