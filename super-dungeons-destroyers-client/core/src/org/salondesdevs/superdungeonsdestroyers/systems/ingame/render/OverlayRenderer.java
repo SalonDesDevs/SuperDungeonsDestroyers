@@ -39,12 +39,6 @@ public class OverlayRenderer extends CrossIteratingSystem {
     Mapper<Terrain> terrainMapper;
 
     @Inject
-    Mapper<TilePosition> tilePositionMapper;
-
-    @Inject
-    Mapper<Offset> offsetMapper;
-
-    @Inject
     Mapper<Size> sizeMapper;
 
     @Inject
@@ -52,13 +46,11 @@ public class OverlayRenderer extends CrossIteratingSystem {
 
     ShapeRenderer shapeRenderer;
 
-    private static final float ELLIPSE_SIZE_FACTOR = 1.f;
+    private static final float SIZE_FACTOR = 1.f;
 
     @Override
     public void process(int first, int second) {
         Terrain terrain = terrainMapper.get(first);
-        TilePosition tilePosition = tilePositionMapper.get(second);
-        Offset offset = offsetMapper.get(second);
         Size size = sizeMapper.get(second);
 
 
@@ -72,7 +64,7 @@ public class OverlayRenderer extends CrossIteratingSystem {
         shapeRenderer.setProjectionMatrix(cameraSystem.camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        shapeRenderer.rect(cameraSystem.camera.position.x, cameraSystem.camera.position.y, size.width * ELLIPSE_SIZE_FACTOR , size.height * ELLIPSE_SIZE_FACTOR);
+        shapeRenderer.rect(cameraSystem.camera.position.x, cameraSystem.camera.position.y, size.width * SIZE_FACTOR, size.height * SIZE_FACTOR);
         shapeRenderer.end();
 
 

@@ -3,6 +3,8 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.events.Event;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
@@ -19,17 +21,18 @@ import java.util.List;
 @Singleton
 public class InputSystem extends BaseSystem implements InputProcessor {
 
-    private IntArray pressedKeys;
+    private IntList pressedKeys;
 
     @Inject
     EventBus eventBus;
 
     private List<Event> eventsToPost;
 
+
     @Override
     public void initialize() {
         eventsToPost = new ArrayList<>();
-        pressedKeys = new IntArray();
+        pressedKeys = new IntArrayList();
         Gdx.input.setInputProcessor(this);
     }
 
@@ -39,7 +42,19 @@ public class InputSystem extends BaseSystem implements InputProcessor {
         eventsToPost.forEach(this.eventBus::post);
         eventsToPost.clear();
 
-        // TODO: If repeated events are enabled, loop through the pressed keys and repeat them.
+        if (this.repeatEvents) {
+            this.pressedKeys.stream().map(key -> new KeyPressedEvent(key, true)).forEach(this.eventBus::post);
+        }
+    }
+
+    private boolean repeatEvents = true;
+
+    public void enableRepeatEvents(boolean repeatEvents) {
+        this.repeatEvents = repeatEvents;
+    }
+
+    public boolean areRepeatEventsEnabled() {
+        return repeatEvents;
     }
 
     @Override
@@ -52,7 +67,7 @@ public class InputSystem extends BaseSystem implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         this.eventsToPost.add(new KeyReleasedEvent(keycode));
-        pressedKeys.removeValue(keycode);
+        pressedKeys.rem(keycode);
         return false;
     }
 
