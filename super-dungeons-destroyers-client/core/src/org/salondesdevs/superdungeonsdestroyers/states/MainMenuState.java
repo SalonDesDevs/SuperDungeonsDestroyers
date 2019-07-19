@@ -4,7 +4,7 @@ import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.systems.MainMenuRenderer;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 
-public class MainMenuState extends GameState {
+public class MainMenuState extends SDDState {
     public MainMenuState() {
         super();
         register(ClearScrenSystem.class);

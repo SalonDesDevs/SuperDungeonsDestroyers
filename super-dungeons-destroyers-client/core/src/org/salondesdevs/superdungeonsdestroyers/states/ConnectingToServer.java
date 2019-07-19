@@ -8,7 +8,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.connectingtoserver.Conne
 
 import javax.inject.Inject;
 
-public class ConnectingToServer extends GameState {
+public class ConnectingToServer extends SDDState {
 
     @Inject
     NetworkHandlerSystem networkHandlerSystem;
@@ -22,6 +22,7 @@ public class ConnectingToServer extends GameState {
 
     @Override
     public void pushed() {
+        super.pushed();
         this.networkHandlerSystem.setCurrentHandler(ConnectingToServerNetHandler.class);
     }
 }

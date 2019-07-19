@@ -1,16 +1,17 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.Animated;
-import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
+import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class AnimatedSpriteRenderer extends IteratingSystem {
-        public AnimatedSpriteRenderer() {
-        super(Aspect.all(Animated.class, TilePosition.class, Offset.class));
+@Singleton
+public class SpriteRenderer extends IteratingSystem {
+    public SpriteRenderer() {
+        super(Aspect.all(Sprited.class, TilePosition.class));
     }
 
     @Override
@@ -21,33 +22,26 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
     SpriteBatch batch;
 
     @Inject
-    Mapper<Animated> animatedMapper;
+    Mapper<Sprited> spritedMapper;
 
     @Inject
     Mapper<TilePosition> positionMapper;
 
     @Inject
-    Mapper<Offset> offsetMapper;
-
-    @Inject
     CameraSystem cameraService;
-
-    float stateTime = 0.0f;
 
     @Override
     public void begin() {
-        stateTime += world.getDelta();
         batch.setProjectionMatrix(cameraService.camera.combined);
         batch.begin();
     }
 
     @Override
     public void process(int entity) {
-        Animated animated = animatedMapper.get(entity);
+        Sprited sprited = spritedMapper.get(entity);
         TilePosition tilePosition = positionMapper.get(entity);
-        Offset offset = offsetMapper.get(entity);
 
-        batch.draw(animated.animation.getKeyFrame(stateTime, true), tilePosition.x * 16 + offset.x, tilePosition.y * 16 + offset.y);
+        batch.draw(sprited.textureRegion, tilePosition.x * 16, tilePosition.y * 16);
     }
 
     @Override

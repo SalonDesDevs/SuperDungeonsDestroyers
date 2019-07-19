@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
+import org.salondesdevs.superdungeonsdestroyers.components.Me;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
@@ -50,7 +51,6 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     @Inject
     LevelSwitcher mapSwitcher;
 
-
     @Inject
     Mapper<TilePosition> positionMapper;
 
@@ -75,10 +75,13 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     @Inject
     World world;
 
+    @Inject
+    Mapper<Me> meMapper;
+
     private static final int FRAME_COLS = 4, FRAME_ROWS = 1;
 
     public void handleEnvironment(Environment environment) {
-        logger.trace("");
+        logger.trace("Received environment {}", environment);
 
         int me = (int) environment.me();
 
@@ -115,6 +118,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             positionMapper.set(playerTest, pos);
 
             cameraMapper.set(playerTest, Camera.INSTANCE);
+            meMapper.set(playerTest, Me.INSTANCE);
 
             offsetMapper.set(playerTest, new Offset());
 

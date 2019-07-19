@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;

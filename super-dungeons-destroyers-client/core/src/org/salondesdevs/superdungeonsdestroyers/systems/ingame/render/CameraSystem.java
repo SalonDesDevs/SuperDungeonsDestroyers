@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,7 +16,6 @@ public class CameraSystem extends IteratingSystem {
     public OrthographicCamera camera;
     public OrthographicCamera guiCamera;
     public final float zoom;
-
 
     @Inject
     Mapper<TilePosition> positionMapper;

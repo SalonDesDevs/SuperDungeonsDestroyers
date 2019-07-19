@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
+package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
