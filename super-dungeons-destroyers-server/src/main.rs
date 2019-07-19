@@ -8,7 +8,7 @@ pub mod events;
 pub mod error;
 
 use crate::network::Connection;
-use crate::game::structure::Context;
+use crate::game::Context;
 use crate::game::game_loop::GameLoop;
 
 use tokio::prelude::*;
@@ -17,7 +17,6 @@ use tokio::timer::Interval;
 
 use failure::{ Fallible, Error };
 
-use std::sync::Arc;
 use std::time::Duration;
 use log::{ info, error };
 
@@ -32,7 +31,7 @@ fn listener() -> Fallible<TcpListener> {
 fn main() -> Fallible<()> {
     pretty_env_logger::init();
 
-    let context = Arc::new(Context::new()?);
+    let context = Context::new();
 
     let mut game_loop = GameLoop::new(context.clone());
 

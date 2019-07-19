@@ -57,16 +57,16 @@ namespace SDD.Client;
     root_type Events;
 
 namespace SDD.Server;
-    table Connect {
-        my_entity_id: uint64;
+    table Welcome {
+        me: SDD.Common.Entity (required);
     }
 
     table Join {
-        player: SDD.Common.Player;
+        player: SDD.Common.Entity (required);
     }
 
     table Leave {
-        player: SDD.Common.Player;
+        player: SDD.Common.Entity (required);
     }
 
     table EntityMove {
@@ -82,7 +82,7 @@ namespace SDD.Server;
 
     union EventUnion {
         /// When you're successfully connected.
-        Connect,
+        Welcome,
 
         /// When someone join the game.
         Join,

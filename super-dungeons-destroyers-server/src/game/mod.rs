@@ -1,3 +1,5 @@
 pub mod listener;
 pub mod game_loop;
-pub mod structure;
+pub mod context;
+
+pub use context::Context;

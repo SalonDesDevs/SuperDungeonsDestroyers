@@ -20,4 +20,4 @@ use crate::events::server::Event;
 pub type Rx = mpsc::UnboundedReceiver<Vec<Event>>;
 pub type Tx = mpsc::UnboundedSender<Vec<Event>>;
 
-pub use connection::{ Connection, Peer };
+pub use connection::{ Connection, Client };

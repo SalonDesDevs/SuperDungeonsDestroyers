@@ -1,23 +1,23 @@
-use super::common::{ Player, Location, Entity, LevelEnvironment };
+use super::common::{ Player, Location, Entity, LevelEnvironment, EntityId };
 
 #[derive(Debug)]
-pub struct Connect {
-    pub my_entity_id: u64,
+pub struct Welcome {
+    pub me: Entity,
 }
 
 #[derive(Debug)]
 pub struct Join {
-    pub player: Player,
+    pub player: Entity,
 }
 
 #[derive(Debug)]
 pub struct Leave {
-    pub player: Player,
+    pub player: Entity,
 }
 
 #[derive(Debug)]
 pub struct EntityMove {
-    pub entity_id: u64,
+    pub entity_id: EntityId,
     pub location: Location,
 }
 
@@ -30,7 +30,7 @@ pub struct ZoneInfo {
 
 #[derive(Debug)]
 pub enum Event {
-    Connect(Connect),
+    Welcome(Welcome),
     Join(Join),
     Leave(Leave),
     EntityMove(EntityMove),

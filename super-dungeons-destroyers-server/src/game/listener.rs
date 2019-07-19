@@ -1,5 +1,4 @@
-use crate::network::{ Peer };
-use crate::game::structure::{ Location };
+use crate::network::{ Client };
 use crate::events::client;
 
 use std::io;
@@ -17,7 +16,7 @@ pub struct Listener;
 // type ServerMessage<'b> = WIPOffset<server::Message<'b>>;
 
 impl Listener {
-    pub fn handle_messages(peer: &Peer, events: Vec<client::Event>) -> Fallible<()> {
+    pub fn handle_messages(peer: &Client, events: Vec<client::Event>) -> Fallible<()> {
         // let ClientMessages { messages, .. } = messages;
         // let messages = messages.messages();
 

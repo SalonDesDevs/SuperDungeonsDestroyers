@@ -6,27 +6,29 @@ pub enum Direction {
     Up,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Player {
     pub name: String,
     pub location: Location,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Location {
     pub level: u8,
     pub x: u8,
     pub y: u8
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum EntityKind {
     Player(Player)
 }
 
-#[derive(Debug)]
+pub type EntityId = u64;
+
+#[derive(Debug, Clone)]
 pub struct Entity {
-    pub entity_id: u64,
+    pub entity_id: EntityId,
     pub kind: EntityKind,
 }
 

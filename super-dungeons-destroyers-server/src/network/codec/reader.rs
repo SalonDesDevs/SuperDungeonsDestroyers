@@ -2,7 +2,6 @@ use crate::events;
 use crate::binding;
 use crate::error::{ NoneError, UnionNoneError, CorruptedError };
 
-use flatbuffers::{ FlatBufferBuilder, WIPOffset as W };
 use failure::Fallible;
 
 pub trait FlatRead<'b, Item> where Self: Sized {

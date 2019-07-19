@@ -10,15 +10,16 @@ pub trait FlatWrite<'b, Item> {
 
 // Server implementations
 
-use binding::server::Connect as BConnect;
-use events::server::Connect as EConnect;
+use binding::server::Welcome as BWelcome;
+use events::server::Welcome as EWelcome;
 
-impl<'b> FlatWrite<'b, W<BConnect<'b>>> for EConnect {
-    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BConnect<'b>>> {
-        let connect = BConnect::create(
+impl<'b> FlatWrite<'b, W<BWelcome<'b>>> for EWelcome {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BWelcome<'b>>> {
+        let me = self.me.write(&mut builder)?;
+        let connect = BWelcome::create(
             &mut builder,
-            &binding::server::ConnectArgs {
-                my_entity_id: self.my_entity_id
+            &binding::server::WelcomeArgs {
+                me: Some(me)
             }
         );
 
@@ -109,7 +110,7 @@ use events::server::Event as EEvent;
 impl<'b> FlatWrite<'b, W<BEvent<'b>>> for EEvent {
     fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BEvent<'b>>> {
         let (event_type, event) = match self {
-            EEvent::Connect(connect) => (BEventUnion::Connect, connect.write(&mut builder)?.as_union_value()),
+            EEvent::Welcome(welcome) => (BEventUnion::Welcome, welcome.write(&mut builder)?.as_union_value()),
             EEvent::Join(join) => (BEventUnion::Join, join.write(&mut builder)?.as_union_value()),
             EEvent::Leave(leave) => (BEventUnion::Leave, leave.write(&mut builder)?.as_union_value()),
             EEvent::EntityMove(entity_move) => (BEventUnion::EntityMove, entity_move.write(&mut builder)?.as_union_value()),

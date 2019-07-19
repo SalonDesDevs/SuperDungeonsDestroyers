@@ -1,4 +1,4 @@
-use super::structure::Context;
+use super::Context;
 
 use crate::binding::{ server, common };
 
@@ -11,11 +11,11 @@ use flatbuffers::{ FlatBufferBuilder, WIPOffset };
 use log::{ warn, debug };
 
 pub struct GameLoop {
-    context: Arc<Context>
+    context: Context
 }
 
 impl GameLoop {
-    pub fn new(context: Arc<Context>) -> Self {
+    pub fn new(context: Context) -> Self {
         GameLoop {
             context
         }
