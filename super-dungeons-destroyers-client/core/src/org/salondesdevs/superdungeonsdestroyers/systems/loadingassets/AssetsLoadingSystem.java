@@ -86,15 +86,8 @@ public class AssetsLoadingSystem extends BaseSystem {
     }
 
     private void load(String path, Class<?> type) {
-//        if (type == TiledMap.class) {
-//            TmxMapLoader.Parameters parameters = new TmxMapLoader.Parameters();
-//            this.assetManager.load(path, TiledMap.class, parameters);
-//        }
-//        else {
-            this.assetManager.load(path, type);
-//        }
+        this.assetManager.load(path, type);
     }
-
 
     private void fillAssets() {
         for (Field field : Assets.class.getDeclaredFields()) {

@@ -30,4 +30,8 @@ public class TiledMapUtils {
     public static Array<MapLayer> getAllLayers(TiledMap tiledMap) {
         return tiledMap.getLayers().getByType(MapLayer.class);
     }
+
+    public static MapMask createMask(TiledMap tiledMap, String propertyString) {
+        return new MapMask(tiledMap, propertyString);
+    }
 }

@@ -11,20 +11,16 @@ import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Interpolators;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.function.Consumer;
+
 
 @Singleton
 public class InputSystem extends IteratingSystem implements InputProcessor {
 
-    IntArray keys;
-
-    @Inject
-    CameraSystem cameraService;
+    private IntArray keys;
 
     @Inject
     NetworkSystem networkSystem;
@@ -48,16 +44,14 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
     @Inject
     Animator animator;
 
-    long lastMoved = 0l, now;
+    private long lastMoved = 0L;
 
-    private static final long delay = 300l;
+    private static final long delay = 300L;
 
     @Override
     //TODO: this is temporary
     public void process(int entity) {
-
-
-        now = TimeUtils.millis();
+        long now = TimeUtils.millis();
 
         if (now - lastMoved > delay) {
 
