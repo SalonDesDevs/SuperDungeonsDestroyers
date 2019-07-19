@@ -1,5 +1,4 @@
 #![feature(async_await, vec_remove_item)]
-#![allow(warnings)]
 
 pub mod binding;
 pub mod network;
@@ -49,8 +48,7 @@ fn main() -> Fallible<()> {
 
             let connection = Connection::new(socket);
 
-            tokio::spawn(connection.process(context.clone())?
-                .map_err(|x| println!("x")));
+            tokio::spawn(connection.process(context.clone())?);
 
             Ok(())
         });

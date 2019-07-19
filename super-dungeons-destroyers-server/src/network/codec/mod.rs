@@ -28,7 +28,6 @@ impl Decoder for MessageCodec {
     type Error = Error;
 
     fn decode(&mut self, src: &mut BytesMut) -> Fallible<Option<Self::Item>> {
-        println!("before size");
         if self.size.is_none() {
             if src.len() < mem::size_of::<u32>() {
                 return Ok(None);
@@ -42,27 +41,19 @@ impl Decoder for MessageCodec {
         }
 
         let size = self.size.unwrap() as usize;
-        println!("after size");
 
         if src.len() < size {
             Ok(None)
         } else {
-            println!("A");
+            self.size = None;
+
             let bytes = src.split_to(size).freeze();
-            println!("B");
             let events = get_root::<binding::client::Events>(&bytes).events();
-            println!("C");
             let events: Vec<_> = (0..events.len())
                 .map(|event| events.get(event))
-                .inspect(|x| println!("{:?}", x))
                 .map(|event| panic::catch_unwind(|| events::client::Event::read(event)).map_err(|_| Error::from(NoneError)))
-                .inspect(|x| println!("{:?}", x))
                 .collect::<Fallible<Fallible<_>>>()??;
 
-            println!("{:?}", events);
-            println!("D");
-
-            self.size = None;
             Ok(Some(events))
         }
     }
