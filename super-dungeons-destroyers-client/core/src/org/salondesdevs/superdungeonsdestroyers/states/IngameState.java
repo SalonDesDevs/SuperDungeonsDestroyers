@@ -51,7 +51,6 @@ public class IngameState extends SDDState {
         register(SpriteRenderer.class);
         register(AnimatedSpriteRenderer.class);
         register(OverlayRenderer.class);
-
     }
 
     @Override

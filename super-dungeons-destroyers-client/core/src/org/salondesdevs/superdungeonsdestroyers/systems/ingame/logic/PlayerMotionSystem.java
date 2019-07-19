@@ -39,7 +39,7 @@ public class PlayerMotionSystem extends Service {
 
     private long lastMoved = 0L;
 
-    private static final long delay = 500L;
+    private static final long delay = 300L;
 
     @Override
     public void initialize() {
