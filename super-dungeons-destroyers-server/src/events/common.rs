@@ -32,7 +32,7 @@ pub struct Entity {
     pub kind: EntityKind,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum LevelEnvironment {
     Bottom,
     Cave,

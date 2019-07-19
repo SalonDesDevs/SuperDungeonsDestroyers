@@ -5,17 +5,19 @@ use crate::events::common::{ Entity, EntityKind, EntityId, Player, Location };
 use crate::events::server;
 use crate::network;
 
-use std::sync::{ Mutex, Arc, RwLock };
+use std::sync::{ Mutex, Arc, RwLock, RwLockReadGuard, RwLockWriteGuard };
 use std::collections::HashMap;
 
 use failure::Fallible;
+
+type Clients = HashMap<network::ClientIdentifier, network::Client>;
 
 #[derive(Default)]
 struct InnerContext {
     id_counter: Mutex<EntityId>,
     entities: RwLock<HashMap<EntityId, Entity>>,
     events: RwLock<Vec<server::Event>>,
-    clients: RwLock<HashMap<EntityId, network::Client>>
+    clients: RwLock<Clients>
 }
 
 #[derive(Clone)]
@@ -26,4 +28,11 @@ impl Context {
         Context(Arc::new(InnerContext::default()))
     }
 
+    pub fn consume_events(&self) -> Vec<server::Event> {
+        self.0.events.write().unwrap().drain(..).collect()
+    }
+
+    pub fn clients(&self) -> RwLockReadGuard<Clients> {
+        self.0.clients.read().unwrap()
+    }
 }

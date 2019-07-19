@@ -1,28 +1,52 @@
+use crate::events::server::Event;
+use crate::network::ClientIdentifier;
+use crate::error::NoneError;
+
 use super::Context;
 
-use crate::binding::{ server, common };
+use std::time::Instant;
+use std::collections::HashMap;
 
 use failure::Fallible;
 
-use std::sync::Arc;
-use std::time::Instant;
-
-use flatbuffers::{ FlatBufferBuilder, WIPOffset };
 use log::{ warn, debug };
 
-pub struct GameLoop {
+#[derive(Default)]
+struct MessageCache {
+    inner: HashMap<ClientIdentifier, Vec<Event>>
+}
+
+impl MessageCache {
+    fn register(&mut self, identifier: ClientIdentifier) {
+        if !self.inner.contains_key(&identifier) {
+            self.inner.insert(identifier, Vec::new());
+        }
+    }
+
+    fn push(&mut self, identifier: &ClientIdentifier, event: Event) {
+        if let Some(events) = self.inner.get_mut(identifier) {
+            events.push(event)
+        }
+    }
+
+    fn into_iter(self) -> impl Iterator<Item = (ClientIdentifier, Vec<Event>)> {
+        self.inner.into_iter()
+    }
+}
+
+pub struct Ticker {
     context: Context
 }
 
-impl GameLoop {
+impl Ticker {
     pub fn new(context: Context) -> Self {
-        GameLoop {
+        Ticker {
             context
         }
     }
 
-    pub fn tick(&mut self, instant: Instant) -> Fallible<()> {
-        //self.send_environment()?;
+    pub fn tick(&self, instant: Instant) -> Fallible<()> {
+        self.send_events()?;
 
         let elapsed = instant.elapsed();
 
@@ -30,6 +54,38 @@ impl GameLoop {
 
         if elapsed.as_millis() >= 75 {
             warn!("[!] Last tick took too long!");
+        }
+
+        Ok(())
+    }
+
+    fn send_events(&self) -> Fallible<()> {
+        let events = self.context.consume_events();
+        let clients = self.context.clients();
+
+        let mut message_cache = MessageCache::default();
+
+        for event in events {
+            match event {
+                Event::Welcome(welcome) => {
+                    let (identifier, _) = clients
+                        .iter()
+                        .find(|&(identifier, _)| identifier == &welcome.me.entity_id)
+                        .ok_or(NoneError)?;
+
+                    message_cache.register(identifier.clone());
+                    message_cache.push(&identifier, Event::Welcome(welcome));
+                },
+                _ => unimplemented!()
+            }
+        }
+
+        for (client, events) in message_cache.into_iter() {
+            let (_, client) = clients.iter()
+                .find(|&(identifier, _)| identifier == &client.address)
+                .ok_or(NoneError)?;
+
+            client.sender.clone().try_send(events)?;
         }
 
         Ok(())

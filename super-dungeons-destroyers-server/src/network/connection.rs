@@ -1,4 +1,4 @@
-use super::Tx;
+use super::Sender;
 use super::codec::MessageCodec;
 
 use crate::game::Context;
@@ -25,15 +25,15 @@ pub struct Connection {
 pub struct Client {
     pub context: Context,
     pub address: SocketAddr,
-    pub sender: Tx,
+    pub sender: Sender
 }
 
 impl Client {
-    fn new(address: SocketAddr, context: Context, sender: Tx) -> Fallible<Self> {
+    fn new(address: SocketAddr, context: Context, sender: Sender) -> Fallible<Self> {
         let client = Client {
             context,
             address,
-            sender,
+            sender
         };
 
         client.context.register_client(client.clone())?;
@@ -53,7 +53,7 @@ impl Connection {
     pub fn process(self, context: Context) -> Fallible<impl Future<Item = (), Error = ()>> {
         let address = self.socket.peer_addr().unwrap();
         let (tx, rx) = mpsc::unbounded_channel();
-        let peer = Client::new(address, context.clone(), tx)?;
+        let client = Client::new(address, context.clone(), tx)?;
         let (sink, stream) = Framed::new(self.socket, MessageCodec::default()).split();
 
         let to_client = rx
@@ -62,19 +62,10 @@ impl Connection {
             .forward(sink);
 
         let from_client = stream
-            .for_each(move |messages| {
-                debug!("Received message(s) from the client.");
-
-                Listener::handle_messages(&peer, messages)
-            })
-            .and_then(move |_| {
-                info!("Got disconnected");
-
-                // context.players.write().unwrap().remove(&address);
-                // TODO: Remove client from context
-
-                Ok(())
-            });
+            .inspect(|_| debug!("Received event(s) from the client"))
+            .for_each(move |messages| Listener::handle_messages(&client, messages))
+            .inspect(|_| info!("Client disconnection"))
+            .and_then(move |_| Ok(context.disconnection(address)));
 
         let future = to_client.join(from_client)
             .map(|_| ())

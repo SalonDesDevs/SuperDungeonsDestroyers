@@ -8,8 +8,7 @@ pub mod events;
 pub mod error;
 
 use crate::network::Connection;
-use crate::game::Context;
-use crate::game::game_loop::GameLoop;
+use crate::game::{ Context, Ticker };
 
 use tokio::prelude::*;
 use tokio::net::TcpListener;
@@ -33,11 +32,11 @@ fn main() -> Fallible<()> {
 
     let context = Context::new();
 
-    let mut game_loop = GameLoop::new(context.clone());
+    let ticker = Ticker::new(context.clone());
 
     let interval = Interval::new_interval(Duration::from_millis(100))
         .map_err(Error::from)
-        .for_each(move |instant| Ok(game_loop.tick(instant)?));
+        .for_each(move |instant| Ok(ticker.tick(instant)?));
 
     let server = listener()?
         .incoming()

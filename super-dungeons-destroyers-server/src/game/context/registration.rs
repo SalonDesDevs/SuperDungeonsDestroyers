@@ -4,6 +4,8 @@ use crate::network;
 
 use super::Context;
 
+use std::net::SocketAddr;
+
 use failure::Fallible;
 
 impl Context {
@@ -56,9 +58,18 @@ impl Context {
         let Entity { entity_id, .. } = me;
         let event = server::Event::Welcome(server::Welcome { me });
 
+        let client_identifier = network::ClientIdentifier {
+            address: client.address,
+            entity_id
+        };
+
         self.register_event(event);
-        self.0.clients.write().unwrap().insert(entity_id, client);
+        self.0.clients.write().unwrap().insert(client_identifier, client);
 
         Ok(())
+    }
+
+    pub fn disconnection(&self, _: SocketAddr) {
+        unimplemented!()
     }
 }
