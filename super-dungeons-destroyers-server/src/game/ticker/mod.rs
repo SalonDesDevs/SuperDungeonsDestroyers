@@ -1,5 +1,5 @@
+use crate::events::common::EntityId;
 use crate::events::server::Event;
-use crate::network::ClientIdentifier;
 use crate::error::NoneError;
 
 use super::Context;
@@ -13,23 +13,23 @@ use log::{ warn, debug };
 
 #[derive(Default)]
 struct MessageCache {
-    inner: HashMap<ClientIdentifier, Vec<Event>>
+    inner: HashMap<EntityId, Vec<Event>>
 }
 
 impl MessageCache {
-    fn register(&mut self, identifier: ClientIdentifier) {
-        if !self.inner.contains_key(&identifier) {
-            self.inner.insert(identifier, Vec::new());
+    fn register(&mut self, id: EntityId) {
+        if !self.inner.contains_key(&id) {
+            self.inner.insert(id, Vec::new());
         }
     }
 
-    fn push(&mut self, identifier: &ClientIdentifier, event: Event) {
-        if let Some(events) = self.inner.get_mut(identifier) {
+    fn push(&mut self, id: &EntityId, event: Event) {
+        if let Some(events) = self.inner.get_mut(id) {
             events.push(event)
         }
     }
 
-    fn into_iter(self) -> impl Iterator<Item = (ClientIdentifier, Vec<Event>)> {
+    fn into_iter(self) -> impl Iterator<Item = (EntityId, Vec<Event>)> {
         self.inner.into_iter()
     }
 }
@@ -61,6 +61,11 @@ impl Ticker {
 
     fn send_events(&self) -> Fallible<()> {
         let events = self.context.consume_events();
+
+        if events.is_empty() {
+            return Ok(());
+        }
+
         let clients = self.context.clients();
         let entities = self.context.entities();
 
@@ -69,26 +74,23 @@ impl Ticker {
         for event in events {
             match event {
                 Event::Welcome(welcome) => {
-                    let (identifier, _) = clients
-                        .iter()
-                        .find(|&(identifier, _)| identifier == &welcome.me.entity_id)
-                        .ok_or(NoneError)?;
+                    let id = welcome.me.entity_id;
 
-                    message_cache.register(identifier.clone());
-                    message_cache.push(&identifier, Event::Welcome(welcome));
+                    message_cache.register(id);
+                    message_cache.push(&id, Event::Welcome(welcome));
                 },
 
                 Event::Join(join) => {
-                    for (identifier, _) in clients.iter() {
-                        message_cache.register(identifier.clone());
-                        message_cache.push(&identifier, Event::Join(join.clone()))
+                    for (id, _) in clients.iter() {
+                        message_cache.register(id.clone());
+                        message_cache.push(&id, Event::Join(join.clone()))
                     }
                 },
 
                 Event::Leave(leave) => {
-                    for (identifier, _) in clients.iter() {
-                        message_cache.register(identifier.clone());
-                        message_cache.push(&identifier, Event::Leave(leave.clone()))
+                    for (id, _) in clients.iter() {
+                        message_cache.register(id.clone());
+                        message_cache.push(&id, Event::Leave(leave.clone()))
                     }
                 },
 
@@ -98,98 +100,33 @@ impl Ticker {
 
                     let EntityMove { location, .. } = r#move;
 
-                    for (identifier, _) in clients.iter() {
-                        let player = entities.get(&identifier.entity_id).ok_or(NoneError)?;
+                    for (id, _) in clients.iter() {
+                        let player = entities.get(&id).ok_or(NoneError)?;
 
                         if let EntityKind::Player(player) = &player.kind {
                             if player.location.level == location.level {
-                                message_cache.register(identifier.clone());
-                                message_cache.push(&identifier, Event::EntityMove(r#move.clone()))
+                                message_cache.register(*id);
+                                message_cache.push(&id, Event::EntityMove(r#move.clone()))
                             }
                         }
                     }
                 },
 
                 Event::ZoneInfo(zone_info) => {
-                    let (identifier, _) = clients
-                        .iter()
-                        .find(|&(identifier, _)| identifier == &zone_info.me)
-                        .ok_or(NoneError)?;
+                    let id = zone_info.receiver;
 
-                    message_cache.register(identifier.clone());
-                    message_cache.push(&identifier, Event::ZoneInfo(zone_info))
+                    message_cache.register(id);
+                    message_cache.push(&id, Event::ZoneInfo(zone_info))
                 }
             }
         }
 
         for (client, events) in message_cache.into_iter() {
-            let (_, client) = clients.iter()
-                .find(|&(identifier, _)| identifier == &client.address)
-                .ok_or(NoneError)?;
+            let client = clients.get(&client).ok_or(NoneError)?;
 
             client.sender.clone().try_send(events)?;
         }
 
         Ok(())
     }
-
-    // fn send_environment(&mut self) -> Fallible<()> {
-    //     let mut players = self.context.players.write().unwrap();
-    //     let levels = self.context.levels.read().unwrap();
-
-    //     let players_clone = players.clone();
-
-    //     for (_, player) in players.iter_mut() {
-    //         let mut builder = FlatBufferBuilder::new();
-
-    //         let level = levels
-    //             .get(player.location.level as usize)
-    //             .unwrap()
-    //             .write(&mut builder)?;
-
-    //         let entities = players_clone
-    //             .values()
-    //             .filter(|target| target.location.level == player.location.level)
-    //             .map(|target| target.write(&mut builder))
-    //             .collect::<Fallible<Vec<WIPOffset<common::Entity>>>>()?;
-
-    //         let entities = builder.create_vector(&entities);
-
-    //         let environment = server::Environment::create(
-    //             &mut builder,
-    //             &server::EnvironmentArgs {
-    //                 level: Some(level),
-    //                 entities: Some(entities),
-    //                 me: player.entity_id
-    //             }
-    //         );
-
-    //         let message = server::Message::create(
-    //             &mut builder,
-    //             &server::MessageArgs {
-    //                 content: Some(environment.as_union_value()),
-    //                 content_type: server::Content::Environment
-    //             }
-    //         );
-
-    //         let messages = builder.create_vector(&[message]);
-
-    //         let messages = server::Messages::create(
-    //             &mut builder,
-    //             &server::MessagesArgs {
-    //                 messages: Some(messages)
-    //             }
-    //         );
-
-    //         builder.finish(messages, None);
-
-    //         let messages = ServerMessages {
-    //             bytes: builder.finished_data().into()
-    //         };
-
-    //         player.tx.try_send(messages)?;
-    //     }
-
-    //     Ok(())
-    // }
 }

@@ -1,4 +1,4 @@
-use crate::events::common::{ Entity, EntityKind, Player, Location };
+use crate::events::common::{ Entity, EntityKind, Player, Location, EntityId };
 use crate::events::server;
 use crate::network;
 
@@ -21,15 +21,13 @@ impl Context {
             .push(event);
     }
 
-    pub fn create_player(&self) -> Entity {
+    fn create_player(&self, entity_id: EntityId) -> Entity {
         // TODO: Get a spawnpoint from the first level.
         let location = Location {
             level: 0,
             x: 0,
             y: 0
         };
-
-        let entity_id = self.create_entity_id();
 
         let player = Player {
             name: ":upside_down:".to_string(),
@@ -54,17 +52,11 @@ impl Context {
     }
 
     pub fn register_client(&self, client: network::Client) -> Fallible<()> {
-        let me = self.create_player();
-        let Entity { entity_id, .. } = me;
+        let me = self.create_player(client.id);
         let event = server::Event::Welcome(server::Welcome { me });
 
-        let client_identifier = network::ClientIdentifier {
-            address: client.address,
-            entity_id
-        };
-
         self.register_event(event);
-        self.0.clients.write().unwrap().insert(client_identifier, client);
+        self.0.clients.write().unwrap().insert(client.id, client);
 
         Ok(())
     }

@@ -1,5 +1,6 @@
 use crate::game::Context;
 use crate::game::listener::Listener;
+use crate::events::common::EntityId;
 
 use super::Sender;
 use super::codec::MessageCodec;
@@ -21,6 +22,7 @@ pub struct Connection {
 
 #[derive(Clone)]
 pub struct Client {
+    pub id: EntityId,
     pub context: Context,
     pub address: SocketAddr,
     pub sender: Sender
@@ -29,6 +31,7 @@ pub struct Client {
 impl Client {
     fn new(address: SocketAddr, context: Context, sender: Sender) -> Fallible<Self> {
         let client = Client {
+            id: context.create_entity_id(),
             context,
             address,
             sender

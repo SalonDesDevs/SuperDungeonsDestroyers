@@ -8,7 +8,7 @@ use crate::network;
 use std::sync::{ Mutex, Arc, RwLock, RwLockReadGuard };
 use std::collections::HashMap;
 
-type Clients = HashMap<network::ClientIdentifier, network::Client>;
+type Clients = HashMap<EntityId, network::Client>;
 type Entities = HashMap<EntityId, Entity>;
 
 #[derive(Default)]

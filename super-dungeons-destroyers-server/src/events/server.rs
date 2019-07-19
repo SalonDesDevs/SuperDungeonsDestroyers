@@ -23,7 +23,8 @@ pub struct EntityMove {
 
 #[derive(Debug, Clone)]
 pub struct ZoneInfo {
-    pub me: EntityId,
+    pub receiver: EntityId,
+
     pub level: u8,
     pub environment: LevelEnvironment,
     pub entities: Vec<Entity>
