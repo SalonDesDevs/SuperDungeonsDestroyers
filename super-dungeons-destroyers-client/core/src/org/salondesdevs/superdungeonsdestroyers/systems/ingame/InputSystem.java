@@ -4,12 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.events.Event;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.input.MouseScrolledEvent;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Singleton
@@ -20,8 +24,11 @@ public class InputSystem extends BaseSystem implements InputProcessor {
     @Inject
     EventBus eventBus;
 
+    private List<Event> eventsToPost;
+
     @Override
     public void initialize() {
+        eventsToPost = new ArrayList<>();
         pressedKeys = new IntArray();
         Gdx.input.setInputProcessor(this);
     }
@@ -29,20 +36,23 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     @Override
     public void process() {
+        eventsToPost.forEach(this.eventBus::post);
+        eventsToPost.clear();
 
+        // TODO: If repeated events are enabled, loop through the pressed keys and repeat them.
     }
 
     @Override
     public boolean keyDown(int keycode) {
         pressedKeys.add(keycode);
-        this.eventBus.post(new KeyPressedEvent(keycode));
+        this.eventsToPost.add(new KeyPressedEvent(keycode));
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        this.eventsToPost.add(new KeyReleasedEvent(keycode));
         pressedKeys.removeValue(keycode);
-        this.eventBus.post(new KeyReleasedEvent(keycode));
         return false;
     }
 
@@ -73,6 +83,7 @@ public class InputSystem extends BaseSystem implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        this.eventsToPost.add(new MouseScrolledEvent(amount));
         return false;
     }
 }

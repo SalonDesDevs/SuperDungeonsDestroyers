@@ -70,7 +70,7 @@ public class PlayerMotionSystem extends Service {
 
             actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
 
-            byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
+            final byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
 
             TilePosition tilePosition = positionMapper.get(playerIdHolder.getEntityId());
             Offset offset = offsetMapper.get(playerIdHolder.getEntityId());
@@ -89,6 +89,7 @@ public class PlayerMotionSystem extends Service {
                     tilePosition.x++;
                     break;
             }
+
 
 
             networkSystem.request().addMoveContent(direction).writeAndFlush();
