@@ -1,5 +1,6 @@
-use crate::events::common::{ Entity, EntityKind, Player, Location, EntityId };
+use crate::events::common::{ Entity, EntityKind, Player, Location, EntityId, Coordinates };
 use crate::events::server;
+use crate::error::NoneError;
 use crate::network;
 
 use super::Context;
@@ -15,23 +16,61 @@ impl Context {
             .insert(entity.entity_id, entity);
     }
 
-    fn register_event(&self, event: server::Event) {
-        self.0.events.write()
-            .unwrap()
-            .push(event);
+    fn register_event(&self, event: server::Event) -> Fallible<()> {
+        let clients = self.clients().read().unwrap();
+        let entities = self.entities().read().unwrap();
+        let events = self.events();
+
+        match event {
+            server::Event::Welcome(welcome) => {
+                events.push(welcome.me.entity_id, server::Event::Welcome(welcome));
+            },
+
+            server::Event::Join(join) => {
+                for (id, _) in clients.iter() {
+                    events.push(*id, server::Event::Join(join.clone()))
+                }
+            },
+
+            server::Event::Leave(leave) => {
+                for (id, _) in clients.iter() {
+                    events.push(*id, server::Event::Leave(leave.clone()))
+                }
+            },
+
+            server::Event::EntityMove(r#move) => {
+                use crate::events::server::EntityMove;
+
+                let EntityMove { location, .. } = r#move;
+
+                for (id, _) in clients.iter() {
+                    let player = entities.get(id).ok_or(NoneError)?;
+
+                    if player.location().level == location.level {
+                        events.push(*id, server::Event::EntityMove(r#move.clone()))
+                    }
+                }
+            },
+
+            server::Event::ZoneInfo(zone_info) => {
+                events.push(zone_info.receiver, server::Event::ZoneInfo(zone_info))
+            }
+        }
+
+        Ok(())
     }
 
-    fn create_player(&self, entity_id: EntityId) -> Entity {
-        // TODO: Get a spawnpoint from the first level.
-        let location = Location {
-            level: 0,
-            x: 0,
-            y: 0
-        };
-
+    fn create_player(&self, entity_id: EntityId) -> Fallible<Entity> {
         let player = Player {
             name: ":upside_down:".to_string(),
-            location
+            // TODO: Get a spawnpoint from the first level.
+            location: Location {
+                level: 0,
+                coordinates: Coordinates {
+                    x: 0,
+                    y: 0
+                }
+            }
         };
 
         let entity = Entity {
@@ -46,16 +85,16 @@ impl Context {
         let event = server::Event::Join(join);
 
         self.register_entity(entity.clone());
-        self.register_event(event);
+        self.register_event(event)?;
 
-        entity
+        Ok(entity)
     }
 
     pub fn register_client(&self, client: network::Client) -> Fallible<()> {
-        let me = self.create_player(client.id);
+        let me = self.create_player(client.id)?;
         let event = server::Event::Welcome(server::Welcome { me });
 
-        self.register_event(event);
+        self.register_event(event)?;
         self.0.clients.write().unwrap().insert(client.id, client);
 
         Ok(())

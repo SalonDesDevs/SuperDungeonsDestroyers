@@ -1,5 +1,4 @@
-use crate::game::Context;
-use crate::game::listener::Listener;
+use crate::game::{ Context, Listener };
 use crate::events::common::EntityId;
 
 use super::Sender;
@@ -56,6 +55,7 @@ impl Connection {
         let (tx, rx) = mpsc::unbounded_channel();
         let client = Client::new(address, context.clone(), tx)?;
         let (sink, stream) = Framed::new(self.socket, MessageCodec::default()).split();
+        let listener = Listener::new(client);
 
         let to_client = rx
             .map_err(Error::from)
@@ -64,7 +64,7 @@ impl Connection {
 
         let from_client = stream
             .inspect(|_| debug!("Received event(s) from the client"))
-            .for_each(move |messages| Listener::handle_messages(&client, messages))
+            .for_each(move |messages| listener.process_events(messages))
             .inspect(|_| info!("Client disconnection"))
             .and_then(move |_| Ok(context.disconnection(address)));
 

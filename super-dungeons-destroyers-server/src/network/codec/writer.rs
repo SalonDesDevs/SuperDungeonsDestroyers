@@ -172,7 +172,7 @@ use events::common::Location as ELocation;
 
 impl FlatWrite<'_, BLocation> for ELocation {
     fn write(&self, _: &mut FlatBufferBuilder) -> F<BLocation> {
-        let location = BLocation::new(self.level, self.x, self.y);
+        let location = BLocation::new(self.level, self.coordinates.x, self.coordinates.y);
 
         Ok(location)
     }

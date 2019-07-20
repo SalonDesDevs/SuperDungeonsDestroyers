@@ -1,12 +1,18 @@
 mod id_counter;
 mod registration;
+mod level_manager;
+mod event_cache;
 
 use crate::events::common::{ Entity, EntityId };
-use crate::events::server;
 use crate::network;
 
-use std::sync::{ Mutex, Arc, RwLock, RwLockReadGuard };
+use self::level_manager::LevelManager;
+use self::event_cache::EventCache;
+
+use std::sync::{ Mutex, Arc, RwLock };
 use std::collections::HashMap;
+
+use failure::Fallible;
 
 type Clients = HashMap<EntityId, network::Client>;
 type Entities = HashMap<EntityId, Entity>;
@@ -15,27 +21,32 @@ type Entities = HashMap<EntityId, Entity>;
 struct InnerContext {
     id_counter: Mutex<EntityId>,
     entities: RwLock<Entities>,
-    events: RwLock<Vec<server::Event>>,
-    clients: RwLock<Clients>
+    clients: RwLock<Clients>,
+    levels: LevelManager,
+    events: EventCache
 }
 
 #[derive(Clone)]
 pub struct Context(Arc<InnerContext>);
 
 impl Context {
-    pub fn new() -> Self {
-        Context(Arc::new(InnerContext::default()))
+    pub fn new() -> Fallible<Self> {
+        let context = Context(Arc::new(InnerContext::default()));
+
+        context.0.levels.generate_level(0)?;
+
+        Ok(context)
     }
 
-    pub fn consume_events(&self) -> Vec<server::Event> {
-        self.0.events.write().unwrap().drain(..).collect()
+    pub fn clients(&self) -> &RwLock<Clients> {
+        &self.0.clients
     }
 
-    pub fn clients(&self) -> RwLockReadGuard<Clients> {
-        self.0.clients.read().unwrap()
+    pub fn entities(&self) -> &RwLock<Entities> {
+        &self.0.entities
     }
 
-    pub fn entities(&self) -> RwLockReadGuard<Entities> {
-        self.0.entities.read().unwrap()
+    pub fn events(&self) -> &EventCache {
+        &self.0.events
     }
 }

@@ -13,10 +13,15 @@ pub struct Player {
 }
 
 #[derive(Debug, Clone, Copy)]
+pub struct Coordinates {
+    pub x: u8,
+    pub y: u8,
+}
+
+#[derive(Debug, Clone, Copy)]
 pub struct Location {
     pub level: u8,
-    pub x: u8,
-    pub y: u8
+    pub coordinates: Coordinates
 }
 
 #[derive(Debug, Clone)]
@@ -32,10 +37,18 @@ pub struct Entity {
     pub kind: EntityKind,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum LevelEnvironment {
     Bottom,
     Cave,
     Top,
     CollisionsTester
+}
+
+impl Entity {
+    pub fn location(&self) -> &Location {
+        match &self.kind {
+            EntityKind::Player(player) => &player.location
+        }
+    }
 }

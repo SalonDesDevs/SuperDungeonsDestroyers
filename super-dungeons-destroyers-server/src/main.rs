@@ -29,7 +29,7 @@ fn listener() -> Fallible<TcpListener> {
 fn main() -> Fallible<()> {
     pretty_env_logger::init();
 
-    let context = Context::new();
+    let context = Context::new()?;
 
     let ticker = Ticker::new(context.clone());
 

@@ -76,14 +76,16 @@ impl<'b> FlatRead<'b, BPlayer<'b>> for EPlayer {
 }
 
 use binding::common::Location as BLocation;
-use events::common::Location as ELocation;
+use events::common::{ Location as ELocation, Coordinates as ECoordinates };
 
 impl FlatRead<'_, BLocation> for ELocation {
     fn read(item: BLocation) -> Fallible<Self> {
         let location = ELocation {
             level: item.level(),
-            x: item.x(),
-            y: item.y(),
+            coordinates: ECoordinates {
+                x: item.x(),
+                y: item.y()
+            }
         };
 
         Ok(location)
