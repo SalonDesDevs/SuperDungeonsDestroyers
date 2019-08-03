@@ -2,10 +2,6 @@ use crate::events;
 use crate::binding;
 use crate::error::{ NoneError, UnionNoneError, CorruptedError };
 
-<<<<<<< HEAD
-use flatbuffers::{ FlatBufferBuilder, WIPOffset as W };
-=======
->>>>>>> 183748109ca379a6acd1bccec75a63cb63bdbd51
 use failure::Fallible;
 
 pub trait FlatRead<'b, Item> where Self: Sized {
@@ -80,25 +76,16 @@ impl<'b> FlatRead<'b, BPlayer<'b>> for EPlayer {
 }
 
 use binding::common::Location as BLocation;
-<<<<<<< HEAD
-use events::common::Location as ELocation;
-=======
 use events::common::{ Location as ELocation, Coordinates as ECoordinates };
->>>>>>> 183748109ca379a6acd1bccec75a63cb63bdbd51
 
 impl FlatRead<'_, BLocation> for ELocation {
     fn read(item: BLocation) -> Fallible<Self> {
         let location = ELocation {
             level: item.level(),
-<<<<<<< HEAD
-            x: item.x(),
-            y: item.y(),
-=======
             coordinates: ECoordinates {
                 x: item.x(),
                 y: item.y()
             }
->>>>>>> 183748109ca379a6acd1bccec75a63cb63bdbd51
         };
 
         Ok(location)

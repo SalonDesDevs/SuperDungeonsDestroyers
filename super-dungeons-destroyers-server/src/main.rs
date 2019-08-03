@@ -3,20 +3,11 @@
 pub mod binding;
 pub mod network;
 pub mod game;
-<<<<<<< HEAD
-pub mod utils;
-=======
->>>>>>> 183748109ca379a6acd1bccec75a63cb63bdbd51
 pub mod events;
 pub mod error;
 
 use crate::network::Connection;
-<<<<<<< HEAD
-use crate::game::structure::Context;
-use crate::game::game_loop::GameLoop;
-=======
 use crate::game::{ Context, Ticker };
->>>>>>> 183748109ca379a6acd1bccec75a63cb63bdbd51
 
 use tokio::prelude::*;
 use tokio::net::TcpListener;
@@ -38,15 +29,9 @@ fn listener() -> Fallible<TcpListener> {
 fn main() -> Fallible<()> {
     pretty_env_logger::init();
 
-<<<<<<< HEAD
-    let context = Arc::new(Context::new()?);
-
-    let mut game_loop = GameLoop::new(context.clone());
-=======
     let context = Context::new()?;
 
     let ticker = Ticker::new(context.clone());
->>>>>>> 183748109ca379a6acd1bccec75a63cb63bdbd51
 
     let interval = Interval::new_interval(Duration::from_millis(100))
         .map_err(Error::from)
