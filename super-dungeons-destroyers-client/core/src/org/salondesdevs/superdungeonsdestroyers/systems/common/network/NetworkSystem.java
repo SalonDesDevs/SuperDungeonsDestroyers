@@ -1,10 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import SDD.Client.Content;
-import SDD.Client.Message;
-import SDD.Client.Messages;
+import SDD.Client.Event;
+import SDD.Client.EventUnion;
+import SDD.Client.Events;
 import SDD.Client.Move;
-import SDD.Client.Ping;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -138,12 +137,12 @@ public class NetworkSystem extends BaseSystem {
         }
 
         public RequestBuilder addMoveContent(final byte direction) {
-            return this.addContent(Content.Move, fbb -> Move.createMove(fbb, direction));
+            return this.addContent(EventUnion.Move, fbb -> Move.createMove(fbb, direction));
         }
 
-        public RequestBuilder addPingContent(final byte number) {
-            return this.addContent(Content.Ping, fbb -> Ping.createPing(fbb, number));
-        }
+//        public RequestBuilder addPingContent(final byte number) {
+//            return this.addContent(EventUnion.Ping, fbb -> Ping.createPing(fbb, number));
+//        }
 
         public RequestBuilder addContent(byte contentType, Function<FlatBufferBuilder, Integer> creator) {
             this.addPair(contentType, creator.apply(builder));
@@ -158,18 +157,18 @@ public class NetworkSystem extends BaseSystem {
             int[] messagesContent = new int[this.pairs.size()];
 
             for (int i = 0; i < messagesContent.length; i++) {
-                Message.startMessage(builder);
+                Event.startEvent(builder);
                 Pair pair = this.pairs.get(i);
-                Message.addContentType(builder, pair.first);
-                Message.addContent(builder, pair.second);
-                messagesContent[i] = Message.endMessage(builder);
+                Event.addEventType(builder, pair.first);
+                Event.addEvent(builder, pair.second);
+                messagesContent[i] = Event.endEvent(builder);
             }
 
-            int messagesVector = Messages.createMessagesVector(builder, messagesContent);
+            int messagesVector = Events.createEventsVector(builder, messagesContent);
 
-            Messages.startMessages(builder);
-            Messages.addMessages(builder, messagesVector);
-            int messages = Messages.endMessages(builder);
+            Events.startEvents(builder);
+            Events.addEvents(builder, messagesVector);
+            int messages = Events.endEvents(builder);
             builder.finish(messages);
             NetworkSystem.this.writeAndFlush(builder.dataBuffer());
         }
@@ -211,7 +210,7 @@ public class NetworkSystem extends BaseSystem {
                         inputStream.read(buffer);
 
                         synchronized (networkHandler.messagesToHandle) {
-                            networkHandler.messagesToHandle.add(SDD.Server.Messages.getRootAsMessages(ByteBuffer.wrap(buffer)));
+                            networkHandler.messagesToHandle.add(SDD.Server.Events.getRootAsEvents(ByteBuffer.wrap(buffer)));
                         }
                     }
                 }

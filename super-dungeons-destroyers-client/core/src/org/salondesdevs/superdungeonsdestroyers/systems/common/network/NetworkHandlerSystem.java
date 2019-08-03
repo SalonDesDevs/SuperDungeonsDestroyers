@@ -1,7 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import SDD.Server.Message;
-import SDD.Server.Messages;
+import SDD.Server.Event;
+import SDD.Server.Events;
 import com.google.inject.Injector;
 import net.wytrem.ecs.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Singleton
 public class NetworkHandlerSystem extends BaseSystem {
 
-    List<Messages> messagesToHandle = new ArrayList<>();
+    List<Events> messagesToHandle = new ArrayList<>();
 
     @Inject
     Injector injector;
@@ -34,15 +34,15 @@ public class NetworkHandlerSystem extends BaseSystem {
         this.currentHandler = injector.getInstance(clazz);
     }
 
-    private void handleMessages(Messages messages) {
-        for (int i = 0; i < messages.messagesLength(); i++) {
-            Message message = messages.messages(i);
+    private void handleMessages(Events messages) {
+        for (int i = 0; i < messages.eventsLength(); i++) {
+            Event message = messages.events(i);
 
             this.currentHandler.handle(message);
         }
     }
 
     public interface Handler {
-        void handle(Message message);
+        void handle(Event message);
     }
 }

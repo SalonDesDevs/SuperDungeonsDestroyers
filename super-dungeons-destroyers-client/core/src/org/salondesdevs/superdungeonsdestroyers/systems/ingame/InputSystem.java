@@ -1,85 +1,74 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import SDD.Common.Direction;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.TimeUtils;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.Position;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
+import org.salondesdevs.superdungeonsdestroyers.events.Event;
+import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.input.MouseScrolledEvent;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Singleton
-public class InputSystem extends IteratingSystem implements InputProcessor {
+public class InputSystem extends BaseSystem implements InputProcessor {
 
-    IntArray keys;
-
-    @Inject
-    CameraSystem cameraService;
+    private IntList pressedKeys;
 
     @Inject
-    NetworkSystem networkSystem;
+    EventBus eventBus;
 
-    public InputSystem() {
-        super(Aspect.all(Position.class));
-    }
+    private List<Event> eventsToPost;
 
     @Override
     public void initialize() {
-        keys = new IntArray();
+        eventsToPost = new ArrayList<>();
+        pressedKeys = new IntArrayList();
         Gdx.input.setInputProcessor(this);
     }
 
-    @Inject
-    Mapper<Position> positionMapper;
-
-    long lastMoved = 0l, now;
-
-    private static final long delay = 200l;
 
     @Override
-    //TODO: this is temporary
-    public void process(int entity) {
-        Position position = positionMapper.get(entity);
+    public void process() {
+        // Necessary because the InputProcessor methods are called by libgdx itself, outside of the World::process, so
+        // the systems order is not respected.
+        eventsToPost.forEach(this.eventBus::post);
+        eventsToPost.clear();
 
-        now = TimeUtils.millis();
-
-        if (now - lastMoved > delay) {
-            lastMoved = now;
-
-            if (keys.contains(Input.Keys.UP)) {
-                position.y++;
-                networkSystem.request().addMoveContent(Direction.Up).writeAndFlush();
-            }
-            if (keys.contains(Input.Keys.DOWN)) {
-                position.y--;
-                networkSystem.request().addMoveContent(Direction.Down).writeAndFlush();
-            }
-            if (keys.contains(Input.Keys.LEFT)) {
-                position.x--;
-                networkSystem.request().addMoveContent(Direction.Left).writeAndFlush();
-            }
-            if (keys.contains(Input.Keys.RIGHT)) {
-                position.x++;
-                networkSystem.request().addMoveContent(Direction.Right).writeAndFlush();
-            }
+        if (this.repeatEvents) {
+            this.pressedKeys.stream().map(key -> new KeyPressedEvent(key, true)).forEach(this.eventBus::post);
         }
+    }
+
+    private boolean repeatEvents = true;
+
+    public void enableRepeatEvents(boolean repeatEvents) {
+        this.repeatEvents = repeatEvents;
+    }
+
+    public boolean areRepeatEventsEnabled() {
+        return repeatEvents;
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        keys.add(keycode);
+        pressedKeys.add(keycode);
+        this.eventsToPost.add(new KeyPressedEvent(keycode));
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        keys.removeValue(keycode);
-        lastMoved = 0;
+        this.eventsToPost.add(new KeyReleasedEvent(keycode));
+        pressedKeys.rem(keycode);
         return false;
     }
 
@@ -110,6 +99,7 @@ public class InputSystem extends IteratingSystem implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        this.eventsToPost.add(new MouseScrolledEvent(amount));
         return false;
     }
 }

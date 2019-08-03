@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import SDD.Common.LevelKind;
+import SDD.Common.LevelEnvironment;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
@@ -38,7 +38,7 @@ public class LevelSwitcher extends IteratingSystem {
             Terrain terrain = terrainMapper.get(entity);
             terrain.tiledMap = assets.rooms[scheduledRoom];
 
-            logger.info("Switched level to {}={}", scheduledRoom, LevelKind.name(scheduledRoom));
+            logger.info("Switched level to {}={}", scheduledRoom, LevelEnvironment.name(scheduledRoom));
 
             this.currentHeight = TiledMapUtils.getHeight(terrain.tiledMap);
 

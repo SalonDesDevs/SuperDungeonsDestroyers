@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.utils;
 
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Array;
@@ -22,7 +23,15 @@ public class TiledMapUtils {
         return tiledMap.getProperties().get("tileheight", Integer.class);
     }
 
-    public static Array<TiledMapTileLayer> getLayers(TiledMap tiledMap) {
+    public static Array<TiledMapTileLayer> getTileLayers(TiledMap tiledMap) {
         return tiledMap.getLayers().getByType(TiledMapTileLayer.class);
+    }
+
+    public static Array<MapLayer> getAllLayers(TiledMap tiledMap) {
+        return tiledMap.getLayers().getByType(MapLayer.class);
+    }
+
+    public static MapMask createMask(TiledMap tiledMap, String propertyString) {
+        return new MapMask(tiledMap, propertyString);
     }
 }
