@@ -2,6 +2,11 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import SDD.Server.Event;
 import SDD.Server.EventUnion;
+import SDD.Server.Welcome;
+import SDD.Server.ZoneInfo;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
@@ -26,14 +31,64 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
         logger.info("Received event with type={}", EventUnion.name(message.eventType()));
 
         switch (message.eventType()) {
-//            case Content
-//                    .Environment:
-//                this.handleEnvironment((Environment) message.content(new Environment()));
-//                break;
-//            case Content.Pong:
-//                this.handlePong((Pong) message.content(new Pong()));
-//                break;
+            case EventUnion.Welcome:
+                this.handleWelcome((Welcome) message.event(new Welcome()));
+                break;
+            case EventUnion.ZoneInfo:
+                this.handleZoneInfo((ZoneInfo) message.event(new ZoneInfo()));
+                break;
         }
+    }
+
+    private void handleZoneInfo(ZoneInfo zoneInfo) {
+        int kind = zoneInfo.environment();
+        mapSwitcher.scheduleChange(kind);
+    }
+
+    private void handleWelcome(Welcome welcome) {
+        int me = (int) welcome.me().entityId();
+
+        // For testing purposes
+        if (!cameraMapper.has(me)) {
+            int terrain = -1;
+            terrainMapper.set(terrain, new Terrain(assetService.testMap));
+
+            int playerTest = world.createEntity();
+
+            Texture walkSheet = assetService.player;
+
+            TextureRegion[][] tmp = TextureRegion.split(walkSheet,
+                    walkSheet.getWidth() / FRAME_COLS,
+                    walkSheet.getHeight() / FRAME_ROWS);
+
+            // Place the regions into a 1D array in the correct order, starting from the top
+            // left, going across first. The Animation constructor requires a 1D array.
+            TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+            int index = 0;
+            for (int i = 0; i < FRAME_ROWS; i++) {
+                for (int j = 0; j < FRAME_COLS; j++) {
+                    walkFrames[index++] = tmp[i][j];
+                }
+            }
+
+            // Initialize the Animation with the frame interval and array of frames
+            Animation<TextureRegion> walkAnimation = new Animation<>(0.07f, walkFrames);
+
+            animatedMapper.set(playerTest, new Animated(walkAnimation));
+
+            TilePosition pos = new TilePosition(1, 1);
+
+            positionMapper.set(playerTest, pos);
+
+            cameraMapper.set(playerTest, Camera.INSTANCE);
+            meMapper.set(playerTest, Me.INSTANCE);
+
+            offsetMapper.set(playerTest, new Offset());
+
+            sizeMapper.set(playerTest, new Size(15, 20));
+        }
+
+
     }
 
 //    private void handlePong(Pong content) {
@@ -75,51 +130,8 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 //    public void handleEnvironment(Environment environment) {
 //        logger.trace("Received environment {}", environment);
 //
-//        int me = (int) environment.me();
 //
-//        // For testing purposes
-//        if (!cameraMapper.has(me)) {
-//            int terrain = -1;
-//            terrainMapper.set(terrain, new Terrain(assetService.testMap));
-//
-//            int playerTest = world.createEntity();
-//
-//            Texture walkSheet = assetService.player;
-//
-//            TextureRegion[][] tmp = TextureRegion.split(walkSheet,
-//                    walkSheet.getWidth() / FRAME_COLS,
-//                    walkSheet.getHeight() / FRAME_ROWS);
-//
-//            // Place the regions into a 1D array in the correct order, starting from the top
-//            // left, going across first. The Animation constructor requires a 1D array.
-//            TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-//            int index = 0;
-//            for (int i = 0; i < FRAME_ROWS; i++) {
-//                for (int j = 0; j < FRAME_COLS; j++) {
-//                    walkFrames[index++] = tmp[i][j];
-//                }
-//            }
-//
-//            // Initialize the Animation with the frame interval and array of frames
-//            Animation<TextureRegion> walkAnimation = new Animation<>(0.07f, walkFrames);
-//
-//            animatedMapper.set(playerTest, new Animated(walkAnimation));
-//
-//            TilePosition pos = new TilePosition(1, 1);
-//
-//            positionMapper.set(playerTest, pos);
-//
-//            cameraMapper.set(playerTest, Camera.INSTANCE);
-//            meMapper.set(playerTest, Me.INSTANCE);
-//
-//            offsetMapper.set(playerTest, new Offset());
-//
-//            sizeMapper.set(playerTest, new Size(15, 20));
-//        }
-//
-//        Level level = environment.level();
-//        int kind = level.kind();
-//        mapSwitcher.scheduleChange(kind);
+
 //
 //
 //        for (int i = 0; i < environment.entitiesLength(); i++) {

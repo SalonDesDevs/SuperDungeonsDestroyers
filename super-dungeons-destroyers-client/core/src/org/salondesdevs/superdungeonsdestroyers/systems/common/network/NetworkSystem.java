@@ -73,23 +73,23 @@ public class NetworkSystem extends BaseSystem {
         batch.begin();
     }
 
-    float remaining = 1;
+    float remaining = 4;
 
     @Override
     public void process() {
         // Send enqueued packets, ...
 
-        remaining -= world.getDelta();
-
-        if (remaining > 0) {
-            font.draw(batch, "Ingame in " + remaining, 100, 100);
-        }
-
-        if (remaining < 0 && test) {
-            test = false;
-//            request().addPingContent((byte) 21).addPingContent((byte) 123).writeAndFlush();
-            this.world.push(IngameState.class);
-        }
+//        remaining -= world.getDelta();
+//
+//        if (remaining > 0) {
+//            font.draw(batch, "Ingame in " + remaining, 100, 100);
+//        }
+//
+//        if (remaining < 0 && test) {
+//            test = false;
+////            request().addPingContent((byte) 21).addPingContent((byte) 123).writeAndFlush();
+//            this.world.push(IngameState.class);
+//        }
     }
 
     @Override

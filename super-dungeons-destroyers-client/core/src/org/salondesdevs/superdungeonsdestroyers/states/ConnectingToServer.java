@@ -13,6 +13,9 @@ public class ConnectingToServer extends SDDState {
     @Inject
     NetworkHandlerSystem networkHandlerSystem;
 
+    @Inject
+    World world;
+
     public ConnectingToServer() {
         super();
         register(ClearScrenSystem.class);
@@ -23,6 +26,8 @@ public class ConnectingToServer extends SDDState {
     @Override
     public void pushed() {
         super.pushed();
-        this.networkHandlerSystem.setCurrentHandler(ConnectingToServerNetHandler.class);
+        // At the moment, this state pushes the next one immediately.
+        this.world.push(IngameState.class);
+//        this.networkHandlerSystem.setCurrentHandler(ConnectingToServerNetHandler.class);
     }
 }
