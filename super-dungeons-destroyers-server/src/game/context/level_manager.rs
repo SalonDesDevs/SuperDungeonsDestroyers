@@ -22,6 +22,7 @@ impl Map {
     pub fn static_solids(&self) -> &Vec<Coordinates> {
         &self.static_solid
     }
+    pub fn spawn_points(&self) -> &Vec<Coordinates> { &self.spawnpoints }
     fn new(environment: &LevelEnvironment) -> Fallible<Self> {
         let inner = tiled::parse_file(environment.as_ref())?;
         let static_solid = Map::find_static_solid(&inner)?;
@@ -104,7 +105,11 @@ pub struct Level {
     level: u8,
     pub map: Arc<Map>
 }
-
+impl Level {
+    pub fn id(&self) -> u8 {
+        self.level
+    }
+}
 #[derive(Default)]
 pub struct LevelManager {
     cache: RwLock<HashMap<LevelEnvironment, Arc<Map>>>,

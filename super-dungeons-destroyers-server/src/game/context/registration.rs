@@ -23,12 +23,27 @@ impl Context {
 
         match event {
             server::Event::Welcome(welcome) => {
-                events.push(welcome.me.entity_id, server::Event::Welcome(welcome));
+                let id = welcome.me.entity_id.clone();
+                events.push(id, server::Event::Welcome(welcome));
+                let player = entities.get(&id).expect("player not found");
+                let level = self.levels().level(player.location().level).expect("level not found");
+                let spawnpoints = level.map.spawn_points();
+                let spawn_player = server::Event::EntityTeleport(
+                    server::EntityTeleport {
+                        entity_id: id,
+                        location: Location {
+                            level: level.id(),
+                            coordinates: *spawnpoints.first().expect("no spawn points found")
+                        }
+                    }
+                );
+                events.push(id, spawn_player)
             },
 
             server::Event::Join(join) => {
                 for (id, _) in clients.iter() {
-                    events.push(*id, server::Event::Join(join.clone()))
+                    events.push(*id, server::Event::Join(join.clone()));
+
                 }
             },
 
