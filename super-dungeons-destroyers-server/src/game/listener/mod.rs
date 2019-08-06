@@ -96,16 +96,14 @@ impl Listener {
                 let future_location = common::Location {
                     level: player.location().level,
                     coordinates: common::Coordinates {
-                        //x:  min(max(player.location().coordinates.x as i32 + x_move, 0), (current_level.map.inner.width - 1) as i32) as u8,
-                        //y:  min(max(player.location().coordinates.y as i32 + y_move, 0), (current_level.map.inner.height - 1) as i32) as u8
-                        x: (player.location().coordinates.x as i32 + x_move) as u8,
-                        y: (player.location().coordinates.y as i32 + y_move) as u8,
+                        x:  min(max(player.location().coordinates.x as i32 + x_move, 0), (current_level.map.inner.width - 1) as i32) as u8,
+                        y:  min(max(player.location().coordinates.y as i32 + y_move, 0), (current_level.map.inner.height - 1) as i32) as u8
                     }
                 };
                 let can_move = current_level.map.static_solids().contains(&future_location.coordinates);
-                debug!("{:?} - Player pos: {:?}", current_level.map.static_solids(), player.location());
+                debug!("{:?} - Player pos: {:?}", player.location() , y_move);
 
-                if !can_move {
+                if can_move {
                     &self.client.context.events().push(self.client.id, server::Event::EntityTeleport(
                         server::EntityTeleport {
                             entity_id: self.client.id,

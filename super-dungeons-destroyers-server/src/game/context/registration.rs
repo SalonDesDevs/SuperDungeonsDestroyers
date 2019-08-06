@@ -26,7 +26,7 @@ impl Context {
                 let id = welcome.me.entity_id.clone();
                 events.push(id, server::Event::Welcome(welcome));
                 let player = entities.get(&id).expect("player not found");
-                let level = self.levels().level(player.location().level).expect("level not found");
+                let level = self.levels().level(0).expect("level not found");
                 let spawnpoints = level.map.spawn_points();
                 let spawn_player = server::Event::EntityTeleport(
                     server::EntityTeleport {
@@ -78,15 +78,14 @@ impl Context {
     }
 
     fn create_player(&self, entity_id: EntityId) -> Fallible<Entity> {
+        let level = self.levels().level(0).expect("level not found");
+        let spawnpoints = level.map.spawn_points();
         let player = Player {
             name: ":upside_down:".to_string(),
             // TODO: Get a spawnpoint from the first level.
             location: Location {
                 level: 0,
-                coordinates: Coordinates {
-                    x: 0,
-                    y: 0
-                }
+                coordinates: *spawnpoints.first().expect("not spawn points found")
             }
         };
 
