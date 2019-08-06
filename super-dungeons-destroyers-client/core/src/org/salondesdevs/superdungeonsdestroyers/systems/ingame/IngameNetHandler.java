@@ -55,7 +55,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     private void handleEntityTeleport(EntityTeleport event) {
         int entityId = (int) event.entityId();
         if (positionMapper.has(entityId)) {
-            positionMapper.get(entityId).set(event.location().x(), event.location().y());
+            positionMapper.get(entityId).set(event.location().x(), mapSwitcher.currentHeight - event.location().y() - 1);
         }
     }
 
