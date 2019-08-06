@@ -4,7 +4,7 @@ use crate::events::client;
 use crate::events::common;
 use crate::events::server;
 
-//use std::cmp::{ min, max };
+use std::cmp::{ min, max };
 use failure::Fallible;
 
 use log::{ debug };
@@ -97,20 +97,22 @@ impl Listener {
                 let future_location = common::Location {
                     level: player.location().level,
                     coordinates: common::Coordinates {
-                        x: (player.location().coordinates.x as i32 + x_move) as u8,
-                        y: (player.location().coordinates.y as i32 + y_move) as u8
+                        x:  min(max(player.location().coordinates.x as i32 + x_move, 0), (current_level.map.inner.width - 1) as i32) as u8,
+                        y: min(max(player.location().coordinates.y as i32 + y_move, 0), (current_level.map.inner.height - 1) as i32) as u8
                     }
                 };
                 let can_move = current_level.map.static_solids().contains(&future_location.coordinates);
+                debug!("{:?}", current_level.map.static_solids());
 
-                debug!("Move? {:?} {:?} {:?}", player.location(), future_location, can_move);
                 if can_move {
                     &self.client.context.events().push(self.client.id, server::Event::EntityMove(
                         server::EntityMove {
                             entity_id: self.client.id,
                             location: *player.location()
                         }
+
                     ));
+                    debug!("Move? {:?} {:?} {:?}", player.location(), future_location, can_move);
                 }
                 Ok(())
 

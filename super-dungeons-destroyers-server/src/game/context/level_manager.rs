@@ -13,7 +13,7 @@ use log::{ debug };
 
 #[derive(Debug)]
 pub struct Map {
-    inner: tiled::Map,
+    pub inner: tiled::Map,
     static_solid: Vec<Coordinates>,
     spawnpoints: Vec<Coordinates>
 }
