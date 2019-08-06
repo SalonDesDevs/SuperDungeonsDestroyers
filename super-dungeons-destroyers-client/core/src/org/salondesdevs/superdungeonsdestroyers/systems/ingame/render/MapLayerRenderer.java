@@ -58,7 +58,7 @@ public class MapLayerRenderer {
             }
         }
 
-        logger.debug("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(layersToRender), list.toArray());
+        logger.info("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(layersToRender), list.toArray());
 
         this.layers.put(tiledMap, list.toIntArray());
         this.renderers.put(tiledMap, tiledMapRenderer);
