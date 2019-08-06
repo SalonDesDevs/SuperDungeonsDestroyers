@@ -41,7 +41,9 @@ impl Context {
     pub fn clients(&self) -> &RwLock<Clients> {
         &self.0.clients
     }
-
+    pub fn levels(&self) -> &LevelManager {
+        &self.0.levels
+    }
     pub fn entities(&self) -> &RwLock<Entities> {
         &self.0.entities
     }

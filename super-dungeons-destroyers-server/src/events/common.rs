@@ -12,7 +12,7 @@ pub struct Player {
     pub location: Location,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Coordinates {
     pub x: u8,
     pub y: u8,

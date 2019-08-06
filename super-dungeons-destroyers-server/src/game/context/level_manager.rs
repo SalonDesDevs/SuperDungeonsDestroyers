@@ -9,13 +9,19 @@ use failure::Fallible;
 
 use tiled::PropertyValue;
 
-struct Map {
+use log::{ debug };
+
+#[derive(Debug)]
+pub struct Map {
     inner: tiled::Map,
     static_solid: Vec<Coordinates>,
     spawnpoints: Vec<Coordinates>
 }
 
 impl Map {
+    pub fn static_solids(&self) -> &Vec<Coordinates> {
+        &self.static_solid
+    }
     fn new(environment: &LevelEnvironment) -> Fallible<Self> {
         let inner = tiled::parse_file(environment.as_ref())?;
         let static_solid = Map::find_static_solid(&inner)?;
@@ -72,8 +78,8 @@ impl Map {
             .iter()
             .filter(|object| object.properties.get("spawn").map(|value| value == &PropertyValue::BoolValue(true)).unwrap_or(false))
             .map(|object| Coordinates {
-                x: ((object.x as u32) / tile_width) as u8,
-                y: ((object.y as u32) / tile_height) as u8,
+                x: ((object.x as u32) / *tile_width) as u8,
+                y: ((object.y as u32) / *tile_height) as u8,
             })
             .collect();
 
@@ -93,10 +99,10 @@ impl AsRef<Path> for LevelEnvironment {
         Path::new(path)
     }
 }
-
+#[derive(Debug)]
 pub struct Level {
     level: u8,
-    map: Arc<Map>
+    pub map: Arc<Map>
 }
 
 #[derive(Default)]
@@ -106,6 +112,10 @@ pub struct LevelManager {
 }
 
 impl LevelManager {
+
+    pub fn level(&self, level_id: u8) -> Option<Level> {
+        self.levels.read().unwrap().get(&level_id).and(None)
+    }
     fn fetch(&self, environment: &LevelEnvironment) -> Option<Arc<Map>> {
         self.cache.read().unwrap().get(environment).cloned()
     }
