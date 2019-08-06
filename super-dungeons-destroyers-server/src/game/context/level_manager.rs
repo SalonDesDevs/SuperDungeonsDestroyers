@@ -99,7 +99,7 @@ impl AsRef<Path> for LevelEnvironment {
         Path::new(path)
     }
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Level {
     level: u8,
     pub map: Arc<Map>
@@ -114,7 +114,7 @@ pub struct LevelManager {
 impl LevelManager {
 
     pub fn level(&self, level_id: u8) -> Option<Level> {
-        self.levels.read().unwrap().get(&level_id).and(None)
+        self.levels.read().unwrap().get(&level_id).cloned()
     }
     fn fetch(&self, environment: &LevelEnvironment) -> Option<Arc<Map>> {
         self.cache.read().unwrap().get(environment).cloned()

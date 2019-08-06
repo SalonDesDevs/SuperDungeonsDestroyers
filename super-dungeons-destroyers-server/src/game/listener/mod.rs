@@ -91,7 +91,7 @@ impl Listener {
                      _ => 0,
                  };
 
-                let current_level = levels.level(player.location().level);
+                let current_level = &levels.level(player.location().level).unwrap();
                 debug!("{:?}", current_level );
 
                 let future_location = common::Location {
@@ -101,7 +101,7 @@ impl Listener {
                         y: (player.location().coordinates.y as i32 + y_move) as u8
                     }
                 };
-                let can_move = !current_level.unwrap().map.static_solids().contains(&future_location.coordinates);
+                let can_move = !current_level.map.static_solids().contains(&future_location.coordinates);
 
                 debug!("Move? {:?} {:?} {:?}", player.location(), future_location, can_move);
                 if can_move {
