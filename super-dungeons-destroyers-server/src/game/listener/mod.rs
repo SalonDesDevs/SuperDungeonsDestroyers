@@ -92,7 +92,6 @@ impl Listener {
                  };
 
                 let current_level = &levels.level(player.location().level).unwrap();
-                //debug!("{:?}", current_level );
 
                 let future_location = common::Location {
                     level: player.location().level,
@@ -102,11 +101,11 @@ impl Listener {
                     }
                 };
                 let can_move = current_level.map.static_solids().contains(&future_location.coordinates);
-                debug!("{:?}", current_level.map.static_solids());
+                debug!("{:?} - Player pos: {:?}", current_level.map.static_solids(), player.location());
 
-                if can_move {
-                    &self.client.context.events().push(self.client.id, server::Event::EntityMove(
-                        server::EntityMove {
+                if !can_move {
+                    &self.client.context.events().push(self.client.id, server::Event::EntityTeleport(
+                        server::EntityTeleport {
                             entity_id: self.client.id,
                             location: *player.location()
                         }

@@ -1,4 +1,4 @@
-use super::common::{ Location, Entity, LevelEnvironment, EntityId };
+use super::common::{ Location, Entity, LevelEnvironment, EntityId, Direction };
 
 #[derive(Debug, Clone)]
 pub struct Welcome {
@@ -18,9 +18,14 @@ pub struct Leave {
 #[derive(Debug, Clone)]
 pub struct EntityMove {
     pub entity_id: EntityId,
-    pub location: Location,
+    pub direction: Direction,
 }
+#[derive(Debug, Clone)]
+pub struct EntityTeleport {
+    pub entity_id: EntityId,
+    pub location: Location,
 
+}
 #[derive(Debug, Clone)]
 pub struct ZoneInfo {
     pub receiver: EntityId,
@@ -37,4 +42,5 @@ pub enum Event {
     Leave(Leave),
     EntityMove(EntityMove),
     ZoneInfo(ZoneInfo),
+    EntityTeleport(EntityTeleport)
 }

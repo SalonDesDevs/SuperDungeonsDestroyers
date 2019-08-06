@@ -37,17 +37,19 @@ impl Context {
                     events.push(*id, server::Event::Leave(leave.clone()))
                 }
             },
-
             server::Event::EntityMove(r#move) => {
-                use crate::events::server::EntityMove;
+                unimplemented!()
+            }
+            server::Event::EntityTeleport(r#move) => {
+                use crate::events::server::EntityTeleport;
 
-                let EntityMove { location, .. } = r#move;
+                let EntityTeleport { location, .. } = r#move;
 
                 for (id, _) in clients.iter() {
                     let player = entities.get(id).ok_or(NoneError)?;
 
                     if player.location().level == location.level {
-                        events.push(*id, server::Event::EntityMove(r#move.clone()))
+                        events.push(*id, server::Event::EntityTeleport(r#move.clone()))
                     }
                 }
             },

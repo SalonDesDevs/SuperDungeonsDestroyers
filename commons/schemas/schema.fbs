@@ -78,7 +78,6 @@ namespace SDD.Server;
     	entity_id: uint64;
 		location: SDD.Common.Location;
     }
-
     table ZoneInfo {
         level: uint8;
         environment: SDD.Common.LevelEnvironment;

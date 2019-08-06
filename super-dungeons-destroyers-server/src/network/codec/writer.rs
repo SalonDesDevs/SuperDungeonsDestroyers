@@ -91,10 +91,28 @@ use events::server::EntityMove as EEntityMove;
 
 impl<'b> FlatWrite<'b, W<BEntityMove<'b>>> for EEntityMove {
     fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BEntityMove<'b>>> {
-        let location = self.location.write(&mut builder)?;
+        let direction = self.direction.write(&mut builder)?;
         let entity_move = BEntityMove::create(
             &mut builder,
             &binding::server::EntityMoveArgs {
+                direction,
+                entity_id: self.entity_id
+            }
+        );
+
+        Ok(entity_move)
+    }
+}
+
+use binding::server::EntityTeleport as BEntityTeleport;
+use events::server::EntityTeleport as EEntityTeleport;
+
+impl<'b> FlatWrite<'b, W<BEntityTeleport<'b>>> for EEntityTeleport {
+    fn write(&self, mut builder: &mut FlatBufferBuilder<'b>) -> F<W<BEntityTeleport<'b>>> {
+        let location = self.location.write(&mut builder)?;
+        let entity_move = BEntityTeleport::create(
+            &mut builder,
+            &binding::server::EntityTeleportArgs {
                 location: Some(&location),
                 entity_id: self.entity_id
             }
@@ -113,8 +131,9 @@ impl<'b> FlatWrite<'b, W<BEvent<'b>>> for EEvent {
             EEvent::Welcome(welcome) => (BEventUnion::Welcome, welcome.write(&mut builder)?.as_union_value()),
             EEvent::Join(join) => (BEventUnion::Join, join.write(&mut builder)?.as_union_value()),
             EEvent::Leave(leave) => (BEventUnion::Leave, leave.write(&mut builder)?.as_union_value()),
-            EEvent::EntityMove(entity_move) => (BEventUnion::EntityMove, entity_move.write(&mut builder)?.as_union_value()),
+            EEvent::EntityTeleport(entity_teleport) => (BEventUnion::EntityTeleport, entity_teleport.write(&mut builder)?.as_union_value()),
             EEvent::ZoneInfo(zone_info) => (BEventUnion::ZoneInfo, zone_info.write(&mut builder)?.as_union_value()),
+            EEvent::EntityMove(entity_move) => ( unimplemented!() )
         };
 
         let event = BEvent::create(
