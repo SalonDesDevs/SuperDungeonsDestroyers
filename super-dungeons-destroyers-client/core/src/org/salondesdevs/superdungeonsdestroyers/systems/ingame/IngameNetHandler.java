@@ -1,6 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import SDD.Common.Direction;
+import SDD.Common.LevelEnvironment;
 import SDD.Server.EntityMove;
 import SDD.Server.EntityTeleport;
 import SDD.Server.Event;
@@ -55,7 +56,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     private void handleEntityTeleport(EntityTeleport event) {
         int entityId = (int) event.entityId();
         if (positionMapper.has(entityId)) {
-            positionMapper.get(entityId).set(event.location().x(), event.location().y());
+            positionMapper.get(entityId).set(event.location().x(), mapSwitcher.currentHeight - event.location().y() - 1);
         }
     }
 
@@ -101,6 +102,8 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
         if (!cameraMapper.has(me)) {
             int terrain = -1;
             terrainMapper.set(terrain, new Terrain(assetService.testMap));
+
+            mapSwitcher.scheduleChange(LevelEnvironment.Bottom);
 
             int playerTest = world.createEntity();
 

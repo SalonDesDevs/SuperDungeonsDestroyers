@@ -26,7 +26,7 @@ public class LevelSwitcher extends IteratingSystem {
 
     public int currentHeight;
 
-    int current = 0;
+    int current = Integer.MIN_VALUE;
 
     public LevelSwitcher() {
         super(Aspect.all(Terrain.class));
@@ -40,8 +40,6 @@ public class LevelSwitcher extends IteratingSystem {
 
             logger.info("Switched level to {}={}", scheduledRoom, LevelEnvironment.name(scheduledRoom));
 
-            this.currentHeight = TiledMapUtils.getHeight(terrain.tiledMap);
-
             current = scheduledRoom;
             scheduledRoom = -1;
         }
@@ -49,5 +47,6 @@ public class LevelSwitcher extends IteratingSystem {
 
     public void scheduleChange(int room) {
         this.scheduledRoom = room;
+        this.currentHeight = TiledMapUtils.getHeight(assets.rooms[room]);
     }
 }
