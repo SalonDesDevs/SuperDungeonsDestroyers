@@ -17,12 +17,21 @@ public final class EntityMove extends Table {
 
   public long entityId() { int o = __offset(4); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   public boolean mutateEntityId(long entity_id) { int o = __offset(4); if (o != 0) { bb.putLong(o + bb_pos, entity_id); return true; } else { return false; } }
-  public SDD.Common.Location location() { return location(new SDD.Common.Location()); }
-  public SDD.Common.Location location(SDD.Common.Location obj) { int o = __offset(6); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
+  public int direction() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public boolean mutateDirection(int direction) { int o = __offset(6); if (o != 0) { bb.put(o + bb_pos, (byte)direction); return true; } else { return false; } }
+
+  public static int createEntityMove(FlatBufferBuilder builder,
+      long entity_id,
+      int direction) {
+    builder.startTable(2);
+    EntityMove.addEntityId(builder, entity_id);
+    EntityMove.addDirection(builder, direction);
+    return EntityMove.endEntityMove(builder);
+  }
 
   public static void startEntityMove(FlatBufferBuilder builder) { builder.startTable(2); }
   public static void addEntityId(FlatBufferBuilder builder, long entityId) { builder.addLong(0, entityId, 0L); }
-  public static void addLocation(FlatBufferBuilder builder, int locationOffset) { builder.addStruct(1, locationOffset, 0); }
+  public static void addDirection(FlatBufferBuilder builder, int direction) { builder.addByte(1, (byte)direction, (byte)0); }
   public static int endEntityMove(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

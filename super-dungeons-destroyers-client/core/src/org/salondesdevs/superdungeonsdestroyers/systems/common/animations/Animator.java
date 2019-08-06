@@ -44,7 +44,7 @@ public class Animator extends BaseSystem {
      * Creates an animation that will modify the proper {@link Offset} field to simulate player movement.
      * This assumes the {@link org.salondesdevs.superdungeonsdestroyers.components.TilePosition} has already be changed!
      */
-    public Animation<Float> createMoveAnimation(Offset offset, byte direction, Runnable onEnd) {
+    public Animation<Float> createMoveAnimation(Offset offset, int direction, Runnable onEnd) {
         float start = 0.0f;
         Consumer<Float> setter = null;
 

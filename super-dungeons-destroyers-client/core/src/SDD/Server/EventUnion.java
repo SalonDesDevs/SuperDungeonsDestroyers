@@ -22,15 +22,19 @@ public final class EventUnion {
    */
   public static final byte EntityMove = 4;
   /**
+   * When an entity is teleported somewhere
+   */
+  public static final byte EntityTeleport = 5;
+  /**
    * When an entity was created.
    */
-  public static final byte EntityCreate = 5;
+  public static final byte EntityCreate = 6;
   /**
    * When you enter a new area.
    */
-  public static final byte ZoneInfo = 6;
+  public static final byte ZoneInfo = 7;
 
-  public static final String[] names = { "NONE", "Welcome", "Join", "Leave", "EntityMove", "EntityCreate", "ZoneInfo", };
+  public static final String[] names = { "NONE", "Welcome", "Join", "Leave", "EntityMove", "EntityTeleport", "EntityCreate", "ZoneInfo", };
 
   public static String name(int e) { return names[e]; }
 }
