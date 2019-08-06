@@ -51,4 +51,14 @@ impl Entity {
             EntityKind::Player(player) => &player.location
         }
     }
+    pub fn locate(mut self, location: Location) {
+        match self.kind {
+            EntityKind::Player(mut player) => {
+                player.location = location
+            }
+            _ => {
+                unimplemented!()
+            }
+        }
+    }
 }

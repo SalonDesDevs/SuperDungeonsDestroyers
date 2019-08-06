@@ -76,7 +76,7 @@ impl Listener {
             client::Event::Move(r#move) => {
                 let peer = &self.client.context;
                 let players = peer.entities().read().expect("not a valide player");
-                let player = players.get(&self.client.id).expect("not a valid user");
+                let mut player =  players.get(&self.client.id).expect("not a valid user");
                 let levels = peer.levels();
 
                 let x_move = match r#move.direction {
@@ -100,10 +100,9 @@ impl Listener {
                         y:  min(max(player.location().coordinates.y as i32 + y_move, 0), (current_level.map.inner.height - 1) as i32) as u8
                     }
                 };
-                let can_move = current_level.map.static_solids().contains(&future_location.coordinates);
-                debug!("{:?} - Player pos: {:?}", player.location() , y_move);
+                let is_edge = current_level.map.static_solids().contains(&future_location.coordinates);
 
-                if can_move {
+                if is_edge {
                     &self.client.context.events().push(self.client.id, server::Event::EntityTeleport(
                         server::EntityTeleport {
                             entity_id: self.client.id,
@@ -111,7 +110,12 @@ impl Listener {
                         }
 
                     ));
-                    debug!("Move? {:?} {:?} {:?}", player.location(), future_location, can_move);
+                    debug!("Move? {:?} {:?} {:?}", player.location(), future_location, is_edge);
+                } else {
+                    debug!("player coordinate: {:?}", &player.location());
+                    player.locate(future_location);
+
+
                 }
                 Ok(())
 
