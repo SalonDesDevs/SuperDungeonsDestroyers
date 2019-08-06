@@ -101,15 +101,14 @@ impl Listener {
                         y: (player.location().coordinates.y as i32 + y_move) as u8
                     }
                 };
-                let can_move = !current_level.map.static_solids().contains(&future_location.coordinates);
+                let can_move = current_level.map.static_solids().contains(&future_location.coordinates);
 
                 debug!("Move? {:?} {:?} {:?}", player.location(), future_location, can_move);
                 if can_move {
                     &self.client.context.events().push(self.client.id, server::Event::EntityMove(
                         server::EntityMove {
                             entity_id: self.client.id,
-                            location: future_location
-
+                            location: *player.location()
                         }
                     ));
                 }
