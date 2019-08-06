@@ -102,7 +102,7 @@ impl Listener {
                         y: (player.location().coordinates.y as i32 + y_move) as u8,
                     }
                 };
-                let can_move = !current_level.map.static_solids().contains(&future_location.coordinates);
+                let can_move = current_level.map.static_solids().contains(&future_location.coordinates);
                 debug!("{:?} - Player pos: {:?}", current_level.map.static_solids(), player.location());
 
                 if !can_move {
