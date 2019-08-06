@@ -90,8 +90,6 @@ public class PlayerMotionSystem extends Service {
                     break;
             }
 
-
-
             networkSystem.request().addMoveContent(direction).writeAndFlush();
 
             Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction, () -> {

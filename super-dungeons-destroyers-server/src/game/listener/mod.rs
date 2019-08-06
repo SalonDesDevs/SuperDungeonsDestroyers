@@ -92,7 +92,7 @@ impl Listener {
                  };
 
                 let current_level = &levels.level(player.location().level).unwrap();
-                debug!("{:?}", current_level );
+                //debug!("{:?}", current_level );
 
                 let future_location = common::Location {
                     level: player.location().level,

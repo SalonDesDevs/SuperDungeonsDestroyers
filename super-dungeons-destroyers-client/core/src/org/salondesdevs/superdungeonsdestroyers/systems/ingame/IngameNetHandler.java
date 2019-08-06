@@ -1,5 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
+import SDD.Common.Direction;
+import SDD.Server.EntityMove;
+import SDD.Server.EntityTeleport;
 import SDD.Server.Event;
 import SDD.Server.EventUnion;
 import SDD.Server.Welcome;
@@ -16,6 +19,7 @@ import org.salondesdevs.superdungeonsdestroyers.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +41,51 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             case EventUnion.ZoneInfo:
                 this.handleZoneInfo((ZoneInfo) message.event(new ZoneInfo()));
                 break;
+            case EventUnion.EntityMove:
+                this.handleEntityMove((EntityMove) message.event(new EntityMove()));
+                break;
+            case EventUnion.EntityTeleport:
+                this.handleEntityTeleport((EntityTeleport) message.event(new EntityTeleport()));
+                break;
+        }
+    }
+
+
+
+    private void handleEntityTeleport(EntityTeleport event) {
+        int entityId = (int) event.entityId();
+        if (positionMapper.has(entityId)) {
+            positionMapper.get(entityId).set(event.location().x(), event.location().y());
+        }
+    }
+
+    @Inject
+    Animator animator;
+
+    private void handleEntityMove(EntityMove event) {
+        int entityId = (int) event.entityId();
+        if (positionMapper.has(entityId) && offsetMapper.has(entityId)) {
+
+            TilePosition tilePosition = positionMapper.get(entityId);
+            Offset offset = offsetMapper.get(entityId);
+
+            switch (event.direction()) {
+                case Direction.Up:
+                    tilePosition.y++;
+                    break;
+                case Direction.Down:
+                    tilePosition.y--;
+                    break;
+                case Direction.Left:
+                    tilePosition.x--;
+                    break;
+                case Direction.Right:
+                    tilePosition.x++;
+                    break;
+            }
+
+            org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation<Float> walkAnimation = animator.createMoveAnimation(offset, event.direction(), () -> {});
+            animator.play(walkAnimation);
         }
     }
 

@@ -71,7 +71,12 @@ namespace SDD.Server;
 
     table EntityMove {
         entity_id: uint64;
-        location: SDD.Common.Location;
+        direction: SDD.Common.Direction;
+    }
+
+    table EntityTeleport {
+    	entity_id: uint64;
+		location: SDD.Common.Location;
     }
 
     table ZoneInfo {
@@ -92,6 +97,9 @@ namespace SDD.Server;
 
         /// When a entity move.
         EntityMove,
+
+        /// When an entity is teleported somewhere
+        EntityTeleport,
 
         /// When an entity was created.
         EntityCreate: SDD.Common.Entity,
