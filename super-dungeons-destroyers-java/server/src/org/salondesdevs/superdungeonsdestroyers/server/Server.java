@@ -32,6 +32,8 @@ public class Server {
             world.process((now - last) / 1000.0f);
             last = now;
         }
+
+        world.dispose();
     }
 
     public void stop() {

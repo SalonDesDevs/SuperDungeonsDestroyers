@@ -1,16 +1,16 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic;
 
-import SDD.Common.Direction;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.eventbus.Subscribe;
-import it.unimi.dsi.fastutil.ints.Int2ByteArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ByteMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PlayerMotionSystem extends Service {
 
-    private Int2ByteMap keysToDirection = new Int2ByteArrayMap();
+    private Int2ObjectMap<Direction> keysToDirection = new Int2ObjectArrayMap<>();
 
     @Inject
     NetworkSystem networkSystem;
@@ -47,10 +47,10 @@ public class PlayerMotionSystem extends Service {
 
     @Override
     public void initialize() {
-        keysToDirection.put(Input.Keys.UP, Direction.Up);
-        keysToDirection.put(Input.Keys.DOWN, Direction.Down);
-        keysToDirection.put(Input.Keys.RIGHT, Direction.Right);
-        keysToDirection.put(Input.Keys.LEFT, Direction.Left);
+        keysToDirection.put(Input.Keys.UP, Direction.NORTH);
+        keysToDirection.put(Input.Keys.DOWN, Direction.SOUTH);
+        keysToDirection.put(Input.Keys.RIGHT, Direction.EAST);
+        keysToDirection.put(Input.Keys.LEFT, Direction.WEST);
     }
 
     @Subscribe
@@ -70,27 +70,27 @@ public class PlayerMotionSystem extends Service {
 
             actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
 
-            final byte direction = keysToDirection.get(keyPressedEvent.getKeycode());
+            final Direction direction = keysToDirection.get(keyPressedEvent.getKeycode());
 
             TilePosition tilePosition = positionMapper.get(playerIdHolder.getEntityId());
             Offset offset = offsetMapper.get(playerIdHolder.getEntityId());
 
             switch (direction) {
-                case Direction.Up:
+                case NORTH:
                     tilePosition.y++;
                     break;
-                case Direction.Down:
+                case SOUTH:
                     tilePosition.y--;
                     break;
-                case Direction.Left:
+                case WEST:
                     tilePosition.x--;
                     break;
-                case Direction.Right:
+                case EAST:
                     tilePosition.x++;
                     break;
             }
 
-            networkSystem.request().addMoveContent(direction).writeAndFlush();
+//            networkSystem.request().addMoveContent(direction).writeAndFlush();
 
             Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction, () -> {
                 actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);

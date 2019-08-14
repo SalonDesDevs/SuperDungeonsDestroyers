@@ -1,46 +1,58 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
 public class NetworkSystem extends BaseSystem {
-    private static final Logger logger = LoggerFactory.getLogger( NetworkSystem.class );
+    private static final Logger logger = LoggerFactory.getLogger(NetworkSystem.class);
 
     @Inject
     org.salondesdevs.superdungeonsdestroyers.server.Server sddServer;
 
+    EventLoopGroup bossGroup, workerGroup;
+
     @Override
     public void initialize() {
-
-        Server server = new Server();
-        Packet.get
-        server.start();
+        bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
+        ServerBootstrap b = new ServerBootstrap();
+        b.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch)
+                            throws Exception {
+                        ch.pipeline().addLast(new PacketDecoder(),
+                                new PacketEncoder(),
+                                new ServerPacketHandler());
+                    }
+                }).option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
 
         try {
-            server.bind(9000);
-        } catch (IOException e) {
-            logger.error("Could not start kryonet server, aborting: ", e);
-            sddServer.stop();
+            b.bind(9000).sync();
+            logger.info("Server successfully opened");
+        } catch (InterruptedException e) {
+            logger.error("Failed to bind netty channel", e);
         }
-
-        server.addListener(new NetListener());
     }
 
-    private class NetListener extends Listener {
-        @Override
-        public void received(Connection connection, Object object) {
-            logger.info("Received {}", object);
-        }
-
-        @Override
-        public void connected(Connection connection) {
-        }
+    @Override
+    public void dispose() {
+        workerGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
     }
 }

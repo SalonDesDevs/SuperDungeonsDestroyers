@@ -1,6 +1,5 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.loadingassets;
 
-import SDD.Common.LevelEnvironment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -127,11 +126,14 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
         }
 
-        assets.rooms = new TiledMap[4];
-        assets.rooms[LevelEnvironment.Bottom] = assets.bottom;
-        assets.rooms[LevelEnvironment.Cave] = assets.cave;
-        assets.rooms[LevelEnvironment.Top] = assets.top;
-        assets.rooms[LevelEnvironment.CollisionsTester] = assets.collisionsTester;
+        assets.rooms = new TiledMap[0];
+
+        Arrays.fill(assets.rooms, assets.testMap);
+        // TODO: load rooms
+//        assets.rooms[LevelEnvironment.Bottom] = assets.bottom;
+//        assets.rooms[LevelEnvironment.Cave] = assets.cave;
+//        assets.rooms[LevelEnvironment.Top] = assets.top;
+//        assets.rooms[LevelEnvironment.CollisionsTester] = assets.collisionsTester;
     }
 
     @Override
