@@ -2,25 +2,26 @@ package org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient;
 
 import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.ByteBufHelper;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-public class EntityMove extends Packet {
+public class PlayerMove extends Packet {
     public Direction direction;
 
-    public EntityMove() {
+    public PlayerMove() {
     }
 
-    public EntityMove(Direction direction) {
+    public PlayerMove(Direction direction) {
         this.direction = direction;
     }
 
     @Override
     public void read(ByteBuf in) {
-        this.direction = Direction.values()[in.readByte()];
+        this.direction = ByteBufHelper.readEnum(Direction.class, in);
     }
 
     @Override
     public void write(ByteBuf out) {
-        out.writeByte(this.direction.ordinal());
+        ByteBufHelper.writeEnum(direction, out);
     }
 }

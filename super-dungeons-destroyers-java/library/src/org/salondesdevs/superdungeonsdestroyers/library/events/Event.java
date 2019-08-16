@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.events;
+package org.salondesdevs.superdungeonsdestroyers.library.events;
 
 public abstract class Event {
 

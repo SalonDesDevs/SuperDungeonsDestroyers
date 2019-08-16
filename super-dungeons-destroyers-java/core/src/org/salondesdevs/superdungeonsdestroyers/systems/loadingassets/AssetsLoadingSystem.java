@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.states.MainMenuState;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.slf4j.Logger;
@@ -126,14 +127,13 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
         }
 
-        assets.rooms = new TiledMap[0];
+        assets.rooms = new TiledMap[Levels.values().length];
 
-        Arrays.fill(assets.rooms, assets.testMap);
         // TODO: load rooms
-//        assets.rooms[LevelEnvironment.Bottom] = assets.bottom;
-//        assets.rooms[LevelEnvironment.Cave] = assets.cave;
-//        assets.rooms[LevelEnvironment.Top] = assets.top;
-//        assets.rooms[LevelEnvironment.CollisionsTester] = assets.collisionsTester;
+        assets.rooms[Levels.BOTTOM.ordinal()] = assets.bottom;
+        assets.rooms[Levels.CAVE.ordinal()] = assets.cave;
+        assets.rooms[Levels.TOP.ordinal()] = assets.top;
+        assets.rooms[Levels.COLLISIONS_TESTER.ordinal()] = assets.collisionsTester;
     }
 
     @Override

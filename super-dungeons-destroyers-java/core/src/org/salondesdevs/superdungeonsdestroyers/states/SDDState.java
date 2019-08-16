@@ -1,7 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.states;
 
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.EventBus;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 
 import javax.inject.Inject;
 

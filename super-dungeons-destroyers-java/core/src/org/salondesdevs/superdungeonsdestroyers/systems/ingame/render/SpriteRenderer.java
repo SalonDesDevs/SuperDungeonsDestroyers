@@ -2,7 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
 
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 @Singleton
 public class SpriteRenderer extends IteratingSystem {
     public SpriteRenderer() {
-        super(Aspect.all(Sprited.class, TilePosition.class));
+        super(Aspect.all(Sprited.class, Position.class));
     }
 
     @Override
@@ -25,7 +25,7 @@ public class SpriteRenderer extends IteratingSystem {
     Mapper<Sprited> spritedMapper;
 
     @Inject
-    Mapper<TilePosition> positionMapper;
+    Mapper<Position> positionMapper;
 
     @Inject
     CameraSystem cameraService;
@@ -39,9 +39,9 @@ public class SpriteRenderer extends IteratingSystem {
     @Override
     public void process(int entity) {
         Sprited sprited = spritedMapper.get(entity);
-        TilePosition tilePosition = positionMapper.get(entity);
+        Position position = positionMapper.get(entity);
 
-        batch.draw(sprited.textureRegion, tilePosition.x * 16, tilePosition.y * 16);
+        batch.draw(sprited.textureRegion, position.x * 16, position.y * 16);
     }
 
     @Override

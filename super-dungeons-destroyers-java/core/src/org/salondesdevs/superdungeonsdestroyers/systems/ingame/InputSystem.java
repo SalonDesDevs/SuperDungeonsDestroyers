@@ -2,15 +2,14 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.utils.IntArray;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.events.Event;
+import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.input.MouseScrolledEvent;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.EventBus;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,7 +33,6 @@ public class InputSystem extends BaseSystem implements InputProcessor {
         pressedKeys = new IntArrayList();
         Gdx.input.setInputProcessor(this);
     }
-
 
     @Override
     public void process() {

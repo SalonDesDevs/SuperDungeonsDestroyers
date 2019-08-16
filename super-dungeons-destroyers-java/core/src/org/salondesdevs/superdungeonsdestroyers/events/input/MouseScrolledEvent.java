@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.events.input;
 
-import org.salondesdevs.superdungeonsdestroyers.events.Event;
+import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
 
 public class MouseScrolledEvent extends Event {
 

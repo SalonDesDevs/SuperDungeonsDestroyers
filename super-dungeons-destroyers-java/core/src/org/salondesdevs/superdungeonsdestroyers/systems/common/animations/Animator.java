@@ -3,6 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.animations;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class Animator extends BaseSystem {
 
     /**
      * Creates an animation that will modify the proper {@link Offset} field to simulate player movement.
-     * This assumes the {@link org.salondesdevs.superdungeonsdestroyers.components.TilePosition} has already be changed!
+     * This assumes the {@link Position} has already be changed!
      */
     public Animation<Float> createMoveAnimation(Offset offset, Direction direction, Runnable onEnd) {
         float start = 0.0f;

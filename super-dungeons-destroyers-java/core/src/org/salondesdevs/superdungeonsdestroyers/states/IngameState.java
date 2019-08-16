@@ -5,6 +5,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.EntityCreator;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerIdHolder;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerMotionSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.render.AnimatedSpriteRenderer;
@@ -30,6 +31,7 @@ public class IngameState extends SDDState {
 
         // Services
         register(Assets.class);
+        register(EntityCreator.class);
 
         // Network stuff
         register(NetworkSystem.class);

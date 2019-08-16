@@ -17,6 +17,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.KeepAlive;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,8 +64,6 @@ public class NetworkSystem extends BaseSystem {
 
         batch = new SpriteBatch();
         font = new BitmapFont();
-
-
     }
 
 
@@ -95,7 +94,7 @@ public class NetworkSystem extends BaseSystem {
         if (remaining < 0 && test) {
             test = false;
 //            this.world.push(IngameState.class);
-            this.send(new KeepAlive());
+//            this.send(new KeepAlive());
         }
     }
 
@@ -118,6 +117,7 @@ public class NetworkSystem extends BaseSystem {
         public void channelActive(ChannelHandlerContext ctx)
                 throws Exception {
             channelHandlerContext = ctx;
+            send(new VersionCheck());
         }
 
         @Override

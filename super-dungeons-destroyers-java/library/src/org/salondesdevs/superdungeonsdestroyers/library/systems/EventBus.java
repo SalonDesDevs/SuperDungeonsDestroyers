@@ -1,7 +1,7 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.common;
+package org.salondesdevs.superdungeonsdestroyers.library.systems;
 
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.events.Event;
+import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
 
 import javax.inject.Singleton;
 

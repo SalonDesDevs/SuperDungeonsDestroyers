@@ -8,9 +8,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
@@ -27,7 +28,7 @@ public class PlayerMotionSystem extends Service {
     NetworkSystem networkSystem;
 
     @Inject
-    Mapper<TilePosition> positionMapper;
+    Mapper<Position> positionMapper;
 
     @Inject
     Mapper<Offset> offsetMapper;
@@ -72,25 +73,25 @@ public class PlayerMotionSystem extends Service {
 
             final Direction direction = keysToDirection.get(keyPressedEvent.getKeycode());
 
-            TilePosition tilePosition = positionMapper.get(playerIdHolder.getEntityId());
+            Position position = positionMapper.get(playerIdHolder.getEntityId());
             Offset offset = offsetMapper.get(playerIdHolder.getEntityId());
 
             switch (direction) {
                 case NORTH:
-                    tilePosition.y++;
+                    position.y++;
                     break;
                 case SOUTH:
-                    tilePosition.y--;
+                    position.y--;
                     break;
                 case WEST:
-                    tilePosition.x--;
+                    position.x--;
                     break;
                 case EAST:
-                    tilePosition.x++;
+                    position.x++;
                     break;
             }
 
-//            networkSystem.request().addMoveContent(direction).writeAndFlush();
+            networkSystem.send(new PlayerMove(direction));
 
             Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction, () -> {
                 actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);

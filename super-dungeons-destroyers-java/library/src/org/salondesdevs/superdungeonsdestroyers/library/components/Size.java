@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.components;
+package org.salondesdevs.superdungeonsdestroyers.library.components;
 
 import net.wytrem.ecs.*;
 

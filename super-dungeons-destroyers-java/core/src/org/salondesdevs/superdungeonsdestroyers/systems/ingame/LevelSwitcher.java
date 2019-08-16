@@ -2,6 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 import org.slf4j.Logger;
@@ -44,8 +45,8 @@ public class LevelSwitcher extends IteratingSystem {
         }
     }
 
-    public void scheduleChange(int room) {
-        this.scheduledRoom = room;
-        this.currentHeight = TiledMapUtils.getHeight(assets.rooms[room]);
+    public void scheduleChange(Levels room) {
+        this.scheduledRoom = room.ordinal();
+        this.currentHeight = TiledMapUtils.getHeight(assets.rooms[room.ordinal()]);
     }
 }

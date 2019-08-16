@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AnimatedSpriteRenderer extends IteratingSystem {
         public AnimatedSpriteRenderer() {
-        super(Aspect.all(Animated.class, TilePosition.class, Offset.class));
+        super(Aspect.all(Animated.class, Position.class, Offset.class));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
     Mapper<Animated> animatedMapper;
 
     @Inject
-    Mapper<TilePosition> positionMapper;
+    Mapper<Position> positionMapper;
 
     @Inject
     Mapper<Offset> offsetMapper;
@@ -46,10 +46,10 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
     @Override
     public void process(int entity) {
         Animated animated = animatedMapper.get(entity);
-        TilePosition tilePosition = positionMapper.get(entity);
+        Position position = positionMapper.get(entity);
         Offset offset = offsetMapper.get(entity);
 
-        batch.draw(animated.animation.getKeyFrame(stateTime, true), tilePosition.x * 16 + offset.x, tilePosition.y * 16 + offset.y);
+        batch.draw(animated.animation.getKeyFrame(stateTime, true), position.x * 16 + offset.x, position.y * 16 + offset.y);
     }
 
     @Override

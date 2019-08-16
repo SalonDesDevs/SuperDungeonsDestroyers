@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.components.Size;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
-import org.salondesdevs.superdungeonsdestroyers.components.TilePosition;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,7 +26,7 @@ public class OverlayRenderer extends CrossIteratingSystem {
     MapLayerRenderer mapLayerRenderer;
 
     public OverlayRenderer() {
-        super(Aspect.all(Terrain.class), Aspect.all(Camera.class, TilePosition.class, Offset.class, Size.class));
+        super(Aspect.all(Terrain.class), Aspect.all(Camera.class, Position.class, Offset.class, Size.class));
     }
 
     @Override

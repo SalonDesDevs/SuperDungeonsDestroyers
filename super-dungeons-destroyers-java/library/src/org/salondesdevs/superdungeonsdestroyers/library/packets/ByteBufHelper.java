@@ -16,4 +16,12 @@ public class ByteBufHelper {
     public static String readString(ByteBuf in) {
         return in.readCharSequence(in.readInt(), utf8).toString();
     }
+
+    public static <E extends Enum<E>> void writeEnum(E value, ByteBuf out) {
+        out.writeByte(value.ordinal());
+    }
+
+    public static <E extends Enum<E>> E readEnum(Class<E> clazz, ByteBuf in) {
+        return clazz.getEnumConstants()[in.readByte()];
+    }
 }

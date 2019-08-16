@@ -33,6 +33,9 @@ public class Assets extends Service {
     @Asset(path = "player.png")
     public Texture player;
 
+    @Asset(path = "other_player.png")
+    public Texture otherPlayer;
+
     @Asset(path = ROOMS_FOLDER + "bottom.tmx")
     public TiledMap bottom;
 
