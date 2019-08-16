@@ -18,22 +18,14 @@ public class MotionSystem extends Service {
     NetworkSystem networkSystem;
 
     @Inject
-    Mapper<Position> positionMapper;
+    EnvironmentManager environmentManager;
+
 
     public void playerMoved(int playerId, PlayerMove playerMove) {
         // TODO: check if the tile is free
-        networkSystem.broadcastExcluding(playerId, new EntityMove(playerId, playerMove.direction));
-        positionMapper.get(playerId).increment(playerMove.direction);
+
+        environmentManager.moveEntity(playerId, playerMove.direction);
     }
 
-    public void teleport(int entityId, int x, int y) {
-        if (positionMapper.has(entityId)) {
-            Position position = positionMapper.get(entityId);
-            if (position.x != x || position.y != y) {
-                position.x = x;
-                position.y = y;
-                networkSystem.broadcast(new EntityTeleport(entityId, x, y));
-            }
-        }
-    }
+
 }

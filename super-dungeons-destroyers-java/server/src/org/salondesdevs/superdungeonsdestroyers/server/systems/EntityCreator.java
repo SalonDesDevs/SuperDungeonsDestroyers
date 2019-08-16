@@ -10,21 +10,30 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
+/**
+ * This is NOT for direct use, see {@link EnvironmentManager#spawn(EntityKind)}.
+ */
 public class EntityCreator extends Service {
 
     @Inject
     World world;
 
-    @Inject
-    Mapper<PlayerConnection> playerConnectionMapper;
-
-    public int createPlayer() {
+    private int createPlayer() {
         int player = world.createEntity();
         addTracked(player);
         addPosition(player);
         addKind(player, EntityKind.PLAYER);
 
         return player;
+    }
+
+    public int create(EntityKind entityKind) {
+        switch (entityKind) {
+            case PLAYER:
+                return createPlayer();
+        }
+
+        return 0;
     }
 
     @Inject

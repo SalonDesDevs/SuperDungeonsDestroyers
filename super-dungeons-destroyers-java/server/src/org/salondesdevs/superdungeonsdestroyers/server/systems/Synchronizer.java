@@ -1,9 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
@@ -21,13 +23,13 @@ import java.util.List;
 
 @Singleton
 /**
- * Used to keep player up to date (entities movements, levels changes...).
+ * Used to keep players up to date (entities movements, levels changes...).
  */
-public class EnvironmentTracker extends IteratingSystem {
+public class Synchronizer extends IteratingSystem {
 
-    private static final Logger logger = LoggerFactory.getLogger( EnvironmentTracker.class );
+    private static final Logger logger = LoggerFactory.getLogger( Synchronizer.class );
 
-    public EnvironmentTracker() {
+    public Synchronizer() {
         super(Aspect.all(Tracked.class));
     }
 
@@ -40,26 +42,20 @@ public class EnvironmentTracker extends IteratingSystem {
     Mapper<PlayerConnection> playerConnectionMapper;
 
     @Inject
-    MotionSystem motionSystem;
-
-    @Inject
     NetworkSystem networkSystem;
 
     Levels level = Levels.BOTTOM;
-
-    public void onPlayerJoin(int player) {
-        logger.info("onPlayerJoin({})", player);
-        playerConnectionMapper.get(player).send(new SwitchLevel(this.level), new Welcome(player));
-        sendTrackedEntities(player);
-        networkSystem.broadcastExcluding(player, new EntitySpawn(player, EntityKind.PLAYER));
-        motionSystem.teleport(player, 1, 1);
-    }
 
     @Inject
     Mapper<EntityKind> entityKindMapper;
 
     @Inject
     Mapper<Position> positionMapper;
+
+    public void startSynchronizingWith(int player) {
+        playerConnectionMapper.get(player).send(new SwitchLevel(this.level), new Welcome(player));
+        sendTrackedEntities(player);
+    }
 
     private void sendTrackedEntities(int player) {
         List<Packet> packetList = new ArrayList<>((entities.size() - 1) * 2);
@@ -80,5 +76,22 @@ public class EnvironmentTracker extends IteratingSystem {
                 packetList.add(new EntityTeleport(entityId, positionMapper.get(entityId)));
             }
         }
+    }
+
+    public void notifyEntitySpawned(int entity, EntityKind entityKind) {
+        networkSystem.broadcast(new EntitySpawn(entity, entityKind));
+    }
+
+    public void notifyEntityMoved(int entity, Direction direction) {
+        if (entityKindMapper.get(entity).equals(EntityKind.PLAYER)) {
+            networkSystem.broadcastExcluding(entity, new EntityMove(entity, direction));
+        }
+        else {
+            networkSystem.broadcast(new EntityMove(entity, direction));
+        }
+    }
+
+    public void notifyPositionChanged(int entity, int x, int y) {
+        networkSystem.broadcast(new EntityTeleport(entity, x, y));
     }
 }

@@ -45,30 +45,30 @@ public class EntityCreator extends Service {
 
     private static final int FRAME_COLS = 4, FRAME_ROWS = 1;
 
-    public void addSprited(int entity, Sprited.Sprites sprites) {
+    public void setSprited(int entity, Sprited.Sprites sprites) {
         this.spritedMapper.set(entity, new Sprited(sprites.toTextureRegion(assets.tileset)));
     }
 
-    public void addBasics(int entity) {
+    public void setBasics(int entity) {
         offsetMapper.set(entity, new Offset());
         sizeMapper.set(entity, new Size(15, 20));
         positionMapper.set(entity, new Position(Integer.MIN_VALUE, Integer.MIN_VALUE));
     }
 
-    public void addRemotePlayer(int entity) {
-        addBasics(entity);
-        addWalkAnim(entity, assets.otherPlayer);
+    public void setPlayer(int entity) {
+        setBasics(entity);
+        setWalkAnim(entity, assets.otherPlayer);
     }
 
     public void addLocalPlayer(int me) {
-        addBasics(me);
+        setBasics(me);
         cameraMapper.set(me, Camera.INSTANCE);
         meMapper.set(me, Me.INSTANCE);
 
-        addWalkAnim(me, assets.player);
+        setWalkAnim(me, assets.player);
     }
 
-    public void addWalkAnim(int entity, Texture walkSheet) {
+    public void setWalkAnim(int entity, Texture walkSheet) {
         TextureRegion[][] tmp = TextureRegion.split(walkSheet,
                 walkSheet.getWidth() / FRAME_COLS,
                 walkSheet.getHeight() / FRAME_ROWS);

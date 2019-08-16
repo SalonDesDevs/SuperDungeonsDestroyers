@@ -14,6 +14,7 @@ import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
+import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,6 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.logging.Filter;
 
 @Singleton
 public class NetworkSystem extends BaseSystem {
@@ -37,6 +37,9 @@ public class NetworkSystem extends BaseSystem {
     List<NetHandler> netHandlerList = new ArrayList<>();
 
     EventLoopGroup bossGroup, workerGroup;
+
+    @Inject
+    Mapper<PlayerConnection> playerConnectionMapper;
 
     @Override
     public void initialize() {
@@ -64,19 +67,16 @@ public class NetworkSystem extends BaseSystem {
         }
     }
 
-    public void broadcast(Packet...packets) {
-
-            System.out.println("list = " + netHandlerList);
-
-            netHandlerList.stream().map(NetHandler::getPlayerConnection).forEach(playerConnection -> playerConnection.send(packets));
+    public void broadcast(Packet... packets) {
+        this.playerConnectionMapper.forEachValue(playerConnection -> playerConnection.send(packets));
     }
 
-    public void broadcastExcluding(int playerId, Packet...packets) {
-        this.broadcastFilter(netHandler -> netHandler.getPlayerId() != playerId, packets);
-    }
-
-    public void broadcastFilter(Predicate<NetHandler> filter, Packet...packets) {
-        netHandlerList.stream().filter(filter).map(NetHandler::getPlayerConnection).forEach(playerConnection -> playerConnection.send(packets));
+    public void broadcastExcluding(int playerId, Packet... packets) {
+        this.playerConnectionMapper.forEach((i, playerConnection) -> {
+            if (playerId != i) {
+                playerConnection.send(packets);
+            }
+        });
     }
 
     @Override
@@ -103,8 +103,8 @@ public class NetworkSystem extends BaseSystem {
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg)
                 throws Exception {
-            logger.info("Received {}", msg.getClass().getSimpleName());
-            this.netHandler.enqeue((Packet) msg);
+            logger.trace("Received {} from {}", msg.getClass().getSimpleName(), ctx);
+            this.netHandler.enqeueForHandling((Packet) msg);
         }
     }
 
