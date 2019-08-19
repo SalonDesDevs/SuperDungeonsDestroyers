@@ -2,7 +2,9 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import net.wytrem.ecs.*;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 
 import javax.inject.Singleton;
 import java.lang.annotation.ElementType;
@@ -23,6 +25,9 @@ public class Assets extends Service {
     public static final String ROOMS_FOLDER = "rooms/";
     @Asset(path = "title.png")
     public Texture title;
+
+    @Asset(path = "title_background.png")
+    public Texture titleBackground;
 
     @Asset(path = "testmap.tmx")
     public TiledMap testMap;
@@ -48,7 +53,21 @@ public class Assets extends Service {
     @Asset(path = ROOMS_FOLDER + "collisions_tester.tmx")
     public TiledMap collisionsTester;
 
+    @Asset(path = "uiskin.json")
+    public Skin skin;
+
     public TiledMap[] rooms;
+
+    public void finishInitialization() {
+
+        rooms = new TiledMap[Levels.values().length];
+
+        // TODO: load rooms
+        rooms[Levels.BOTTOM.ordinal()] = bottom;
+        rooms[Levels.CAVE.ordinal()] = cave;
+        rooms[Levels.TOP.ordinal()] = top;
+        rooms[Levels.COLLISIONS_TESTER.ordinal()] = collisionsTester;
+    }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)

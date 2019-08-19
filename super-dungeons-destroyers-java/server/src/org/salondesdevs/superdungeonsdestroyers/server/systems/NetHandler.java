@@ -6,6 +6,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class NetHandler {
         if (packet instanceof VersionCheck) {
             VersionCheck versionCheck = (VersionCheck) packet;
             // TODO: check protocol version
-            if (versionCheck.minor != Integer.MIN_VALUE) {
+            if (versionCheck.major == ProtocolVersion.MAJOR && versionCheck.minor == ProtocolVersion.MINOR) {
                 this.checkedIn = true;
                 // If the protocol is correct, we actually spawn the player in the world.
                 this.playerId = environmentManager.spawn(EntityKind.PLAYER);

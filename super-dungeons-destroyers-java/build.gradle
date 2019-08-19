@@ -7,9 +7,9 @@ buildscript {
         jcenter()
         google()
     }
-    dependencies {
-        classpath "gradle.plugin.io.netifi:gradle-flatbuffers-plugin:1.0.5"
-    }
+//    dependencies {
+//        classpath "gradle.plugin.io.netifi:gradle-flatbuffers-plugin:1.0.5"
+//    }
 }
 
 allprojects {
@@ -33,11 +33,11 @@ allprojects {
     }
 }
 
-import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
+//import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
 
 project(":library") {
     apply plugin: "java"
-    apply plugin: "io.netifi.flatbuffers"
+//    apply plugin: "io.netifi.flatbuffers"
 
     dependencies {
         compile "net.wytrem:ecs:2.0"
@@ -45,21 +45,21 @@ project(":library") {
         compile "org.slf4j:slf4j-simple:1.7.26"
         compile "com.google.guava:guava:28.0-jre"
         compile "io.netty:netty-all:4.1.39.Final"
-        compile files("libs/flatbuffers-java-1.11.1.jar")
+//        compile files("libs/flatbuffers-java-1.11.1.jar")
     }
 
-    task createFlatBuffers(type: FlatBuffers) {
-        inputDir = file("../../../commons/schemas")
-        outputDir = file("src/")
-        language = 'java'
-        extraArgs = '--gen-mutable'
-    }
-
-    task deletePreviousFlatBuffers(type: Delete) {
-        delete "src/SDD/"
-    }
-
-    tasks.createFlatBuffers.dependsOn(deletePreviousFlatBuffers)
+//    task createFlatBuffers(type: FlatBuffers) {
+//        inputDir = file("../../../commons/schemas")
+//        outputDir = file("src/")
+//        language = 'java'
+//        extraArgs = '--gen-mutable'
+//    }
+//
+//    task deletePreviousFlatBuffers(type: Delete) {
+//        delete "src/SDD/"
+//    }
+//
+//    tasks.createFlatBuffers.dependsOn(deletePreviousFlatBuffers)
 }
 
 

@@ -1,0 +1,130 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	default: {
+		file: default.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	RGBA_128_128_128_255: {
+		r: 0.5019608
+		g: 0.5019608
+		b: 0.5019608
+		a: 1
+	}
+	RGBA_157_100_0_255: {
+		r: 0.6166668
+		g: 0.39357063
+		b: 0
+		a: 1
+	}
+	RGBA_225_198_0_255: {
+		r: 0.8831111
+		g: 0.7764706
+		b: 0
+		a: 1
+	}
+	RGBA_226_226_226_255: {
+		r: 0.8866668
+		g: 0.8866668
+		b: 0.8866668
+		a: 1
+	}
+	RGBA_255_0_0_255: {
+		r: 1
+		g: 0
+		b: 0
+		a: 1
+	}
+	RGBA_255_255_255_255: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	buttonSquare_brown_tinted: {
+		name: buttonSquare_brown
+		color: RGBA_225_198_0_255
+	}
+	buttonSquare_brown_pressed_tinted: {
+		name: buttonSquare_brown_pressed
+		color: RGBA_225_198_0_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: buttonSquare_brown
+		down: buttonSquare_brown_pressed_tinted
+		over: buttonSquare_brown_tinted
+		disabled: buttonSquare_blue
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: {
+		checkboxOn: iconCheck_bronze
+		checkboxOff: iconCheck_grey
+		font: default
+		up: buttonSquare_brown
+		down: buttonSquare_brown_pressed_tinted
+		over: buttonSquare_brown_tinted
+		disabled: buttonSquare_blue
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: {
+		up: buttonSquare_brown
+		down: buttonSquare_brown_pressed_tinted
+		over: buttonSquare_brown_tinted
+		disabled: buttonSquare_blue
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+	default: {
+		font: default
+		overFontColor: RGBA_225_198_0_255
+		disabledFontColor: RGBA_226_226_226_255
+		up: buttonSquare_brown
+		down: buttonSquare_brown_pressed_tinted
+		over: buttonSquare_brown_tinted
+		disabled: buttonSquare_blue
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: default
+		fontColorSelected: RGBA_225_198_0_255
+		fontColorUnselected: RGBA_255_255_255_255
+		selection: tooltipBackground
+		background: panelInset_brown
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: panelInset_brown
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: default
+		fontColor: RGBA_226_226_226_255
+		overFontColor: RGBA_225_198_0_255
+		disabledFontColor: RGBA_226_226_226_255
+		up: buttonSquare_brown
+		down: buttonSquare_brown_pressed_tinted
+		over: buttonSquare_brown_tinted
+		disabled: buttonSquare_blue
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+		background: tooltipBackground
+	}
+}
+}

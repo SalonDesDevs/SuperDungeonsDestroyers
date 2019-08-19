@@ -126,14 +126,7 @@ public class AssetsLoadingSystem extends BaseSystem {
                 }
             }
         }
-
-        assets.rooms = new TiledMap[Levels.values().length];
-
-        // TODO: load rooms
-        assets.rooms[Levels.BOTTOM.ordinal()] = assets.bottom;
-        assets.rooms[Levels.CAVE.ordinal()] = assets.cave;
-        assets.rooms[Levels.TOP.ordinal()] = assets.top;
-        assets.rooms[Levels.COLLISIONS_TESTER.ordinal()] = assets.collisionsTester;
+        assets.finishInitialization();
     }
 
     @Override

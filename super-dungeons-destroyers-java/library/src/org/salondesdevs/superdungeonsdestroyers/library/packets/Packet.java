@@ -28,20 +28,25 @@ public abstract class Packet {
 
     static {
         // Both sides
-        register(0, KeepAlive::new, KeepAlive.class);
+        int id = 0;
+        register(id++, KeepAlive::new, KeepAlive.class);
+
+        id = 10;
 
         // From client
-        register(10, VersionCheck::new, VersionCheck.class);
-        register(11, PlayerMove::new, PlayerMove.class);
+        register(id++, VersionCheck::new, VersionCheck.class);
+        register(id++, PlayerMove::new, PlayerMove.class);
+
+        id = 50;
 
         // From server
-        register(51, DisconnectReason::new, DisconnectReason.class);
-        register(52, Welcome::new, Welcome.class);
-        register(53, EntitySpawn::new, EntitySpawn.class);
-        register(54, EntityDespawn::new, EntityDespawn.class);
-        register(55, EntityTeleport::new, EntityTeleport.class);
-        register(56, EntityMove::new, EntityMove.class);
-        register(57, SwitchLevel::new, SwitchLevel.class);
+        register(id++, DisconnectReason::new, DisconnectReason.class);
+        register(id++, Welcome::new, Welcome.class);
+        register(id++, EntitySpawn::new, EntitySpawn.class);
+        register(id++, EntityDespawn::new, EntityDespawn.class);
+        register(id++, EntityTeleport::new, EntityTeleport.class);
+        register(id++, EntityMove::new, EntityMove.class);
+        register(id++, SwitchLevel::new, SwitchLevel.class);
     }
 
     private static <P extends Packet> void register(int id, Supplier<P> packetSupplier, Class<P> clazz) {

@@ -1,7 +1,5 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,12 +10,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.FutureListener;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.KeepAlive;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +36,12 @@ public class NetworkSystem extends BaseSystem {
 
     @Override
     public void initialize() {
+
+    }
+
+    public void tryConnect(String host, int port) {
         logger.info("Connecting to server");
 
-        String host = "localhost";
-        int port = 9000;
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
@@ -57,54 +59,29 @@ public class NetworkSystem extends BaseSystem {
         });
 
         try {
-            ChannelFuture f = b.connect(host, port).sync();
+            ChannelFuture f = b.connect(host, port);
+
+            f.addListener((FutureListener<Void>) future -> {
+                if (!f.isSuccess()) {
+                    logger.error("Could not connect to SDD server at {}:{}", host, port);
+                    if (f.cause() != null) {
+                        logger.error("Throwable: ", f.cause());
+                    }
+                    else {
+                        logger.error("ChannelFuture#cause() (throwable) is null.");
+                    }
+                }
+            });
+
+
+            f.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-    }
-
-
-    SpriteBatch batch;
-
-    BitmapFont font;
-
-
-    boolean test = true;
-
-    @Override
-    public void begin() {
-        batch.begin();
-    }
-
-    float remaining = 4;
-
-    @Override
-    public void process() {
-        // Send enqueued packets, ...
-
-        remaining -= world.getDelta();
-
-//        if (remaining > 0) {
-//            font.draw(batch, "Ingame in " + remaining, 100, 100);
-//        }
-
-        if (remaining < 0 && test) {
-            test = false;
-//            this.world.push(IngameState.class);
-//            this.send(new KeepAlive());
         }
     }
 
     public void send(Packet packet) {
         this.channelHandlerContext.writeAndFlush(packet);
-    }
-
-    @Override
-    public void end() {
-        batch.end();
     }
 
     @Override
@@ -117,7 +94,8 @@ public class NetworkSystem extends BaseSystem {
         public void channelActive(ChannelHandlerContext ctx)
                 throws Exception {
             channelHandlerContext = ctx;
-            send(new VersionCheck());
+            logger.info("Sending VersionCheck({}, {})", ProtocolVersion.MAJOR, ProtocolVersion.MINOR);
+            send(new VersionCheck(ProtocolVersion.MAJOR, ProtocolVersion.MINOR));
         }
 
         @Override
