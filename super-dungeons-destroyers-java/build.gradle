@@ -36,15 +36,15 @@ allprojects {
 //import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
 
 project(":library") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 //    apply plugin: "io.netifi.flatbuffers"
 
     dependencies {
-        compile "net.wytrem:ecs:2.0"
-        compile "org.slf4j:slf4j-api:1.7.26"
-        compile "org.slf4j:slf4j-simple:1.7.26"
-        compile "com.google.guava:guava:28.0-jre"
-        compile "io.netty:netty-all:4.1.39.Final"
+        api "net.wytrem:ecs:2.0"
+        api "org.slf4j:slf4j-api:1.7.26"
+        api "org.slf4j:slf4j-simple:1.7.26"
+        api "com.google.guava:guava:28.0-jre"
+        api "io.netty:netty-all:4.1.39.Final"
 //        compile files("libs/flatbuffers-java-1.11.1.jar")
     }
 
@@ -64,32 +64,32 @@ project(":library") {
 
 
 project(":core") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        compile project(":library")
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        api project(":library")
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }
 
 project(":server") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        compile project(":library")
+        api project(":library")
     }
 }
 
 project(":desktop") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        compile project(":core")
+        api project(":core")
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
