@@ -54,6 +54,7 @@ public class UiSystem extends BaseSystem {
             Gdx.input.setInputProcessor(this.currentScreen.getStage());
         }
         else {
+            this.currentScreen = null;
             Gdx.input.setInputProcessor(ingameInputSystem);
         }
     }

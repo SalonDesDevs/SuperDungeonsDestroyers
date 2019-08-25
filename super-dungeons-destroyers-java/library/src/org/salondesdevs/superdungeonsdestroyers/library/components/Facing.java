@@ -1,6 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components;
 
-public enum Direction {
+import net.wytrem.ecs.Component;
+
+public enum Facing implements Component {
     NORTH(0, 1),
     SOUTH(0, -1),
     WEST(-1, 0),
@@ -8,17 +10,17 @@ public enum Direction {
 
     public final int x, y;
 
-    Direction(int x, int y) {
+    Facing(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public static Direction getClosest(float x, float y) {
-        Direction result = null;
+    public static Facing getClosest(float x, float y) {
+        Facing result = null;
         float maxDot = Float.MIN_VALUE;
         float dot;
 
-        for (Direction dir : values()) {
+        for (Facing dir : values()) {
             dot = dir.x * x + dir.y * y;
             if (dot > maxDot) {
                 maxDot = dot;

@@ -1,27 +1,17 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets;
 
-import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityDespawn;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
 
 import java.util.function.Supplier;
 
-public abstract class Packet {
-
-    public abstract void read(ByteBuf in);
-
-    public abstract void write(ByteBuf out);
+public abstract class Packet implements NettySerializable {
 
     private static final Byte2ObjectMap<Supplier<? extends Packet>> suppliers = new Byte2ObjectOpenHashMap<>();
     private static final Object2ByteMap<Class<? extends Packet>> classes = new Object2ByteOpenHashMap<>();
@@ -40,6 +30,7 @@ public abstract class Packet {
         id = 50;
 
         // From server
+        register(id++, VersionCheckSuccess::new, VersionCheckSuccess.class);
         register(id++, DisconnectReason::new, DisconnectReason.class);
         register(id++, Welcome::new, Welcome.class);
         register(id++, EntitySpawn::new, EntitySpawn.class);
@@ -47,6 +38,7 @@ public abstract class Packet {
         register(id++, EntityTeleport::new, EntityTeleport.class);
         register(id++, EntityMove::new, EntityMove.class);
         register(id++, SwitchLevel::new, SwitchLevel.class);
+        register(id++, EntityComponentSet::new, EntityComponentSet.class);
     }
 
     private static <P extends Packet> void register(int id, Supplier<P> packetSupplier, Class<P> clazz) {

@@ -1,10 +1,15 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components;
 
-import net.wytrem.ecs.*;
+import io.netty.buffer.ByteBuf;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.WatchableComponent;
 
-public class Size implements Component {
+public class Size extends WatchableComponent {
 
-    public float width, height;
+    private float width;
+    private float height;
+
+    public Size() {
+    }
 
     public Size(float width, float height) {
         this.width = width;
@@ -12,10 +17,41 @@ public class Size implements Component {
     }
 
     public void setWidth(float width) {
+        if (width != this.width) {
+            setChanged();
+        }
         this.width = width;
     }
 
     public void setHeight(float height) {
+        if (height != this.height) {
+            this.setChanged();
+        }
         this.height = height;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void set(float width, float height) {
+        this.setWidth(width);
+        this.setHeight(height);
+    }
+
+    @Override
+    public void read(ByteBuf in) {
+        this.width = in.readFloat();
+        this.height = in.readFloat();
+    }
+
+    @Override
+    public void write(ByteBuf out) {
+        out.writeFloat(this.width);
+        out.writeFloat(this.height);
     }
 }

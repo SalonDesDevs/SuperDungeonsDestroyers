@@ -10,7 +10,7 @@ import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PlayerMotionSystem extends Service {
 
-    private Int2ObjectMap<Direction> keysToDirection = new Int2ObjectArrayMap<>();
+    private Int2ObjectMap<Facing> keysToDirection = new Int2ObjectArrayMap<>();
 
     @Inject
     NetworkSystem networkSystem;
@@ -48,10 +48,10 @@ public class PlayerMotionSystem extends Service {
 
     @Override
     public void initialize() {
-        keysToDirection.put(Input.Keys.UP, Direction.NORTH);
-        keysToDirection.put(Input.Keys.DOWN, Direction.SOUTH);
-        keysToDirection.put(Input.Keys.RIGHT, Direction.EAST);
-        keysToDirection.put(Input.Keys.LEFT, Direction.WEST);
+        keysToDirection.put(Input.Keys.UP, Facing.NORTH);
+        keysToDirection.put(Input.Keys.DOWN, Facing.SOUTH);
+        keysToDirection.put(Input.Keys.RIGHT, Facing.EAST);
+        keysToDirection.put(Input.Keys.LEFT, Facing.WEST);
     }
 
     @Subscribe
@@ -71,12 +71,12 @@ public class PlayerMotionSystem extends Service {
 
             actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
 
-            final Direction direction = keysToDirection.get(keyPressedEvent.getKeycode());
+            final Facing facing = keysToDirection.get(keyPressedEvent.getKeycode());
 
             Position position = positionMapper.get(playerIdHolder.getEntityId());
             Offset offset = offsetMapper.get(playerIdHolder.getEntityId());
 
-            switch (direction) {
+            switch (facing) {
                 case NORTH:
                     position.y++;
                     break;
@@ -91,9 +91,9 @@ public class PlayerMotionSystem extends Service {
                     break;
             }
 
-            networkSystem.send(new PlayerMove(direction));
+            networkSystem.send(new PlayerMove(facing));
 
-            Animation<Float> walkAnimation = animator.createMoveAnimation(offset, direction, () -> {
+            Animation<Float> walkAnimation = animator.createMoveAnimation(offset, facing, () -> {
                 actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);
             });
 

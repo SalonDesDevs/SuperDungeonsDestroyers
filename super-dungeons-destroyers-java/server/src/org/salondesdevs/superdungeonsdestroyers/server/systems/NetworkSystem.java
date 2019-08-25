@@ -96,7 +96,6 @@ public class NetworkSystem extends BaseSystem {
             synchronized (netHandlerList) {
                 netHandlerList.add(netHandler);
                 logger.info("Actived new connection from {}", ctx.channel().remoteAddress());
-                logger.info("list is now {}", netHandlerList);
             }
         }
 

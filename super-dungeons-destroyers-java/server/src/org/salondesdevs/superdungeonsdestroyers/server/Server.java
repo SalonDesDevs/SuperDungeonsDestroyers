@@ -10,7 +10,7 @@ public class Server {
 
     public void start() {
         WorldConfiguration worldConfiguration = new WorldConfiguration();
-        worldConfiguration.getExtraModules().add(new AbstractModule() {
+        worldConfiguration.addModule(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(Server.class).toInstance(Server.this);

@@ -64,7 +64,7 @@ public class OverlayRenderer extends CrossIteratingSystem {
         shapeRenderer.setProjectionMatrix(cameraSystem.camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        shapeRenderer.rect(cameraSystem.camera.position.x, cameraSystem.camera.position.y, size.width * SIZE_FACTOR, size.height * SIZE_FACTOR);
+        shapeRenderer.rect(cameraSystem.camera.position.x, cameraSystem.camera.position.y, size.getWidth() * SIZE_FACTOR, size.getHeight() * SIZE_FACTOR);
         shapeRenderer.end();
 
 

@@ -1,9 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 
 import javax.inject.Inject;
@@ -18,9 +20,11 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
     @Override
     public void initialize() {
         batch = new SpriteBatch();
+        font = new BitmapFont();
     }
 
     SpriteBatch batch;
+        BitmapFont font;
 
     @Inject
     Mapper<Animated> animatedMapper;
@@ -43,6 +47,9 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
         batch.begin();
     }
 
+    @Inject
+    Mapper<Name> nameMapper;
+
     @Override
     public void process(int entity) {
         Animated animated = animatedMapper.get(entity);
@@ -50,7 +57,12 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
         Offset offset = offsetMapper.get(entity);
 
         batch.draw(animated.animation.getKeyFrame(stateTime, true), position.x * 16 + offset.x, position.y * 16 + offset.y);
+
+        if (nameMapper.has(entity)) {
+            font.draw(batch, nameMapper.get(entity).getValue(), position.x * 16 + offset.x, position.y * 16 + offset.y);
+        }
     }
+
 
     @Override
     public void end() {

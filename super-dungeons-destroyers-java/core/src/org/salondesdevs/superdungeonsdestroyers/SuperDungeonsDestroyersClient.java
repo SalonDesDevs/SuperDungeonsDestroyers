@@ -25,7 +25,7 @@ public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
     public void create() {
         logger.info("Starting SDDClient v{}", VERSION);
         WorldConfiguration worldConfiguration = new WorldConfiguration();
-        worldConfiguration.getExtraModules().add(new AbstractModule() {
+        worldConfiguration.addModule(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(SuperDungeonsDestroyersClient.class).toInstance(SuperDungeonsDestroyersClient.this);

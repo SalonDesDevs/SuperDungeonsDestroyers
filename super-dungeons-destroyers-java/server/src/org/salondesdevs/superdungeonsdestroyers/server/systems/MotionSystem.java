@@ -1,10 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +21,7 @@ public class MotionSystem extends Service {
     public void playerMoved(int playerId, PlayerMove playerMove) {
         // TODO: check if the tile is free
 
-        environmentManager.moveEntity(playerId, playerMove.direction);
+        environmentManager.moveEntity(playerId, playerMove.facing);
     }
 
 

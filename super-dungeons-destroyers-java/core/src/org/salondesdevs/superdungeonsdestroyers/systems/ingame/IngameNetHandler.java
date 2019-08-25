@@ -6,11 +6,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
@@ -41,6 +37,20 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
         else if (packet instanceof EntitySpawn) {
             this.handleEntitySpawn(((EntitySpawn) packet));
         }
+        else if (packet instanceof EntityComponentSet){
+            this.handleEntityComponentSet(((EntityComponentSet) packet));
+        }
+    }
+
+    @Inject
+    World world;
+
+    private void handleEntityComponentSet(EntityComponentSet packet) {
+        setFromValue(packet.entityId, packet.watchableComponent);
+    }
+
+    private <C extends Component> void setFromValue(int entityId, C component) {
+        ((Mapper<C>) world.getMapper(component.getClass())).set(entityId, component);
     }
 
     private void handleEntitySpawn(EntitySpawn entitySpawn) {
@@ -61,6 +71,9 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 //            positionMapper.get(event.entityId).set(event.x, mapSwitcher.currentHeight - event.location().y() - 1);
             positionMapper.get(event.entityId).set(event.x, event.y);
         }
+        else {
+            positionMapper.set(event.entityId, new Position(event.x, event.y));
+        }
     }
 
     @Inject
@@ -72,7 +85,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             Position tilePosition = positionMapper.get(entityMove.entityId);
             Offset offset = offsetMapper.get(entityMove.entityId);
 
-            switch (entityMove.direction) {
+            switch (entityMove.facing) {
                 case NORTH:
                     tilePosition.y++;
                     break;
@@ -87,7 +100,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
                     break;
             }
 
-            org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation<Float> walkAnimation = animator.createMoveAnimation(offset, entityMove.direction, () -> {});
+            org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation<Float> walkAnimation = animator.createMoveAnimation(offset, entityMove.facing, () -> {});
             animator.play(walkAnimation);
         }
     }

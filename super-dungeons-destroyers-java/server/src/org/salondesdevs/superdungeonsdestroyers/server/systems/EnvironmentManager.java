@@ -1,7 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Direction;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.slf4j.Logger;
@@ -27,13 +27,13 @@ public class EnvironmentManager extends Service {
     @Inject
     EntityCreator entityCreator;
 
-    public void moveEntity(int entity, Direction direction) {
+    public void moveEntity(int entity, Facing facing) {
         if (positionMapper.has(entity)) {
-            positionMapper.get(entity).increment(direction);
-            synchronizer.notifyEntityMoved(entity, direction);
+            positionMapper.get(entity).increment(facing);
+            synchronizer.notifyEntityMoved(entity, facing);
         }
         else {
-            logger.warn("Tried to move {} in direction {}, but it has no position.", entity, direction.name());
+            logger.warn("Tried to move {} in direction {}, but it has no position.", entity, facing.name());
         }
     }
 

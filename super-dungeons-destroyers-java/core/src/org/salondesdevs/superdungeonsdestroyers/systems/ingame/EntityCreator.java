@@ -51,8 +51,6 @@ public class EntityCreator extends Service {
 
     public void setBasics(int entity) {
         offsetMapper.set(entity, new Offset());
-        sizeMapper.set(entity, new Size(15, 20));
-        positionMapper.set(entity, new Position(Integer.MIN_VALUE, Integer.MIN_VALUE));
     }
 
     public void setPlayer(int entity) {
@@ -61,7 +59,6 @@ public class EntityCreator extends Service {
     }
 
     public void addLocalPlayer(int me) {
-        setBasics(me);
         cameraMapper.set(me, Camera.INSTANCE);
         meMapper.set(me, Me.INSTANCE);
 

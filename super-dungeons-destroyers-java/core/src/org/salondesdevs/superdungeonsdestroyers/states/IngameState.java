@@ -57,9 +57,15 @@ public class IngameState extends SDDState {
         register(UiSystem.class);
     }
 
+    @Inject
+    UiSystem uiSystem;
+
     @Override
     public void pushed() {
         super.pushed();
+
+        uiSystem.displayScreen(null);
+
         this.networkHandlerSystem.setCurrentHandler(IngameNetHandler.class);
     }
 }

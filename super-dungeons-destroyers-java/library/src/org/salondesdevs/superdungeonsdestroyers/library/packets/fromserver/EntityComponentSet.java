@@ -1,30 +1,32 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
 import io.netty.buffer.ByteBuf;
-import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
+import net.wytrem.ecs.Component;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-public class EntitySpawn extends Packet {
-    public int entityId;
-    public EntityKind entityKind;
+public class EntityComponentSet extends Packet {
 
-    public EntitySpawn() {
+    public int entityId;
+    public Component watchableComponent;
+
+    public EntityComponentSet() {
+
     }
 
-    public EntitySpawn(int entityId, EntityKind entityKind) {
+    public EntityComponentSet(int entityId, Component watchableComponent) {
         this.entityId = entityId;
-        this.entityKind = entityKind;
+        this.watchableComponent = watchableComponent;
     }
 
     @Override
     public void read(ByteBuf in) {
         this.entityId = in.readInt();
-        this.entityKind = readEnum(EntityKind.class, in);
+        this.watchableComponent = readWatchableComponent(in);
     }
 
     @Override
     public void write(ByteBuf out) {
         out.writeInt(this.entityId);
-        writeEnum(this.entityKind, out);
+        writeWatchableComponent(this.watchableComponent, out);
     }
 }

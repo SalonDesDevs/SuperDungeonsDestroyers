@@ -40,7 +40,7 @@ project(":library") {
 //    apply plugin: "io.netifi.flatbuffers"
 
     dependencies {
-        api "net.wytrem:ecs:2.0"
+        api "net.wytrem:ecs:2.2"
         api "org.slf4j:slf4j-api:1.7.26"
         api "org.slf4j:slf4j-simple:1.7.26"
         api "com.google.guava:guava:28.0-jre"

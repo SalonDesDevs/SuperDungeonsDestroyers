@@ -27,8 +27,8 @@ public class Position implements Component {
         setY(y);
     }
 
-    public void increment(Direction direction) {
-        this.x += direction.x;
-        this.y += direction.y;
+    public void increment(Facing facing) {
+        this.x += facing.x;
+        this.y += facing.y;
     }
 }
