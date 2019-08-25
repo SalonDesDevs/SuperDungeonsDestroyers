@@ -18,11 +18,19 @@ public class NameRandomizer extends IteratingSystem {
     @Inject
     Mapper<Name> nameMapper;
 
+    long last = System.currentTimeMillis();
 
     @Override
     public void process(int entity) {
-        if (Math.random() < 0.1) {
-            nameMapper.set(entity, new Name("player " + Math.random()));
+        if (System.currentTimeMillis() - last > 5000) {
+            last = System.currentTimeMillis();
+
+            if (!nameMapper.has(entity)) {
+                nameMapper.set(entity, new Name("player " + Math.random()));
+            }
+            else {
+                nameMapper.get(entity).setValue("Hi" + Math.random());
+            }
         }
     }
 }
