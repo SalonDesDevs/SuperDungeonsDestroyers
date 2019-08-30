@@ -67,6 +67,10 @@ public class NetworkSystem extends BaseSystem {
         }
     }
 
+    public void send(int player, Packet... packets) {
+        this.playerConnectionMapper.get(player).send(packets);
+    }
+
     public void broadcast(Packet... packets) {
         this.playerConnectionMapper.forEachValue(playerConnection -> playerConnection.send(packets));
     }

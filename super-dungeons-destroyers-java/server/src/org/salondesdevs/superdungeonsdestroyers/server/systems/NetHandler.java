@@ -6,6 +6,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
@@ -64,6 +65,9 @@ public class NetHandler {
     @Inject
     Mapper<Size> sizeMapper;
 
+    @Inject
+    ChatSystem chatSystem;
+
     private void handle(Packet packet) {
         if (packet instanceof VersionCheck) {
             VersionCheck versionCheck = (VersionCheck) packet;
@@ -91,6 +95,9 @@ public class NetHandler {
         }
         if (packet instanceof PlayerMove) {
             motionSystem.playerMoved(this.playerId, ((PlayerMove) packet));
+        }
+        else if (packet instanceof FromClientChat) {
+            chatSystem.playerChatted(this.playerId, ((FromClientChat) packet));
         }
     }
 }
