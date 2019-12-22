@@ -8,7 +8,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.watched.Watch
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.WatchedComponents;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.AutoWatchedComponents;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
 import org.slf4j.Logger;
@@ -36,15 +36,15 @@ public class Synchronizer extends IteratingSystem {
     @Inject
     World world;
     
-    private Set<Mapper<? extends Component>> watchedMappers;
+    private Set<Mapper<? extends Component>> autoWatchedMappers;
 
     @Override
     public void initialize() {
-        this.watchedMappers = new HashSet<>();
+        this.autoWatchedMappers = new HashSet<>();
         world.addMapperRegisterListener(mapper -> {
             Class<? extends Component> clazz = mapper.getComponentTypeClass();
-            if (WatchedComponents.contains(clazz)) {
-                this.watchedMappers.add(mapper);
+            if (AutoWatchedComponents.contains(clazz)) {
+                this.autoWatchedMappers.add(mapper);
                 mapper.addListener(new WatchedComponentChanged());
             }
         });
@@ -52,7 +52,7 @@ public class Synchronizer extends IteratingSystem {
 
     @Override
     public void process(int entity) {
-        for (Mapper<? extends Component> mapper : watchedMappers) {
+        for (Mapper<? extends Component> mapper : autoWatchedMappers) {
             if (mapper.has(entity)) {
                 WatchableComponent watchableComponent = (WatchableComponent) mapper.get(entity);
                 if (watchableComponent.hasChanged()) {
@@ -99,7 +99,7 @@ public class Synchronizer extends IteratingSystem {
                 packetList.add(new EntityTeleport(entity, positionMapper.get(entity)));
             }
 
-            for (Mapper<? extends Component> mapper : watchedMappers) {
+            for (Mapper<? extends Component> mapper : autoWatchedMappers) {
                 if (mapper.has(entity)) {
                     packetList.add(new EntityComponentSet(entity, mapper.get(entity)));
                 }
@@ -136,7 +136,7 @@ public class Synchronizer extends IteratingSystem {
 
         @Override
         public void onUnset(int entity, Component oldValue) {
-
+            // TODO
         }
     }
 }

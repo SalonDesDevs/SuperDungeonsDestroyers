@@ -21,7 +21,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
     @Override
     public void handle(Packet packet) {
-        logger.info("Received {}", packet.getClass().getSimpleName());
+        logger.trace("Received {}", packet.getClass().getSimpleName());
         if (packet instanceof Welcome) {
             this.handleWelcome(((Welcome) packet));
         }
@@ -80,10 +80,8 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     Animator animator;
 
     private void handleEntityMove(EntityMove entityMove) {
-        if (positionMapper.has(entityMove.entityId) && offsetMapper.has(entityMove.entityId)) {
-
+        if (positionMapper.has(entityMove.entityId)) {
             Position tilePosition = positionMapper.get(entityMove.entityId);
-            Offset offset = offsetMapper.get(entityMove.entityId);
 
             switch (entityMove.facing) {
                 case NORTH:
@@ -99,6 +97,11 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
                     tilePosition.x++;
                     break;
             }
+        }
+
+
+        if (positionMapper.has(entityMove.entityId) && offsetMapper.has(entityMove.entityId)) {
+            Offset offset = offsetMapper.get(entityMove.entityId);
 
             org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation<Float> walkAnimation = animator.createMoveAnimation(offset, entityMove.facing, () -> {});
             animator.play(walkAnimation);

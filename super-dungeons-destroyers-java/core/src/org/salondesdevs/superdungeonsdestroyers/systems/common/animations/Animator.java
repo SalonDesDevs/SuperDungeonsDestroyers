@@ -51,19 +51,19 @@ public class Animator extends BaseSystem {
 
         switch (facing) {
             case SOUTH:
-                start = 16.0f;
+                start = 1.0f;
                 setter = offset::setY;
                 break;
             case NORTH:
-                start = -16.0f;
+                start = -1.0f;
                 setter = offset::setY;
                 break;
             case WEST:
-                start = 16.0f;
+                start = 1.0f;
                 setter = offset::setX;
                 break;
             case EAST:
-                start = -16.0f;
+                start = -1.0f;
                 setter = offset::setX;
                 break;
         }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
+import org.salondesdevs.superdungeonsdestroyers.utils.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,10 +17,10 @@ public class SpriteRenderer extends IteratingSystem {
 
     @Override
     public void initialize() {
-        batch = new SpriteBatch();
+        batch = new GridSpriteBatch();
     }
 
-    SpriteBatch batch;
+    GridSpriteBatch batch;
 
     @Inject
     Mapper<Sprited> spritedMapper;
@@ -41,7 +42,7 @@ public class SpriteRenderer extends IteratingSystem {
         Sprited sprited = spritedMapper.get(entity);
         Position position = positionMapper.get(entity);
 
-        batch.draw(sprited.textureRegion, position.x * 16, position.y * 16);
+        batch.draw(sprited.textureRegion, position);
     }
 
     @Override

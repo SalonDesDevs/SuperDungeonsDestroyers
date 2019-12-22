@@ -4,9 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.wytrem.ecs.Component;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-public class EntityComponentSet extends Packet {
+public class EntityComponentSet extends EntityPacket {
 
-    public int entityId;
     public Component watchableComponent;
 
     public EntityComponentSet() {
@@ -14,19 +13,19 @@ public class EntityComponentSet extends Packet {
     }
 
     public EntityComponentSet(int entityId, Component watchableComponent) {
-        this.entityId = entityId;
+        super(entityId);
         this.watchableComponent = watchableComponent;
     }
 
     @Override
     public void read(ByteBuf in) {
-        this.entityId = in.readInt();
+        super.read(in);
         this.watchableComponent = readWatchableComponent(in);
     }
 
     @Override
     public void write(ByteBuf out) {
-        out.writeInt(this.entityId);
+        super.write(out);
         writeWatchableComponent(this.watchableComponent, out);
     }
 }

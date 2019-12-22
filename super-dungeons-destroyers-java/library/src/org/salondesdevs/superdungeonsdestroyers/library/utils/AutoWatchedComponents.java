@@ -9,8 +9,12 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.*;
 
 import java.util.function.Supplier;
 
-public class WatchedComponents {
-
+/**
+ * A class used to register components which are automatically updated by the server's synchronizer.
+ *
+ * Just add a line into the static block and you're done.
+ */
+public class AutoWatchedComponents {
 
     private static final Byte2ObjectMap<Supplier<? extends Component>> suppliers = new Byte2ObjectOpenHashMap<>();
     private static final Byte2ObjectMap<Class<? extends Component>> classesById = new Byte2ObjectOpenHashMap<>();
@@ -25,9 +29,13 @@ public class WatchedComponents {
         register(id++, Health::new, Health.class);
         register(id++, MaxHealth::new, MaxHealth.class);
         register(id++, RemainingSteps::new, RemainingSteps.class);
+        register(id++, Speed::new, Speed.class);
     }
 
     private static <P extends Component> void register(int id, Supplier<P> componentSupplier, Class<P> clazz) {
+        if (id > 126) {
+           return;
+        }
         suppliers.put((byte) id, componentSupplier);
         classesById.put((byte) id, clazz);
         classes.put(clazz, (byte) id);

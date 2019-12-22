@@ -30,7 +30,7 @@ public interface NettySerializable {
     }
 
     default void writeWatchableComponent(Component watchableComponent, ByteBuf out) {
-        out.writeByte(WatchedComponents.getId(watchableComponent));
+        out.writeByte(AutoWatchedComponents.getId(watchableComponent));
 
         if (Enum.class.isAssignableFrom(watchableComponent.getClass())) {
             writeEnum((Enum) watchableComponent, out);
@@ -43,11 +43,11 @@ public interface NettySerializable {
     default Component readWatchableComponent(ByteBuf in) {
         byte id = in.readByte();
 
-        if (Enum.class.isAssignableFrom(WatchedComponents.getClassById(id))) {
-            return (Component) readEnum((Class<? extends Enum>) WatchedComponents.getClassById(id), in);
+        if (Enum.class.isAssignableFrom(AutoWatchedComponents.getClassById(id))) {
+            return (Component) readEnum((Class<? extends Enum>) AutoWatchedComponents.getClassById(id), in);
         }
         else {
-            Component read = WatchedComponents.createFromId(id);
+            Component read = AutoWatchedComponents.createFromId(id);
             ((NettySerializable) read).read(in);
             return read;
         }

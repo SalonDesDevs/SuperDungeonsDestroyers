@@ -14,11 +14,11 @@ public class IntWatchedComponent extends WatchableComponent {
         this.value = value;
     }
 
-    public int getValue() {
+    public int get() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void set(int value) {
         this.value = value;
         this.setChanged();
     }

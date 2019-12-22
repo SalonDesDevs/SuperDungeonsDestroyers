@@ -2,6 +2,9 @@ package org.salondesdevs.superdungeonsdestroyers.library.components;
 
 import net.wytrem.ecs.*;
 
+/**
+ * Represents the position of an entity, <bold>in grid coordinates</bold>.
+ */
 public class Position implements Component {
 
     public int x, y;

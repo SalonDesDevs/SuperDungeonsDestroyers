@@ -5,6 +5,7 @@ import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
@@ -66,6 +67,9 @@ public class NetHandler {
     Mapper<Size> sizeMapper;
 
     @Inject
+    Mapper<Speed> speedMapper;
+
+    @Inject
     ChatSystem chatSystem;
 
     private void handle(Packet packet) {
@@ -81,7 +85,8 @@ public class NetHandler {
                 synchronizer.startSynchronizingWith(this.playerId);
                 environmentManager.teleport(playerId, 1, 1);
                 maxHealthMapper.set(playerId, new MaxHealth(382));
-                sizeMapper.set(playerId, new Size(15, 24));
+                sizeMapper.set(playerId, new Size(1.0f, 1.3f));
+                speedMapper.set(playerId, new Speed());
             }
             else {
                 // Otherwise, close.

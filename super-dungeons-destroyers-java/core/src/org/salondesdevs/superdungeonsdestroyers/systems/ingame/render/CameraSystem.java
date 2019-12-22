@@ -28,7 +28,7 @@ public class CameraSystem extends IteratingSystem {
 
     public CameraSystem() {
         super(Aspect.all(Position.class, Camera.class));
-        this.zoom = 2.f;
+        this.zoom = 1.f;
     }
 
 
@@ -41,13 +41,16 @@ public class CameraSystem extends IteratingSystem {
     @Override
     public void process(int entity) {
         Position position = positionMapper.get(entity);
-        camera.position.x = position.x * 16.f;
-        camera.position.y = position.y * 16.f;
 
         if (offsetMapper.has(entity)) {
             Offset offset = offsetMapper.get(entity);
-            camera.position.x += offset.x;
-            camera.position.y += offset.y;
+
+            camera.position.x = GridSpriteBatch.toGridCoordsX(position, offset);
+            camera.position.y = GridSpriteBatch.toGridCoordsY(position, offset);
+        }
+        else {
+            camera.position.x = GridSpriteBatch.toGridCoordsX(position);
+            camera.position.y = GridSpriteBatch.toGridCoordsY(position);
         }
         camera.update();
     }

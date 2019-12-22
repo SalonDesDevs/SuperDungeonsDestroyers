@@ -4,16 +4,16 @@ import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-public class EntityTeleport extends Packet {
+public class EntityTeleport extends EntityPacket {
 
-    public int entityId, x, y;
+    public int x, y;
 
     public EntityTeleport() {
-        super();
+
     }
 
     public EntityTeleport(int entityId, int x, int y) {
-        this.entityId = entityId;
+        super(entityId);
         this.x = x;
         this.y = y;
     }
@@ -24,14 +24,14 @@ public class EntityTeleport extends Packet {
 
     @Override
     public void read(ByteBuf in) {
-        this.entityId = in.readInt();
+        super.read(in);
         this.x = in.readInt();
         this.y = in.readInt();
     }
 
     @Override
     public void write(ByteBuf out) {
-        out.writeInt(entityId);
+        super.write(out);
         out.writeInt(x);
         out.writeInt(y);
     }

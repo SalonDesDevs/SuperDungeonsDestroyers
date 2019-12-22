@@ -4,28 +4,27 @@ import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-public class EntityMove extends Packet {
+public class EntityMove extends EntityPacket {
 
-    public int entityId;
     public Facing facing;
 
     public EntityMove() {
     }
 
     public EntityMove(int entityId, Facing facing) {
-        this.entityId = entityId;
+        super(entityId);
         this.facing = facing;
     }
 
     @Override
     public void read(ByteBuf in) {
-        this.entityId = in.readInt();
+        super.read(in);
         this.facing = readEnum(Facing.class, in);
     }
 
     @Override
     public void write(ByteBuf out) {
-        out.writeInt(this.entityId);
+        super.write(out);
         writeEnum(this.facing, out);
     }
 }

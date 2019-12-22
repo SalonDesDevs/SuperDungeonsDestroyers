@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.utils.Constants;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class MapLayerRenderer {
     }
 
     private void createAndStoreRenderer(TiledMap tiledMap, String... layersToRender) {
-        TiledMapRenderer tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        TiledMapRenderer tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, GridSpriteBatch.GRID_SIZE / 16.0f);
 
         IntList list = new IntArrayList();
 
@@ -58,7 +59,7 @@ public class MapLayerRenderer {
             }
         }
 
-        logger.info("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(layersToRender), list.toArray());
+        logger.debug("Creating renderer for {} with layers {} = {}", tiledMap, Arrays.toString(layersToRender), list.toArray());
 
         this.layers.put(tiledMap, list.toIntArray());
         this.renderers.put(tiledMap, tiledMapRenderer);
