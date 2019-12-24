@@ -1,23 +1,11 @@
 mod codec;
 mod connection;
 
+use crate::events::server::Event;
+
 use tokio::sync::mpsc;
 
-use bytes::Bytes;
+pub use connection::{ Connection, Client };
 
-use crate::binding::client;
-
-pub struct ClientMessages {
-    _bytes: Bytes,
-    pub messages: client::Messages<'static>
-}
-
-#[derive(Debug, Clone)]
-pub struct ServerMessages {
-    pub bytes: Bytes,
-}
-
-pub type Rx = mpsc::UnboundedReceiver<ServerMessages>;
-pub type Tx = mpsc::UnboundedSender<ServerMessages>;
-
-pub use connection::{ Connection, Peer };
+pub type Receiver = mpsc::UnboundedReceiver<Vec<Event>>;
+pub type Sender = mpsc::UnboundedSender<Vec<Event>>;

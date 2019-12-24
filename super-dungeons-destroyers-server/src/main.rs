@@ -1,13 +1,13 @@
 #![feature(async_await, vec_remove_item)]
 
+pub mod binding;
 pub mod network;
 pub mod game;
-pub mod binding;
-pub mod utils;
+pub mod events;
+pub mod error;
 
 use crate::network::Connection;
-use crate::game::structure::Shared;
-use crate::game::game_loop::GameLoop;
+use crate::game::{ Context, Ticker };
 
 use tokio::prelude::*;
 use tokio::net::TcpListener;
@@ -15,7 +15,6 @@ use tokio::timer::Interval;
 
 use failure::{ Fallible, Error };
 
-use std::sync::Arc;
 use std::time::Duration;
 use log::{ info, error };
 
@@ -30,13 +29,13 @@ fn listener() -> Fallible<TcpListener> {
 fn main() -> Fallible<()> {
     pretty_env_logger::init();
 
-    let shared = Arc::new(Shared::default());
+    let context = Context::new()?;
 
-    let mut game_loop = GameLoop::new(shared.clone());
+    let ticker = Ticker::new(context.clone());
 
     let interval = Interval::new_interval(Duration::from_millis(100))
         .map_err(Error::from)
-        .for_each(move |instant| Ok(game_loop.tick(instant)?));
+        .for_each(move |instant| Ok(ticker.tick(instant)?));
 
     let server = listener()?
         .incoming()
@@ -46,7 +45,7 @@ fn main() -> Fallible<()> {
 
             let connection = Connection::new(socket);
 
-            tokio::spawn(connection.process(shared.clone()));
+            tokio::spawn(connection.process(context.clone())?);
 
             Ok(())
         });

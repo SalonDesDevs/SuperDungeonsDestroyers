@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+        google()
+    }
+//    dependencies {
+//        classpath "gradle.plugin.io.netifi:gradle-flatbuffers-plugin:1.0.5"
+//    }
+}
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+
+    version = '1.0.0'
+
+    ext {
+        appName = "super-dungeons-destroyers-client"
+        gdxVersion = '1.9.8'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://wytrem.github.io/maven/" }
+    }
+}
+
+//import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
+
+project(":library") {
+    apply plugin: "java-library"
+//    apply plugin: "io.netifi.flatbuffers"
+
+    dependencies {
+        api "net.wytrem:ecs:2.2"
+        api "org.slf4j:slf4j-api:1.7.26"
+        api "org.slf4j:slf4j-simple:1.7.26"
+        api "com.google.guava:guava:28.0-jre"
+        api "io.netty:netty-all:4.1.39.Final"
+//        compile files("libs/flatbuffers-java-1.11.1.jar")
+    }
+
+//    task createFlatBuffers(type: FlatBuffers) {
+//        inputDir = file("../../../commons/schemas")
+//        outputDir = file("src/")
+//        language = 'java'
+//        extraArgs = '--gen-mutable'
+//    }
+//
+//    task deletePreviousFlatBuffers(type: Delete) {
+//        delete "src/SDD/"
+//    }
+//
+//    tasks.createFlatBuffers.dependsOn(deletePreviousFlatBuffers)
+}
+
+
+project(":core") {
+    apply plugin: "java-library"
+
+    dependencies {
+        api project(":library")
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    }
+}
+
+project(":server") {
+    apply plugin: "java-library"
+
+    dependencies {
+        api project(":library")
+    }
+}
+
+project(":desktop") {
+    apply plugin: "java-library"
+
+    dependencies {
+        implementation project(":core")
+
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    }
+}
+
+tasks.eclipse.doLast {
+    delete ".project"
+}

@@ -1,0 +1,72 @@
+
+uiskin.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tooltipBackground
+  rotate: false
+  xy: 1, 242
+  size: 110, 25
+  orig: 110, 25
+  offset: 0, 0
+  index: -1
+buttonRound_brown
+  rotate: false
+  xy: 48, 202
+  size: 35, 38
+  orig: 35, 38
+  offset: 0, 0
+  index: -1
+buttonSquare_blue
+  rotate: false
+  xy: 1, 191
+  size: 45, 49
+  split: 8, 8, 8, 10
+  orig: 45, 49
+  offset: 0, 0
+  index: -1
+buttonSquare_brown
+  rotate: false
+  xy: 1, 140
+  size: 45, 49
+  split: 8, 8, 8, 8
+  orig: 45, 49
+  offset: 0, 0
+  index: -1
+buttonSquare_brown_pressed
+  rotate: false
+  xy: 354, 352
+  size: 45, 45
+  split: 8, 8, 8, 8
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+iconCheck_bronze
+  rotate: false
+  xy: 259, 286
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+iconCheck_grey
+  rotate: false
+  xy: 113, 252
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+panelInset_brown
+  rotate: false
+  xy: 259, 303
+  size: 93, 94
+  orig: 93, 94
+  offset: 0, 0
+  index: -1
+default
+  rotate: false
+  xy: 1, 269
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
