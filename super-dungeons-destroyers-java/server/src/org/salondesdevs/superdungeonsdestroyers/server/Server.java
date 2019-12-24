@@ -23,14 +23,28 @@ public class Server {
         world.push(UniqueState.class);
 
         // Main loop
-        // TODO: to be improved (fixed timestep?)
+        // TODO: to be improved (fixed timestep mechanic)
         isRunning = true;
         long now, last = System.currentTimeMillis();
+        float delta;
 
         while (isRunning) {
             now = System.currentTimeMillis();
-            world.process((now - last) / 1000.0f);
-            last = now;
+            delta = (now - last) / 1000.0f;
+
+            if (delta < 0.1f) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+
+                world.process(delta);
+                last = now;
+            }
+
         }
 
         world.dispose();
