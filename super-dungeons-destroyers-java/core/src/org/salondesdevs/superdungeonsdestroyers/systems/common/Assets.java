@@ -53,7 +53,7 @@ public class Assets extends Service {
     @Asset(path = ROOMS_FOLDER + "collisions_tester.tmx")
     public TiledMap collisionsTester;
 
-    @Asset(path = "uiskin.json")
+    @Asset(path = "tixel/x1/tixel.json")
     public Skin skin;
 
     public TiledMap[] rooms;

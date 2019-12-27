@@ -21,6 +21,7 @@ allprojects {
     ext {
         appName = "super-dungeons-destroyers-client"
         gdxVersion = '1.9.8'
+        visuiVersion = '1.4.2'
     }
 
     repositories {
@@ -69,7 +70,10 @@ project(":core") {
     dependencies {
         api project(":library")
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        api "com.kotcrab.vis:vis-ui:$visuiVersion"
+        api 'com.kotcrab.vis:vis-usl:0.2.1'
     }
 }
 

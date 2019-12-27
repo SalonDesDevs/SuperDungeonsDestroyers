@@ -1,0 +1,113 @@
+include <visui-1.3.0>
+
+^com.badlogic.gdx.graphics.g2d.BitmapFont: {
+  default-font: { file: droid-sans-13.fnt }
+  small-font: default-font
+}
+
+^com.badlogic.gdx.graphics.Color: {
+  green: {a: 1, b: 0, g: 1, r: 0 }
+  red: {a: 1, b: 0, g: 0, r: 1 }
+  blue: {a: 1, b: 1, g: 0, r: 0 }
+
+  t-white: {r: 1, g: 1, b: 1, a: 1}
+  t-black: {r: 0, g: 0, b: 0, a: 1}
+  t-highlight: {r: 0.85, g: 0.5, b: 0.05, a: 1}
+  t-highlight-medium: {r: 0.7, g: 0.4, b: 0, a: 1}
+  t-highlight-dark: {r: 0.6, g: 0.3, b: 0, a: 1}
+  t-warn: {r: 1, g: 0, b: 0, a: 1}
+  t-light: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+  t-medium: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  t-medium-dark: {r: 0.15, g: 0.15, b: 0.15, a: 1}
+  t-dark: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+  t-alpha: {r: 0, g: 0, b: 0, a: 0.5}
+
+  black: t-black
+  white: t-white
+  grey: t-light
+  vis-blue: t-highlight
+  vis-red: t-warn
+  menuitem: t-medium-dark
+  link-label: t-highlight
+}
+
+^TintedDrawable: {
+  dialogDim: {name: t-dot, color: t-alpha}
+
+  border: {name: t-border, color: t-highlight}
+  border-circle: {name: t-border-circle, color: t-highlight}
+  border-circle-error: {name: t-border-circle, color: t-warn}
+  border-dark-blue: {name: t-border, color: t-highlight-dark}
+  border-error: {name: t-border, color: t-warn}
+  button: {name: t-base, color: t-medium}
+  button-blue: {name: t-base, color: t-highlight}
+  button-blue-down: {name: t-base, color: t-highlight-dark}
+  button-blue-over: {name: t-base, color: t-highlight-medium}
+  button-down: {name: t-base, color: t-highlight}
+  button-over: {name: t-base, color: t-light}
+  button-red: {name: t-base, color: t-warn}
+  button-window-bg: {name: t-base, color: t-dark}
+  check-off: {name: t-check, color: t-medium}
+  check-on: {name: t-check, color: t-highlight}
+  default-pane: {name: t-dot, color: t-medium}
+  default-pane-noborder: {name: t-dot, color: t-medium}
+  default-select: {name: t-select, color: t-medium}
+  default-select-selection: {name: t-dot, color: t-highlight-medium}
+  grey: {name: t-dot, color: t-medium}
+  list-selection: {name: t-dot, color: t-highlight}
+  menu-bg: {name: t-dot, color: t-medium-dark}
+  padded-list-selection: {name: t-hline, color: t-highlight}
+  progressbar: {name: t-vline, color: t-medium}
+  progressbar-filled: {name: t-vline, color: t-highlight}
+  progressbar-filled-vertical: {name: t-hline, color: t-highlight}
+  progressbar-vertical: {name: t-hline, color: t-medium}
+  radio-off: {name: t-radio, color: t-medium}
+  radio-on: {name: t-radio, color: t-highlight}
+  scroll: {name: t-hline, color: t-medium}
+  scroll-horizontal: {name: t-vline, color: t-medium}
+  scroll-knob-horizontal: {name: t-hknob, color: t-dark}
+  scroll-knob-vertical: {name: t-vknob, color: t-dark}
+  select-box-list-bg: {name: t-dot, color: t-medium}
+  select-down: {name: t-select-down, color: t-light}
+  selection: {name: t-dot, color: t-highlight-dark}
+  select-up: {name: t-select-up, color: t-light}
+  separator: {name: t-dot, color: t-light}
+  separator-menu: {name: t-dot, color: t-medium}
+  slider: {name: t-hslider, color: t-medium-dark}
+  slider-knob: {name: t-base, color: t-medium}
+  slider-knob-disabled: {name: t-base, color: t-medium-dark}
+  slider-knob-down: {name: t-base, color: t-highlight}
+  slider-knob-over: {name: t-base, color: t-light}
+  slider-vertical: {name: t-vslider, color: t-medium-dark}
+  splitpane: {name: t-vslider, color: t-medium-dark}
+  splitpane-over: {name: t-vslider, color: t-light}
+  splitpane-vertical: {name: t-hslider, color: t-medium-dark}
+  splitpane-vertical-over: {name: t-hslider, color: t-light}
+  sub-menu: {name: t-tree-plus, color: t-light}
+  textfield: {name: t-base, color: t-medium}
+  textfield-over: {name: t-base, color: t-medium-dark}
+  tooltip-bg: {name: t-dot, color: t-medium-dark}
+  touchpad-knob: {name: t-radio, color: t-highlight}
+  tree-minus: {name: t-tree-minus, color: t-light}
+  tree-over: {name: t-dot, color: t-medium-dark}
+  tree-plus: {name: t-tree-plus, color: t-light}
+  tree-selection: {name: t-dot, color: t-highlight}
+  vis-blue: {name: t-dot, color: t-highlight}
+  vis-check: {name: t-check, color: t-medium}
+  vis-check-down: {name: t-check, color: t-highlight}
+  vis-check-over: {name: t-check, color: t-light}
+  vis-check-tick: {name: t-check-tick, color: t-white}
+  vis-check-tick-disabled: {name: t-check-tick, color: grey}
+  vis-radio: {name: t-radio, color: t-medium}
+  vis-radio-down: {name: t-radio, color: t-highlight}
+  vis-radio-over: {name: t-radio, color: t-light}
+  vis-radio-tick: {name: t-radio-tick, color: t-white}
+  vis-radio-tick-disabled: {name: t-radio-tick, color: grey}
+  vis-red: {name: t-dot, color: t-warn}
+  white: {name: t-dot, color: white}
+  window: {name: t-window, color: t-dark}
+  window-bg: {name: t-dot, color: t-dark}
+  window-border-bg: {name: t-dot, color: t-dark}
+  window-noborder: {name: t-window-border, color: t-dark}
+  window-resizable: {name: t-window-resize, color: t-dark}
+}

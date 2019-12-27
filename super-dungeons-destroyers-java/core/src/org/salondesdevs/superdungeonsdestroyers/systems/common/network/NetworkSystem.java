@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
+import com.badlogic.gdx.Gdx;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,6 +19,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +41,8 @@ public class NetworkSystem extends BaseSystem {
 
     }
 
-    public void tryConnect(String host, int port) {
-        logger.info("Connecting to server");
+    public void tryConnect(String host, int port, MainMenuScreen screen) {
+        logger.info("Connecting to server at {}:{}", host, port);
 
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -63,13 +65,24 @@ public class NetworkSystem extends BaseSystem {
 
             f.addListener((FutureListener<Void>) future -> {
                 if (!f.isSuccess()) {
-                    logger.error("Could not connect to SDD server at {}:{}", host, port);
+                    logger.error("Could not connect to server at {}:{}", host, port);
+
                     if (f.cause() != null) {
                         logger.error("Throwable: ", f.cause());
+                        Gdx.app.postRunnable(() -> {
+                            screen.setErrorText("Could not connect to server (" + f.cause().getLocalizedMessage() + ").");
+                        });
                     }
                     else {
-                        logger.error("ChannelFuture#cause() (throwable) is null.");
+                        screen.setErrorText("Could not connect to server (null throwable).");
+                        Gdx.app.postRunnable(() -> {
+                           logger.error("ChannelFuture#cause() (throwable) is null.");
+                        });
                     }
+                }
+                else {
+                    logger.info("Successfully connected to {}:{}", host, port);
+                    Gdx.app.postRunnable(screen::connectSuccess);
                 }
             });
 
