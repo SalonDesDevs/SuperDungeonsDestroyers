@@ -2,14 +2,13 @@ package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
 import io.netty.channel.ChannelHandlerContext;
 import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
-import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
+import org.salondesdevs.superdungeonsdestroyers.library.components.*;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
@@ -72,10 +71,12 @@ public class NetHandler {
     @Inject
     ChatSystem chatSystem;
 
+    @Inject
+    Mapper<Name> nameMapper;
+
     private void handle(Packet packet) {
         if (packet instanceof VersionCheck) {
             VersionCheck versionCheck = (VersionCheck) packet;
-            // TODO: check protocol version
             if (versionCheck.major == ProtocolVersion.MAJOR && versionCheck.minor == ProtocolVersion.MINOR) {
                 this.checkedIn = true;
                 ctx.writeAndFlush(new VersionCheckSuccess());
@@ -90,19 +91,30 @@ public class NetHandler {
             }
             else {
                 // Otherwise, close.
-                ctx.close();
+                this.disconnect("Invalid protocol version (expected " + ProtocolVersion.string() + " and got " + ProtocolVersion.toString(versionCheck) + ")");
+                return;
             }
         }
 
         if (!this.checkedIn) {
-            logger.warn("Connection {} tried to bypass version check", ctx.channel().remoteAddress());
+            logger.error("Connection {} tried to bypass version check", ctx.channel().remoteAddress());
+            this.disconnect("You tried to bypass version check");
             return;
         }
+
         if (packet instanceof PlayerMove) {
             motionSystem.playerMoved(this.playerId, ((PlayerMove) packet));
         }
         else if (packet instanceof FromClientChat) {
             chatSystem.playerChatted(this.playerId, ((FromClientChat) packet));
         }
+        else if (packet instanceof PlayerName) {
+            nameMapper.set(playerId, new Name(((PlayerName) packet).getName()));
+        }
+    }
+
+    public void disconnect(String reason) {
+        ctx.writeAndFlush(new DisconnectReason(reason));
+        ctx.close();
     }
 }

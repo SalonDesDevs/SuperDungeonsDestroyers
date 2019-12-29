@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
@@ -26,6 +27,7 @@ public abstract class Packet implements NettySerializable {
         // From client
         register(id++, VersionCheck::new, VersionCheck.class);
         register(id++, PlayerMove::new, PlayerMove.class);
+        register(id++, PlayerName::new, PlayerName.class);
 
         id = 50;
 

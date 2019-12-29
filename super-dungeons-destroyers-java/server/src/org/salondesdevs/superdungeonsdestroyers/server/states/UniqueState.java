@@ -9,7 +9,7 @@ public class UniqueState extends GameState {
         register(EventBus.class);
         register(NetworkSystem.class);
         register(MotionSystem.class);
-        register(NameRandomizer.class);
+//        register(NameRandomizer.class);
         register(Synchronizer.class);
         register(EntityCreator.class);
         register(EnvironmentManager.class);

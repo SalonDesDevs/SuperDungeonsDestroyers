@@ -82,6 +82,7 @@ project(":server") {
 
     dependencies {
         api project(":library")
+        implementation 'org.mapeditor:libtiled:1.0.2'
     }
 }
 

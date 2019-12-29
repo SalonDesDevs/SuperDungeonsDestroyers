@@ -68,4 +68,8 @@ public class UiSystem extends BaseSystem {
             Gdx.input.setInputProcessor(ingameInputSystem);
         }
     }
+
+    public Screen getCurrentScreen() {
+        return currentScreen;
+    }
 }

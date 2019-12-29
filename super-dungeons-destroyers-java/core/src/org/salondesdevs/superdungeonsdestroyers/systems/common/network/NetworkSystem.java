@@ -1,6 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
 import com.badlogic.gdx.Gdx;
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -69,16 +70,14 @@ public class NetworkSystem extends BaseSystem {
 
                     if (f.cause() != null) {
                         logger.error("Throwable: ", f.cause());
-                        Gdx.app.postRunnable(() -> {
-                            screen.setErrorText("Could not connect to server (" + f.cause().getLocalizedMessage() + ").");
-                        });
                     }
                     else {
-                        screen.setErrorText("Could not connect to server (null throwable).");
-                        Gdx.app.postRunnable(() -> {
-                           logger.error("ChannelFuture#cause() (throwable) is null.");
-                        });
+                        logger.error("ChannelFuture#cause() (throwable) is null.");
                     }
+
+                    Gdx.app.postRunnable(() -> {
+                        screen.connectFailed(f.cause());
+                    });
                 }
                 else {
                     logger.info("Successfully connected to {}:{}", host, port);
@@ -107,7 +106,7 @@ public class NetworkSystem extends BaseSystem {
         public void channelActive(ChannelHandlerContext ctx)
                 throws Exception {
             channelHandlerContext = ctx;
-            logger.info("Sending VersionCheck({}, {})", ProtocolVersion.MAJOR, ProtocolVersion.MINOR);
+            logger.debug("Sending VersionCheck({}, {})", ProtocolVersion.MAJOR, ProtocolVersion.MINOR);
             send(new VersionCheck(ProtocolVersion.MAJOR, ProtocolVersion.MINOR));
         }
 

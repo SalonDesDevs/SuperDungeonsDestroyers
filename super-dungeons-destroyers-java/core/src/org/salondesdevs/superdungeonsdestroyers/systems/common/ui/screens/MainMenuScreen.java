@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -30,7 +31,11 @@ public class MainMenuScreen extends Screen {
     @Inject
     NetworkHandlerSystem networkHandlerSystem;
 
+    @Inject
+    I18NService i18NService;
+
     private VisLabel errorLabel;
+    private VisTextField nameField;
 
     @Inject
     protected void addActors() {
@@ -51,19 +56,23 @@ public class MainMenuScreen extends Screen {
         VerticalGroup buttons = new VerticalGroup();
         buttons.space(10f);
         {
-            VisTextField textField = new VisTextField("localhost");
-            buttons.addActor(textField);
+            nameField = new VisTextField("nickname");
+            buttons.addActor(nameField);
 
-            VisTextButton textButton = new VisTextButton("Se connecter au server");
+            VisTextField serverIp = new VisTextField("localhost");
+            buttons.addActor(serverIp);
+
+            VisTextButton textButton = new VisTextButton(i18NService.get("connectToServer"));
             buttons.addActor(textButton);
 
             errorLabel = new VisLabel("");
+            errorLabel.setColor(Color.RED);
             buttons.addActor(errorLabel);
 
             textButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    String text = textField.getText();
+                    String text = serverIp.getText();
                     if (text.length() > 0) {
                         String ip = text;
                         int port = 9000;
@@ -83,15 +92,23 @@ public class MainMenuScreen extends Screen {
         }
 
         verticalGroup.addActor(buttons);
-
     }
 
     public void connectSuccess() {
-
-        this.world.push(IngameState.class);
+            errorLabel.setText("");
+//        this.world.push(IngameState.class);
     }
 
-    public void setErrorText(String text) {
-        errorLabel.setText(text);
+    public void connectFailed(Throwable t) {
+        if (t != null) {
+            errorLabel.setText(i18NService.format("couldNotConnect", t.getLocalizedMessage()));
+        }
+        else {
+            errorLabel.setText(i18NService.format("couldNotConnect", "null throwable"));
+        }
+    }
+
+    public String getNickname() {
+        return nameField.getText().isEmpty() ? "Nick" + Math.random() : nameField.getText();
     }
 }

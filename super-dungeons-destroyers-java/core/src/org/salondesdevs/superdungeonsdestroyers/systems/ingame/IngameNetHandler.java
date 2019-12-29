@@ -21,7 +21,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
     @Override
     public void handle(Packet packet) {
-        logger.trace("Received {}", packet.getClass().getSimpleName());
+        logger.debug("Received {}", packet.getClass().getSimpleName());
         if (packet instanceof Welcome) {
             this.handleWelcome(((Welcome) packet));
         }

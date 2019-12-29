@@ -5,7 +5,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 
 import javax.inject.Inject;
 
-public class SDDState extends GameState {
+public abstract class SDDState extends GameState {
 
     @Inject
     EventBus eventBus;

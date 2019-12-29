@@ -3,6 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.I18NBundle;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 
@@ -55,6 +56,9 @@ public class Assets extends Service {
 
     @Asset(path = "tixel/x1/tixel.json")
     public Skin skin;
+
+    @Asset(path = "i18n/all")
+    public I18NBundle i18n;
 
     public TiledMap[] rooms;
 

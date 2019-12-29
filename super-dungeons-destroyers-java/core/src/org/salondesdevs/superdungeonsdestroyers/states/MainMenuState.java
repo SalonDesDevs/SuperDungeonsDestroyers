@@ -6,6 +6,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.I18NService;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
 
 import javax.inject.Inject;
@@ -35,6 +36,7 @@ public class MainMenuState extends SDDState {
         // Systems
         register(ClearScrenSystem.class);
         register(UiSystem.class);
+        register(I18NService.class);
         register(NetworkSystem.class);
         register(NetworkHandlerSystem.class);
     }
