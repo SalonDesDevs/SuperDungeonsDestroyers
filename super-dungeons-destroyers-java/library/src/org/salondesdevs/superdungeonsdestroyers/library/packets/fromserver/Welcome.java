@@ -1,7 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
-import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+
+import io.netty.buffer.ByteBuf;
 
 public class Welcome extends Packet {
     public int me;

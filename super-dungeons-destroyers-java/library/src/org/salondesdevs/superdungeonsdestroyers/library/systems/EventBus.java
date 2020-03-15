@@ -1,9 +1,12 @@
 package org.salondesdevs.superdungeonsdestroyers.library.systems;
 
-import net.wytrem.ecs.*;
+import javax.inject.Singleton;
+
 import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
 
-import javax.inject.Singleton;
+import net.wytrem.ecs.BaseSystem;
+import net.wytrem.ecs.GameState;
+import net.wytrem.ecs.Service;
 
 @Singleton
 public class EventBus extends Service {

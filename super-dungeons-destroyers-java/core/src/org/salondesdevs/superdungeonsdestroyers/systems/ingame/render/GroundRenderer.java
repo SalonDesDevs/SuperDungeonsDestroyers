@@ -1,10 +1,13 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.IteratingSystem;
+import net.wytrem.ecs.Mapper;
 
 /**
  * If a {@link org.salondesdevs.superdungeonsdestroyers.components.Terrain} entity is present, will use it to render the

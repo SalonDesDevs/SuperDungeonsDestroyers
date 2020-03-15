@@ -7,6 +7,10 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.watched.Float
  */
 public class Speed extends FloatWatchedComponent {
     public Speed() {
-        super(2.0f);
+        this(2.0f);
+    }
+
+    public Speed(float value) {
+        super(value);
     }
 }

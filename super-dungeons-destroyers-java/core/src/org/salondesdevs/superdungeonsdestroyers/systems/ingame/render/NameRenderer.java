@@ -1,16 +1,19 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import net.wytrem.ecs.Aspect;
-import net.wytrem.ecs.IteratingSystem;
-import net.wytrem.ecs.Mapper;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 
-import javax.inject.Inject;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.IteratingSystem;
+import net.wytrem.ecs.Mapper;
 
 public class NameRenderer extends IteratingSystem {
     public NameRenderer() {
@@ -44,6 +47,9 @@ public class NameRenderer extends IteratingSystem {
         batch.begin();
     }
 
+    @Inject
+    Mapper<Size> sizeMapper;
+
     @Override
     public void process(int entity) {
         Name name = nameMapper.get(entity);
@@ -57,7 +63,17 @@ public class NameRenderer extends IteratingSystem {
             y = GridSpriteBatch.toGridCoordsY(position, offset);
         }
 
-        font.draw(batch, name.getValue(), x, y);
+        if (sizeMapper.has(entity)) {
+            Size size = sizeMapper.get(entity);
+            GlyphLayout glyphLayout = new GlyphLayout();
+            glyphLayout.setText(font, name.getValue());
+            x += (GridSpriteBatch.convert(size.getWidth()) - glyphLayout.width) / 2.0f;
+            y += GridSpriteBatch.convert(size.getHeight()) + glyphLayout.height + 2.0f;
+            font.draw(batch, glyphLayout, x, y);
+        }
+        else {
+            font.draw(batch, name.getValue(), x, y);
+        }
     }
 
     @Override
@@ -67,6 +83,7 @@ public class NameRenderer extends IteratingSystem {
 
     @Override
     public void dispose() {
+        font.dispose();
         batch.dispose();
     }
 }

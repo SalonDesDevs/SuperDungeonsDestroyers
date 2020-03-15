@@ -2,7 +2,6 @@ package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
 import io.netty.buffer.ByteBuf;
 import net.wytrem.ecs.Component;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
 public class EntityComponentSet extends EntityPacket {
 

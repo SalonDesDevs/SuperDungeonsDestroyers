@@ -1,15 +1,18 @@
 package org.salondesdevs.superdungeonsdestroyers;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.google.inject.AbstractModule;
-import net.wytrem.ecs.*;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.salondesdevs.superdungeonsdestroyers.states.LoadingAssets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.google.inject.AbstractModule;
+
+import net.wytrem.ecs.World;
+import net.wytrem.ecs.WorldConfiguration;
 
 public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
 

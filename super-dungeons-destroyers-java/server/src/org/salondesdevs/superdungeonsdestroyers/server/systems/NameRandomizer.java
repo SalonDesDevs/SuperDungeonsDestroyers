@@ -1,13 +1,13 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import net.wytrem.ecs.Aspect;
-import net.wytrem.ecs.IteratingSystem;
-import net.wytrem.ecs.Mapper;
-import org.checkerframework.checker.units.qual.A;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 
-import javax.inject.Inject;
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.IteratingSystem;
+import net.wytrem.ecs.Mapper;
 
 public class NameRandomizer extends IteratingSystem {
 

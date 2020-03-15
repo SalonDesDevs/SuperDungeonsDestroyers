@@ -1,21 +1,22 @@
 package org.salondesdevs.superdungeonsdestroyers.states;
 
+import javax.inject.Inject;
+
+import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.I18NService;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.EntityCreator;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameInputSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameNetHandler;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.LevelSwitcher;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerIdHolder;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerMotionSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.render.*;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameNetHandler;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameInputSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.LevelSwitcher;
-
-import javax.inject.Inject;
 
 public class IngameState extends SDDState {
     @Inject
@@ -31,6 +32,7 @@ public class IngameState extends SDDState {
         register(Assets.class);
         register(I18NService.class);
         register(EntityCreator.class);
+        register(AnimationsCreator.class);
 
         // Network stuff
         register(NetworkSystem.class);
@@ -53,6 +55,7 @@ public class IngameState extends SDDState {
         register(AnimatedSpriteRenderer.class);
         register(NameRenderer.class);
         register(OverlayRenderer.class);
+        register(HudRenderer.class);
         register(UiSystem.class);
     }
 

@@ -1,7 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components.watched;
 
 import io.netty.buffer.ByteBuf;
-import net.wytrem.ecs.Component;
 
 public class FloatWatchedComponent extends WatchableComponent {
 

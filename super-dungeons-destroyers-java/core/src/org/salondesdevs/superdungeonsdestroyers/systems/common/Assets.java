@@ -1,17 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.I18NBundle;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
-
-import javax.inject.Singleton;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.I18NBundle;
+
+import net.wytrem.ecs.Service;
 
 @Singleton
 /**

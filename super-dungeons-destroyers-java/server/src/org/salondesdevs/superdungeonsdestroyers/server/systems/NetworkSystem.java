@@ -1,6 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
+import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Injector;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -10,19 +24,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
-import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
+import net.wytrem.ecs.BaseSystem;
+import net.wytrem.ecs.Mapper;
 
 @Singleton
 public class NetworkSystem extends BaseSystem {

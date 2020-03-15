@@ -1,10 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.connectingtoserver;
 
-import net.wytrem.ecs.World;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
 import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
@@ -14,7 +13,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import net.wytrem.ecs.World;
 
 public class ConnectingToServerNetHandler implements NetworkHandlerSystem.Handler {
     private static final Logger logger = LoggerFactory.getLogger( ConnectingToServerNetHandler.class );

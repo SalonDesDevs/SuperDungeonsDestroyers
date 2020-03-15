@@ -1,8 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
-import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+
+import io.netty.buffer.ByteBuf;
 
 public class EntitySpawn extends EntityPacket {
     public EntityKind entityKind;

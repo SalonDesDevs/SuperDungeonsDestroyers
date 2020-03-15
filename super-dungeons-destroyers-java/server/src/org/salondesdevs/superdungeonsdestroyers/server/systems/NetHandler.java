@@ -1,8 +1,15 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import io.netty.channel.ChannelHandlerContext;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
+import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
@@ -15,9 +22,8 @@ import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnecti
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import io.netty.channel.ChannelHandlerContext;
+import net.wytrem.ecs.Mapper;
 
 public class NetHandler {
     private static final Logger logger = LoggerFactory.getLogger( NetHandler.class );
@@ -85,9 +91,9 @@ public class NetHandler {
                 this.playerConnectionMapper.set(playerId, new PlayerConnection(ctx));
                 synchronizer.startSynchronizingWith(this.playerId);
                 environmentManager.teleport(playerId, 1, 1);
-                maxHealthMapper.set(playerId, new MaxHealth(382));
+                maxHealthMapper.set(playerId, new MaxHealth(100));
                 sizeMapper.set(playerId, new Size(1.0f, 1.3f));
-                speedMapper.set(playerId, new Speed());
+                speedMapper.set(playerId, new Speed(3.0f));
             }
             else {
                 // Otherwise, close.

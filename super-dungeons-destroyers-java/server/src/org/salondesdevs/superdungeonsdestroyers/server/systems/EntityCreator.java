@@ -1,13 +1,16 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
-import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
+import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
+
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.Service;
+import net.wytrem.ecs.World;
 
 @Singleton
 /**
@@ -20,11 +23,18 @@ public class EntityCreator extends Service {
 
     private int createPlayer() {
         int player = world.createEntity();
+        addKind(player, EntityKind.PLAYER);
         addTracked(player);
         addPosition(player);
-        addKind(player, EntityKind.PLAYER);
 
         return player;
+    }
+
+    @Inject
+    Mapper<Speed> speedMapper;
+
+    private void addSpeed(int player) {
+        speedMapper.set(player, new Speed(10.0f));
     }
 
     public int create(EntityKind entityKind) {

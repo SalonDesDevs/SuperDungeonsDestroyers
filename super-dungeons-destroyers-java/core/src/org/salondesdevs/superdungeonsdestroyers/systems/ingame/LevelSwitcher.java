@@ -1,6 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import net.wytrem.ecs.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
@@ -8,8 +10,9 @@ import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.IteratingSystem;
+import net.wytrem.ecs.Mapper;
 
 @Singleton
 public class LevelSwitcher extends IteratingSystem {

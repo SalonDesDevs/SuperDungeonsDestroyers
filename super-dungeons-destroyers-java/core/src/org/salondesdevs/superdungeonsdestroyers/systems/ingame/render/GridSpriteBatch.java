@@ -1,12 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.google.inject.internal.cglib.core.$DefaultNamingPolicy;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GridSpriteBatch extends SpriteBatch {
 
@@ -27,6 +26,10 @@ public class GridSpriteBatch extends SpriteBatch {
 
     public void draw(TextureRegion region, Position position, Size size) {
         this.draw(region, position.x * GRID_SIZE, position.y * GRID_SIZE, size.getWidth() * GRID_SIZE, size.getHeight() * GRID_SIZE);
+    }
+
+    public static float convert(float grid) {
+        return grid * GRID_SIZE;
     }
 
     public static float toGridCoordsX(Position position) {

@@ -1,5 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.loadingassets;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.states.MainMenuState;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -10,21 +25,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
-import org.salondesdevs.superdungeonsdestroyers.states.MainMenuState;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import net.wytrem.ecs.BaseSystem;
 
 @Singleton
 /**

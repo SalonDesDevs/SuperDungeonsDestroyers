@@ -1,9 +1,10 @@
 package org.salondesdevs.superdungeonsdestroyers.states;
 
-import net.wytrem.ecs.*;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 
-import javax.inject.Inject;
+import net.wytrem.ecs.GameState;
 
 public abstract class SDDState extends GameState {
 

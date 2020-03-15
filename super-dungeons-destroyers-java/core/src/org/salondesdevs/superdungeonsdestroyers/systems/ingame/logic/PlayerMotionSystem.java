@@ -1,23 +1,25 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.google.common.eventbus.Subscribe;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
-import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
+import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
+import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
+
+import com.badlogic.gdx.Input;
+import com.google.common.eventbus.Subscribe;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.Service;
 
 @Singleton
 public class PlayerMotionSystem extends Service {
@@ -31,10 +33,10 @@ public class PlayerMotionSystem extends Service {
     Mapper<Position> positionMapper;
 
     @Inject
-    Mapper<Offset> offsetMapper;
+    Mapper<ActionState> actionStateMapper;
 
     @Inject
-    Mapper<ActionState> actionStateMapper;
+    AnimationsCreator animationsCreator;
 
     @Inject
     Animator animator;
@@ -43,8 +45,6 @@ public class PlayerMotionSystem extends Service {
     PlayerIdHolder playerIdHolder;
 
     private long lastMoved = 0L;
-
-    private static final long delay = 300L;
 
     @Override
     public void initialize() {
@@ -62,19 +62,12 @@ public class PlayerMotionSystem extends Service {
         }
 
         if (keysToDirection.keySet().contains(keyPressedEvent.getKeycode())) {
-            long now = TimeUtils.millis();
-
-            if (now - lastMoved < delay) {
-                return;
-            }
-            lastMoved = now;
 
             actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
 
             final Facing facing = keysToDirection.get(keyPressedEvent.getKeycode());
 
             Position position = positionMapper.get(playerIdHolder.getEntityId());
-            Offset offset = offsetMapper.get(playerIdHolder.getEntityId());
 
             switch (facing) {
                 case NORTH:
@@ -93,7 +86,7 @@ public class PlayerMotionSystem extends Service {
 
             networkSystem.send(new PlayerMove(facing));
 
-            Animation<Float> walkAnimation = animator.createMoveAnimation(offset, facing, () -> {
+            Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(playerIdHolder.getEntityId(), facing, () -> {
                 actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);
             });
 

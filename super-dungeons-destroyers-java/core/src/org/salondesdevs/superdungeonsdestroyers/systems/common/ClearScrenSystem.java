@@ -1,10 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common;
 
+import javax.inject.Singleton;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import net.wytrem.ecs.*;
 
-import javax.inject.Singleton;
+import net.wytrem.ecs.BaseSystem;
 
 @Singleton
 public class ClearScrenSystem extends BaseSystem {

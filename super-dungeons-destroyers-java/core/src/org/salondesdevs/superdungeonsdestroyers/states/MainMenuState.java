@@ -1,6 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.states;
 
-import net.wytrem.ecs.*;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
@@ -9,7 +10,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.I18NService;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
 
-import javax.inject.Inject;
+import net.wytrem.ecs.World;
 
 public class MainMenuState extends SDDState {
 

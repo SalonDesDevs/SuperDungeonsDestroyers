@@ -1,20 +1,23 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import net.wytrem.ecs.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
 import org.salondesdevs.superdungeonsdestroyers.components.Me;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.Service;
 
 @Singleton
 public class EntityCreator extends Service {

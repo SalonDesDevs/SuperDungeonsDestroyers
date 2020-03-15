@@ -1,19 +1,25 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.components.Camera;
-import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
-import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+import static com.badlogic.gdx.graphics.GL20.GL_KEEP;
+import static com.badlogic.gdx.graphics.GL20.GL_REPLACE;
+import static com.badlogic.gdx.graphics.GL20.GL_STENCIL_TEST;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.badlogic.gdx.graphics.GL20.*;
+import org.salondesdevs.superdungeonsdestroyers.components.Camera;
+import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.CrossIteratingSystem;
+import net.wytrem.ecs.Mapper;
 
 /**
  * If a {@link org.salondesdevs.superdungeonsdestroyers.components.Terrain} entity is present, will use it to render the

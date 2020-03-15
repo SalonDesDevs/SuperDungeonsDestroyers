@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components;
 
-import net.wytrem.ecs.*;
+import net.wytrem.ecs.Component;
 
 /**
  * Represents the position of an entity, <bold>in grid coordinates</bold>.

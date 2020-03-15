@@ -16,14 +16,10 @@ public class MapMask {
     public final boolean[][] v;
     public final int height;
     public final int width;
-    private final int tileWidth;
-    private final int tileHeight;
 
     public MapMask(TiledMap tiledMap, String propertyKey) {
         this.height = TiledMapUtils.getHeight(tiledMap);
         this.width = TiledMapUtils.getWidth(tiledMap);
-        this.tileWidth = TiledMapUtils.getTileWidth(tiledMap);
-        this.tileHeight = TiledMapUtils.getTileHeight(tiledMap);
         this.v = new boolean[height][width];
         generate(TiledMapUtils.getTileLayers(tiledMap), propertyKey);
     }
@@ -37,22 +33,6 @@ public class MapMask {
     {
         if ( x >= width || x < 0 || y < 0 || y >= height  ) return outOfBoundsResult;
         return v[y][x];
-    }
-
-    /**
-     *
-     * @param x
-     * @param y
-     * @return TRUE when property found at PIXEL coordinates.
-     */
-    public boolean atScreen( final int x, final int y, boolean outOfBoundsResult)
-    {
-        return atGrid(x / tileWidth, y / tileHeight, outOfBoundsResult);
-    }
-
-    public boolean atScreen( final float x, final float y, boolean outOfBoundsResult)
-    {
-        return atGrid((int)x / tileWidth, (int)y / tileHeight, outOfBoundsResult);
     }
 
     private void generate(Array<TiledMapTileLayer> layers, String propertyKey) {

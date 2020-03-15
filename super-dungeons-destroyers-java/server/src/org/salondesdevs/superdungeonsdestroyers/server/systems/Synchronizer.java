@@ -1,25 +1,36 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.watched.WatchableComponent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityComponentSet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.AutoWatchedComponents;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.Component;
+import net.wytrem.ecs.IteratingSystem;
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.World;
 
 @Singleton
 /**

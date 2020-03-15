@@ -1,16 +1,25 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets;
 
+import java.util.function.Supplier;
+
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityComponentSet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityDespawn;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
+
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
-
-import java.util.function.Supplier;
 
 public abstract class Packet implements NettySerializable {
 

@@ -1,20 +1,23 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
-import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
-import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
-import org.salondesdevs.superdungeonsdestroyers.events.input.MouseScrolledEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.input.MouseScrolledEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.wytrem.ecs.BaseSystem;
 
 
 @Singleton

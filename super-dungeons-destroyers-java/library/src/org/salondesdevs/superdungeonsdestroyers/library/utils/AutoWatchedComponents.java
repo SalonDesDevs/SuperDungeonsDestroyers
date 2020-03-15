@@ -1,13 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.library.utils;
 
+import java.util.function.Supplier;
+
+import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Health;
+import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
+import org.salondesdevs.superdungeonsdestroyers.library.components.RemainingSteps;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
+
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import net.wytrem.ecs.Component;
-import org.salondesdevs.superdungeonsdestroyers.library.components.*;
-
-import java.util.function.Supplier;
 
 /**
  * A class used to register components which are automatically updated by the server's synchronizer.

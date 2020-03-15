@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.common.animations;
+package org.salondesdevs.superdungeonsdestroyers.library.systems.animations;
 
 import java.util.function.Consumer;
 

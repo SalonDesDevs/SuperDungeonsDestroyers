@@ -1,19 +1,29 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import net.wytrem.ecs.*;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityComponentSet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animator;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import net.wytrem.ecs.Component;
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.World;
 
 public class IngameNetHandler implements NetworkHandlerSystem.Handler {
 
@@ -79,6 +89,9 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     @Inject
     Animator animator;
 
+    @Inject
+    AnimationsCreator animationsCreator;
+
     private void handleEntityMove(EntityMove entityMove) {
         if (positionMapper.has(entityMove.entityId)) {
             Position tilePosition = positionMapper.get(entityMove.entityId);
@@ -99,11 +112,8 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
             }
         }
 
-
         if (positionMapper.has(entityMove.entityId) && offsetMapper.has(entityMove.entityId)) {
-            Offset offset = offsetMapper.get(entityMove.entityId);
-
-            org.salondesdevs.superdungeonsdestroyers.systems.common.animations.Animation<Float> walkAnimation = animator.createMoveAnimation(offset, entityMove.facing, () -> {});
+            Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(entityMove.entityId, entityMove.facing, () -> {});
             animator.play(walkAnimation);
         }
     }

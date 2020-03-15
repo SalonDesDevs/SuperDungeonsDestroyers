@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.components;
 
-import net.wytrem.ecs.*;
+import net.wytrem.ecs.Component;
 
 public class Offset implements Component {
 

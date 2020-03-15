@@ -1,7 +1,19 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Gdx;
-import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,20 +24,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.FutureListener;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import net.wytrem.ecs.BaseSystem;
 
 @Singleton
 public class NetworkSystem extends BaseSystem {
@@ -42,10 +42,12 @@ public class NetworkSystem extends BaseSystem {
 
     }
 
+    EventLoopGroup workerGroup;
+
     public void tryConnect(String host, int port, MainMenuScreen screen) {
         logger.info("Connecting to server at {}:{}", host, port);
 
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
         b.group(workerGroup);
@@ -87,6 +89,7 @@ public class NetworkSystem extends BaseSystem {
 
 
             f.await();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -98,7 +101,7 @@ public class NetworkSystem extends BaseSystem {
 
     @Override
     public void dispose() {
-
+        workerGroup.shutdownGracefully();
     }
 
     public class ClientHandler extends ChannelInboundHandlerAdapter {

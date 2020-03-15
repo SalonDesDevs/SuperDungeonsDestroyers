@@ -1,10 +1,10 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
-import com.badlogic.gdx.utils.I18NBundle;
-import net.wytrem.ecs.Service;
+import javax.inject.Inject;
+
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
-import javax.inject.Inject;
+import net.wytrem.ecs.Service;
 
 public class I18NService extends Service {
     @Inject

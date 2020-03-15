@@ -1,7 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components;
 
-import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.components.watched.WatchableComponent;
+
+import io.netty.buffer.ByteBuf;
 
 /**
  * Represents the display Size of an entity, <bold>in grid coordinates</bold>.

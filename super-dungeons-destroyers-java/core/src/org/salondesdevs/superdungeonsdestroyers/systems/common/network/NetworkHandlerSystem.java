@@ -1,13 +1,16 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import com.google.inject.Injector;
-import net.wytrem.ecs.*;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+
+import com.google.inject.Injector;
+
+import net.wytrem.ecs.BaseSystem;
 
 @Singleton
 public class NetworkHandlerSystem extends BaseSystem {
