@@ -55,8 +55,6 @@ public class MainMenuScreen extends Screen {
         VisImage image = new VisImage(assets.title);
         verticalGroup.addActor(image);
 
-
-
         VerticalGroup buttons = new VerticalGroup();
         buttons.space(10f);
         {

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 import org.slf4j.Logger;
@@ -21,10 +20,6 @@ import com.badlogic.gdx.utils.Array;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
-/**
- * If a {@link org.salondesdevs.superdungeonsdestroyers.components.Terrain} entity is present, will use it to render the
- * specified map layers.
- */
 public class MapLayerRenderer {
     private static final Logger logger = LoggerFactory.getLogger( MapLayerRenderer.class );
 
@@ -70,14 +65,14 @@ public class MapLayerRenderer {
     private Map<TiledMap, TiledMapRenderer> renderers;
     private Map<TiledMap, int[]> layers;
 
-    public void render(Terrain terrain) {
-        TiledMapRenderer tiledMapRenderer = this.renderers.get(terrain.tiledMap);
+    public void render(TiledMap terrain) {
+        TiledMapRenderer tiledMapRenderer = this.renderers.get(terrain);
 
         if (tiledMapRenderer == null) {
-            throw new IllegalStateException("Renderer not registered for map " + terrain.tiledMap);
+            throw new IllegalStateException("Renderer not registered for map " + terrain);
         }
 
         tiledMapRenderer.setView(cameraService.camera);
-        tiledMapRenderer.render(this.layers.get(terrain.tiledMap));
+        tiledMapRenderer.render(this.layers.get(terrain));
     }
 }

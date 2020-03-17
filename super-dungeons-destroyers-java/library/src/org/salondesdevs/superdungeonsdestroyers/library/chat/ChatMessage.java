@@ -11,7 +11,7 @@ public class ChatMessage implements NettySerializable {
         this("");
     }
 
-    private ChatMessage(String content) {
+    public ChatMessage(String content) {
         this.content = content;
     }
 

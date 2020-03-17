@@ -10,10 +10,7 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHa
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.I18NService;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.EntityCreator;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameInputSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameNetHandler;
-import org.salondesdevs.superdungeonsdestroyers.systems.ingame.LevelSwitcher;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.*;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerIdHolder;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerMotionSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.render.*;
@@ -41,6 +38,7 @@ public class IngameState extends SDDState {
         // Input
         register(IngameInputSystem.class);
         register(PlayerMotionSystem.class);
+        register(ClientChat.class);
 
         // Updating stuff
         register(LevelSwitcher.class);

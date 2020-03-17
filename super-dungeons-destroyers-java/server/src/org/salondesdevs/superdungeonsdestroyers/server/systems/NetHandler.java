@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
@@ -94,6 +95,7 @@ public class NetHandler {
                 maxHealthMapper.set(playerId, new MaxHealth(100));
                 sizeMapper.set(playerId, new Size(1.0f, 1.3f));
                 speedMapper.set(playerId, new Speed(3.0f));
+                chatSystem.broadcast(new ChatMessage("bienvenue sur le server"));
             }
             else {
                 // Otherwise, close.

@@ -44,7 +44,7 @@ project(":library") {
         api "net.wytrem:ecs:2.2"
         api "org.slf4j:slf4j-api:1.7.26"
         api "org.slf4j:slf4j-simple:1.7.26"
-        api "com.google.guava:guava:28.0-jre"
+        api "com.google.guava:guava:28.2-jre"
         api "io.netty:netty-all:4.1.39.Final"
 //        compile files("libs/flatbuffers-java-1.11.1.jar")
     }
@@ -82,7 +82,7 @@ project(":server") {
 
     dependencies {
         api project(":library")
-        implementation 'org.mapeditor:libtiled:1.0.2'
+        implementation 'org.mapeditor:libtiled:1.2.3'
     }
 }
 

@@ -2,7 +2,12 @@ package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
 import javax.inject.Inject;
 
+import net.wytrem.ecs.Mapper;
+import org.mapeditor.core.*;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
+import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +23,37 @@ public class MotionSystem extends Service {
     @Inject
     EnvironmentManager environmentManager;
 
+    @Inject
+    MapLoader mapLoader;
+
+    @Inject
+    Mapper<Position> positionMapper;
+
+    @Inject
+    Mapper<PlayerConnection> playerConnectionMapper;
+
 
     public void playerMoved(int playerId, PlayerMove playerMove) {
-        // TODO: check if the tile is free
+        Position pos = positionMapper.get(playerId);
 
-        environmentManager.moveEntity(playerId, playerMove.facing);
+        int wantedX = pos.x + playerMove.facing.x;
+        int wantedY = pos.y + playerMove.facing.y;
+        TileLayer ground = ((TileLayer) mapLoader.map.getLayerByName("ground"));
+
+        Tile tile = ground.getTileAt(wantedX, wantedY);
+        if (tile != null) {
+            Properties properties = tile.getProperties();
+
+            if (properties != null) {
+                if (properties.getProperty("solid", "false").equals("true")) {
+                    // If the wanted tile is solid, discard move.
+                    logger.warn("Player {} tried to move on a solid tile.", playerId);
+                    playerConnectionMapper.get(playerId).send(new EntityTeleport(playerId, pos.x, pos.y));
+                }
+                else {
+                    environmentManager.moveEntity(playerId, playerMove.facing);
+                }
+            }
+        }
     }
-
-
 }

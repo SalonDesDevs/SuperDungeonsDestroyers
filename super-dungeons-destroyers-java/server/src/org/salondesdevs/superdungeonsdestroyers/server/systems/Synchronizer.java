@@ -80,7 +80,7 @@ public class Synchronizer extends IteratingSystem {
     @Inject
     NetworkSystem networkSystem;
 
-    Levels level = Levels.BOTTOM;
+    Levels level = Levels.COLLISIONS_TESTER;
 
     @Inject
     Mapper<EntityKind> entityKindMapper;

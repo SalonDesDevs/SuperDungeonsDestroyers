@@ -3,7 +3,9 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
@@ -15,14 +17,9 @@ import net.wytrem.ecs.IteratingSystem;
 import net.wytrem.ecs.Mapper;
 
 @Singleton
-public class LevelSwitcher extends IteratingSystem {
+public class LevelSwitcher extends Service {
 
     private static final Logger logger = LoggerFactory.getLogger( LevelSwitcher.class );
-
-    int scheduledRoom = -1;
-
-    @Inject
-    Mapper<Terrain> terrainMapper;
 
     @Inject
     Assets assets;
@@ -30,26 +27,19 @@ public class LevelSwitcher extends IteratingSystem {
     public int currentHeight;
 
     int current = Integer.MIN_VALUE;
+    TiledMap currentMap = null;
 
-    public LevelSwitcher() {
-        super(Aspect.all(Terrain.class));
+    public void setRoom(Levels room) {
+        current = room.ordinal();
+        this.currentMap = assets.rooms[this.current];
+        this.currentHeight = TiledMapUtils.getHeight(this.currentMap);
     }
 
-    @Override
-    public void process(int entity) {
-        if (scheduledRoom != -1 && scheduledRoom != current) {
-            Terrain terrain = terrainMapper.get(entity);
-            terrain.tiledMap = assets.rooms[scheduledRoom];
-
-//            logger.info("Switched level to {}={}", scheduledRoom, LevelEnvironment.name(scheduledRoom));
-
-            current = scheduledRoom;
-            scheduledRoom = -1;
-        }
+    public TiledMap getTerrain() {
+        return this.currentMap;
     }
 
-    public void scheduleChange(Levels room) {
-        this.scheduledRoom = room.ordinal();
-        this.currentHeight = TiledMapUtils.getHeight(assets.rooms[room.ordinal()]);
+    public TiledMapTileLayer getGround() {
+        return (TiledMapTileLayer) this.currentMap.getLayers().get("ground");
     }
 }

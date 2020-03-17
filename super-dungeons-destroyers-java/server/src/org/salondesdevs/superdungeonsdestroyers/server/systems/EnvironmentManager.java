@@ -45,7 +45,14 @@ public class EnvironmentManager extends Service {
         return spawned;
     }
 
+    public void teleport(int entity, Position destination) {
+        teleport(entity, destination.x, destination.y);
+    }
+
     public void teleport(int entity, int x, int y) {
+        teleport(entity, x, y, false);
+    }
+    public void teleport(int entity, int x, int y, boolean forceResendPacket) {
         if (positionMapper.has(entity)) {
             Position position = positionMapper.get(entity);
             if (position.x != x || position.y != y) {

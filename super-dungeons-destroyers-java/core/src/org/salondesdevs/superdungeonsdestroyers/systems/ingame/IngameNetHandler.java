@@ -3,18 +3,12 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import javax.inject.Inject;
 
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.components.Terrain;
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityComponentSet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
@@ -50,6 +44,16 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
         else if (packet instanceof EntityComponentSet){
             this.handleEntityComponentSet(((EntityComponentSet) packet));
         }
+        else if (packet instanceof FromServerChat) {
+            this.handleFromServerChat((FromServerChat) packet);
+        }
+    }
+
+    @Inject
+    ClientChat clientChat;
+
+    private void handleFromServerChat(FromServerChat packet) {
+        clientChat.onMessage(packet.getChatChannel(), packet.getChatMessage());
     }
 
     @Inject
@@ -70,10 +74,7 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     }
 
     private void handleSwitchLevel(SwitchLevel switchLevel) {
-        if (!terrainMapper.has(-1)) {
-            terrainMapper.set(-1, new Terrain(assetService.testMap));
-        }
-        this.mapSwitcher.scheduleChange(switchLevel.level);
+        this.mapSwitcher.setRoom(switchLevel.level);
     }
 
     private void handleEntityTeleport(EntityTeleport event) {
@@ -132,15 +133,10 @@ public class IngameNetHandler implements NetworkHandlerSystem.Handler {
     Mapper<Position> positionMapper;
 
     @Inject
-    Mapper<Terrain> terrainMapper;
-
-    @Inject
     Assets assetService;
 
     @Inject
     EntityCreator entityCreator;
-
-
 
 
 //    public void handleEnvironment(Environment environment) {
