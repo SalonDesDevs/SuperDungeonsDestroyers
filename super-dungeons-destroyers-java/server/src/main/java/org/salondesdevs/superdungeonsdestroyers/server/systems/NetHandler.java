@@ -90,12 +90,14 @@ public class NetHandler {
                 // If the protocol is correct, we actually spawn the player in the world.
                 this.playerId = environmentManager.spawn(EntityKind.PLAYER);
                 this.playerConnectionMapper.set(playerId, new PlayerConnection(ctx));
+
+                // TODO: this should move to other systems (event subscribe)
                 synchronizer.startSynchronizingWith(this.playerId);
                 environmentManager.teleport(playerId, 1, 1);
                 maxHealthMapper.set(playerId, new MaxHealth(100));
                 sizeMapper.set(playerId, new Size(1.0f, 1.3f));
                 speedMapper.set(playerId, new Speed(3.0f));
-                chatSystem.broadcast(new ChatMessage("bienvenue sur le server"));
+                chatSystem.broadcast(ChatMessage.text("bienvenue sur le server"));
             }
             else {
                 // Otherwise, close.

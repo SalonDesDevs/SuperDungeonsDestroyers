@@ -39,7 +39,6 @@ public class NetworkSystem extends BaseSystem {
 
     @Override
     public void initialize() {
-
     }
 
     EventLoopGroup workerGroup;
@@ -101,7 +100,9 @@ public class NetworkSystem extends BaseSystem {
 
     @Override
     public void dispose() {
-        workerGroup.shutdownGracefully();
+        if (workerGroup != null) {
+            workerGroup.shutdownGracefully();
+        }
     }
 
     public class ClientHandler extends ChannelInboundHandlerAdapter {

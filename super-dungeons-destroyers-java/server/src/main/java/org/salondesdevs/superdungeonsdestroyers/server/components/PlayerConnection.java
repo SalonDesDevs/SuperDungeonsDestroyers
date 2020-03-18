@@ -22,7 +22,6 @@ public class PlayerConnection implements Component {
     }
 
     public void send(Packet...packets) {
-        System.out.println("Sending " + Arrays.toString(packets));
         for (Packet packet : packets) {
             this.channelHandlerContext.write(packet);
         }

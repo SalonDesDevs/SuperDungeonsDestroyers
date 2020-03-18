@@ -12,6 +12,10 @@ public class Server {
     private boolean isRunning;
 
     public void start() {
+
+        Server.class.getResourceAsStream("/simplelogger.properties").getClass();
+        ClassLoader.getSystemResourceAsStream("simplelogger.properties").getClass();
+        
         WorldConfiguration worldConfiguration = new WorldConfiguration();
         worldConfiguration.addModule(new AbstractModule() {
             @Override

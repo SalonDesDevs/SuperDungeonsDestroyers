@@ -78,4 +78,9 @@ public class OverlayRenderer extends IteratingSystem {
 
         Gdx.gl.glDisable(GL_STENCIL_TEST);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return this.levelSwitcher.getTerrain() != null;
+    }
 }

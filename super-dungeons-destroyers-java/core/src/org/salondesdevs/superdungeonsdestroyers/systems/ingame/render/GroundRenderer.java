@@ -28,5 +28,8 @@ public class GroundRenderer extends BaseSystem {
         this.mapLayerRenderer.render(levelSwitcher.getTerrain());
     }
 
-
+    @Override
+    public boolean isEnabled() {
+        return this.levelSwitcher.getTerrain() != null;
+    }
 }

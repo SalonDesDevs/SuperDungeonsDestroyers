@@ -51,6 +51,10 @@ public class UiSystem extends BaseSystem {
         }
     }
 
+    public void closeScreen() {
+        displayScreen(null);
+    }
+
     public void displayScreen(Class<? extends Screen> screenClass) {
         if (this.currentScreen != null) {
             this.currentScreen.dispose();

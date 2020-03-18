@@ -11,9 +11,14 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.FromS
 
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class ChatSystem extends Service {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatSystem.class);
+
     @Inject
     NetworkSystem networkSystem;
 
@@ -37,6 +42,8 @@ public class ChatSystem extends Service {
     }
 
     public void playerChatted(int player, FromClientChat fromClientChat) {
+        logger.info("Player {} chatted.", player);
+
         if (fromClientChat.getChatMessage().isCommand()) {
             // If it is a command, handle it.
 
@@ -64,6 +71,7 @@ public class ChatSystem extends Service {
             } else {
                 String prefix = nameMapper.has(player) ? nameMapper.get(player).getValue() + " : " : "entity#" + player;
                 this.broadcast(fromClientChat.getChatMessage().prepend(ChatMessage.text(prefix)), fromClientChat.getChatChannel());
+                logger.info("broadcasting");
             }
         }
     }

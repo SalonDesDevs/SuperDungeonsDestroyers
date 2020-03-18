@@ -2,18 +2,11 @@ package org.salondesdevs.superdungeonsdestroyers.library.packets;
 
 import java.util.function.Supplier;
 
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityComponentSet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityDespawn;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntitySpawn;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.SwitchLevel;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
 
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
@@ -50,6 +43,8 @@ public abstract class Packet implements NettySerializable {
         register(id++, EntityMove::new, EntityMove.class);
         register(id++, SwitchLevel::new, SwitchLevel.class);
         register(id++, EntityComponentSet::new, EntityComponentSet.class);
+        register(id++, FromClientChat::new, FromClientChat.class);
+        register(id++, FromServerChat::new, FromServerChat.class);
     }
 
     private static <P extends Packet> void register(int id, Supplier<P> packetSupplier, Class<P> clazz) {

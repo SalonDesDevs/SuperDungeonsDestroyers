@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import net.wytrem.ecs.Service;
 
 public class MotionSystem extends Service {
-
     private static final Logger logger = LoggerFactory.getLogger( MotionSystem.class );
 
     @Inject
