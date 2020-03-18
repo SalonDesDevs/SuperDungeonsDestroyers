@@ -1,6 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
@@ -9,6 +10,7 @@ import net.wytrem.ecs.Aspect;
 import net.wytrem.ecs.IteratingSystem;
 import net.wytrem.ecs.Mapper;
 
+@Singleton
 public class NameRandomizer extends IteratingSystem {
 
     public NameRandomizer() {

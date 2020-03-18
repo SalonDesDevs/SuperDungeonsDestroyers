@@ -44,6 +44,12 @@ public class MainMenuState extends SDDState {
 
     @Override
     public void pushed() {
+        super.pushed();
         uiSystem.displayScreen(MainMenuScreen.class);
+    }
+
+    @Override
+    public String toString() {
+        return "MainMenu";
     }
 }

@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
+import com.google.common.base.MoreObjects;
 import io.netty.buffer.ByteBuf;
 import net.wytrem.ecs.Component;
 
@@ -26,5 +27,13 @@ public class EntityComponentSet extends EntityPacket {
     public void write(ByteBuf out) {
         super.write(out);
         writeWatchableComponent(this.watchableComponent, out);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("watchableComponent", watchableComponent)
+                .add("entityId", entityId)
+                .toString();
     }
 }

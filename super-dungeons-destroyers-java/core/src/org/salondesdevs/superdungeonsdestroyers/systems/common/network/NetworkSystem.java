@@ -3,11 +3,17 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
+import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +42,6 @@ public class NetworkSystem extends BaseSystem {
     NetworkHandlerSystem networkHandler;
 
     ChannelHandlerContext channelHandlerContext;
-
-    @Override
-    public void initialize() {
-    }
 
     EventLoopGroup workerGroup;
 
@@ -94,6 +96,15 @@ public class NetworkSystem extends BaseSystem {
         }
     }
 
+    @Subscribe
+    public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
+        logger.info("onPacketReceived(" + "packetReceivedEvent = " + packetReceivedEvent + ")");
+
+        if (packetReceivedEvent.getPacket() instanceof VersionCheckSuccess) {
+            world.push(IngameState.class);
+        }
+    }
+
     public void send(Packet packet) {
         this.channelHandlerContext.writeAndFlush(packet);
     }
@@ -117,9 +128,7 @@ public class NetworkSystem extends BaseSystem {
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg)
                 throws Exception {
-            synchronized (networkHandler.messagesToHandle) {
-                networkHandler.messagesToHandle.add((Packet) msg);
-            }
+            networkHandler.enqueue((Packet) msg);
         }
     }
 }

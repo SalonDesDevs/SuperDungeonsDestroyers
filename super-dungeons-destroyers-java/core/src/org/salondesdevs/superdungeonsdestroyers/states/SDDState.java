@@ -5,8 +5,12 @@ import javax.inject.Inject;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 
 import net.wytrem.ecs.GameState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class SDDState extends GameState {
+
+    private static final Logger logger = LoggerFactory.getLogger(SDDState.class);
 
     @Inject
     EventBus eventBus;
@@ -18,11 +22,13 @@ public abstract class SDDState extends GameState {
 
     @Override
     public void pushed() {
-        eventBus.registerListeners(this);
+        logger.info("Pushed game state {}", this.toString());
+
+        eventBus.registerGameState(this);
     }
 
     @Override
     public void poped() {
-        eventBus.unregisterListeners(this);
+        eventBus.unregisterGameState(this);
     }
 }

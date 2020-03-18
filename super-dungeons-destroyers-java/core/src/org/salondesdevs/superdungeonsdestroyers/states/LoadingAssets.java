@@ -36,4 +36,9 @@ public class LoadingAssets extends SDDState {
         super.pause();
         Gdx.gl.glClearColor(0, 0, 0, 1);
     }
+
+    @Override
+    public String toString() {
+        return "LoadingAssets";
+    }
 }

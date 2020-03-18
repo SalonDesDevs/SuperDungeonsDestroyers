@@ -57,11 +57,13 @@ public class UiSystem extends BaseSystem {
 
     public void displayScreen(Class<? extends Screen> screenClass) {
         if (this.currentScreen != null) {
+            this.currentScreen.onClosed();
             this.currentScreen.dispose();
         }
 
         if (screenClass != null) {
             this.currentScreen = injector.getInstance(screenClass);
+            this.currentScreen.onDisplayed();
             Gdx.input.setInputProcessor(this.currentScreen.getStage());
         }
         else {

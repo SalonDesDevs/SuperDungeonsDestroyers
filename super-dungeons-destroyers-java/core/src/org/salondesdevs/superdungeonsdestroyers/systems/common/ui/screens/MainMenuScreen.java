@@ -2,10 +2,14 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
 import javax.inject.Inject;
 
+import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.connectingtoserver.ConnectingToServerNetHandler;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,7 +24,6 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 
 import net.wytrem.ecs.World;
-import org.salondesdevs.superdungeonsdestroyers.utils.BackgroundColor;
 
 public class MainMenuScreen extends Screen {
 
@@ -38,6 +41,9 @@ public class MainMenuScreen extends Screen {
 
     @Inject
     I18NService i18NService;
+
+    @Inject
+    UiSystem uiSystem;
 
     private VisLabel errorLabel;
     private VisTextField nameField;
@@ -87,7 +93,6 @@ public class MainMenuScreen extends Screen {
                             port = Integer.parseInt(split[1]);
                         }
 
-                        networkHandlerSystem.setCurrentHandler(ConnectingToServerNetHandler.class);
                         networkSystem.tryConnect(ip, port, MainMenuScreen.this);
                     }
                 }
@@ -95,6 +100,14 @@ public class MainMenuScreen extends Screen {
         }
 
         verticalGroup.addActor(buttons);
+    }
+
+    @Subscribe
+    public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
+        if (packetReceivedEvent.getPacket() instanceof VersionCheckSuccess) {
+              networkSystem.send(new PlayerName(this.getNickname()));
+              uiSystem.displayScreen(null);
+        }
     }
 
     public void connectSuccess() {

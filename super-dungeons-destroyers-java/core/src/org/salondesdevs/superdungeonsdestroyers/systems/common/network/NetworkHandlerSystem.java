@@ -6,41 +6,42 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-import com.google.inject.Injector;
-
 import net.wytrem.ecs.BaseSystem;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
+/**
+ * Dispatches incoming {@link Packet}s as {@link org.salondesdevs.superdungeonsdestroyers.library.events.Event}s.
+ */
 public class NetworkHandlerSystem extends BaseSystem {
 
-    List<Packet> messagesToHandle = new ArrayList<>();
+    private static final Logger logger = LoggerFactory.getLogger(NetworkHandlerSystem.class);
+
+    private List<Packet> messagesToHandle = new ArrayList<>();
 
     @Inject
-    Injector injector;
-
-    private Handler currentHandler;
+    EventBus eventBus;
 
     @Override
     public void process() {
         synchronized (messagesToHandle) {
-            if (currentHandler != null) {
-                messagesToHandle.forEach(this::handleMessages);
-                messagesToHandle.clear();
-            }
+            messagesToHandle.forEach(this::handleMessages);
+            messagesToHandle.clear();
         }
     }
 
-    public void setCurrentHandler(Class<? extends Handler> clazz) {
-        this.currentHandler = injector.getInstance(clazz);
+    public void enqueue(Packet incoming) {
+        synchronized (messagesToHandle) {
+            messagesToHandle.add(incoming);
+        }
     }
 
     private void handleMessages(Packet packet) {
-            this.currentHandler.handle(packet);
-    }
-
-    public interface Handler {
-        void handle(Packet packet);
+        eventBus.post(new PacketReceivedEvent(packet));
     }
 }

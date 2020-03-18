@@ -3,6 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.eventbus.Subscribe;
 import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
 import org.salondesdevs.superdungeonsdestroyers.components.Me;
@@ -10,6 +11,8 @@ import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
+import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -89,4 +92,10 @@ public class EntityCreator extends Service {
         animatedMapper.set(entity, new Animated(walkAnimation));
     }
 
+    @Subscribe
+    public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
+        if (packetReceivedEvent.getPacket() instanceof Welcome) {
+            addLocalPlayer(((Welcome) packetReceivedEvent.getPacket()).me);
+        }
+    }
 }

@@ -1,9 +1,13 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import com.google.common.eventbus.Subscribe;
+import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
+import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
@@ -19,11 +23,16 @@ import net.wytrem.ecs.Component;
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.World;
 
-public class IngameNetHandler implements NetworkHandlerSystem.Handler {
+@Singleton
+public class IngameNetHandler extends Service {
 
     private static final Logger logger = LoggerFactory.getLogger( IngameNetHandler.class );
 
-    @Override
+    @Subscribe
+    public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
+        handle(packetReceivedEvent.getPacket());
+    }
+
     public void handle(Packet packet) {
         logger.debug("Received {}", packet.getClass().getSimpleName());
         if (packet instanceof Welcome) {

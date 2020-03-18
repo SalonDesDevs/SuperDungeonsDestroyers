@@ -16,7 +16,7 @@ public class HudRenderer extends IteratingSystem {
     BitmapFont font;
 
     public HudRenderer() {
-        super(Aspect.all(Me.class));
+        super(Aspect.all(Me.class, Position.class));
     }
 
     @Override

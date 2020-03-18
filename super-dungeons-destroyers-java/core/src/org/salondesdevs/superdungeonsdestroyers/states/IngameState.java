@@ -30,6 +30,7 @@ public class IngameState extends SDDState {
         register(I18NService.class);
         register(EntityCreator.class);
         register(AnimationsCreator.class);
+        register(IngameNetHandler.class);
 
         // Network stuff
         register(NetworkSystem.class);
@@ -65,7 +66,10 @@ public class IngameState extends SDDState {
         super.pushed();
 
         uiSystem.displayScreen(null);
+    }
 
-        this.networkHandlerSystem.setCurrentHandler(IngameNetHandler.class);
+    @Override
+    public String toString() {
+        return "Ingame";
     }
 }

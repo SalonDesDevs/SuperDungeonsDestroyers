@@ -2,8 +2,15 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+
+import javax.inject.Inject;
 
 public abstract class Screen {
+
+    @Inject
+    EventBus eventBus;
+
     protected Stage stage;
 
     public Screen() {
@@ -28,5 +35,13 @@ public abstract class Screen {
 
     public void draw() {
         this.stage.draw();
+    }
+
+    public void onClosed() {
+        eventBus.unregister(this);
+    }
+
+    public void onDisplayed() {
+        eventBus.register(this);
     }
 }
