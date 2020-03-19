@@ -3,7 +3,9 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 import javax.inject.Inject;
 
 import com.google.common.eventbus.Subscribe;
-import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
@@ -93,7 +95,7 @@ public class MainMenuScreen extends Screen {
                             port = Integer.parseInt(split[1]);
                         }
 
-                        networkSystem.tryConnect(ip, port, MainMenuScreen.this);
+                        networkSystem.tryConnectToServer(ip, port);
                     }
                 }
             });
@@ -110,12 +112,16 @@ public class MainMenuScreen extends Screen {
         }
     }
 
-    public void connectSuccess() {
+
+    @Subscribe
+    public void onConnectSucceed(ConnectSucceedEvent connectSucceedEvent) {
             errorLabel.setText("");
-//        this.world.push(IngameState.class);
     }
 
-    public void connectFailed(Throwable t) {
+    @Subscribe
+    public void onConnectFailed(ConnectFailedEvent connectFailedEvent) {
+        Throwable t = connectFailedEvent.getCause();
+
         if (t != null) {
             errorLabel.setText(i18NService.format("couldNotConnect", t.getLocalizedMessage()));
         }

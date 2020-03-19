@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
-import org.salondesdevs.superdungeonsdestroyers.events.input.KeyPressedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;

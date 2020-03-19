@@ -23,13 +23,13 @@ public class EventBus extends Service {
     }
 
     public void register(Object object) {
-        logger.info("register(" + "object = " + object + ")");
+//        logger.trace("register(" + "object = " + object + ")");
 
         globalEventBus.register(object);
     }
 
     public void unregister(Object object) {
-        logger.info("unregister(" + "object = " + object + ")");
+//        logger.trace("unregister(" + "object = " + object + ")");
 
         globalEventBus.unregister(object);
     }

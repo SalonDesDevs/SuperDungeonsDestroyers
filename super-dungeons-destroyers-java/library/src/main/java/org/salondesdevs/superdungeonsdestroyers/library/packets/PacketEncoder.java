@@ -11,7 +11,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) {
-        logger.info("encode(" + "ctx = " + ctx + ", msg = " + msg + ", out = " + out + ")");
+//        logger.trace("encode(" + "ctx = " + ctx + ", msg = " + msg + ", out = " + out + ")");
 
         try {
             out.writeByte(Packet.getId(msg));

@@ -3,6 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.states;
 import javax.inject.Inject;
 
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
+import org.salondesdevs.superdungeonsdestroyers.library.SDDState;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
@@ -30,7 +31,7 @@ public class IngameState extends SDDState {
         register(I18NService.class);
         register(EntityCreator.class);
         register(AnimationsCreator.class);
-        register(IngameNetHandler.class);
+        register(Synchroniser.class);
 
         // Network stuff
         register(NetworkSystem.class);

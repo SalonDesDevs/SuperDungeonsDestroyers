@@ -3,9 +3,11 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import com.badlogic.gdx.Input;
 import com.google.common.eventbus.Subscribe;
 import net.wytrem.ecs.Service;
-import org.salondesdevs.superdungeonsdestroyers.events.input.KeyReleasedEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
+import org.salondesdevs.superdungeonsdestroyers.events.ChatEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.KeyReleasedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.FromServerChat;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.ChatScreen;
@@ -35,11 +37,13 @@ public class ClientChat extends Service {
         this.messages = new ArrayList<>();
     }
 
-    public void onMessage(ChatChannel chatChannel, ChatMessage chatMessage) {
-        this.messages.add(chatMessage);
-        logger.info("onMessage(" + "chatChannel = " + chatChannel + ", chatMessage = " + chatMessage + ")");
-        if (uiSystem.getCurrentScreen() != null && uiSystem.getCurrentScreen() instanceof ChatScreen) {
-            ((ChatScreen) uiSystem.getCurrentScreen()).appendMessage(chatMessage);
+    @Subscribe
+    public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
+        if (packetReceivedEvent.getPacket() instanceof FromServerChat) {
+            FromServerChat fromServerChat = ((FromServerChat) packetReceivedEvent.getPacket());
+            ChatMessage chatMessage = fromServerChat.getChatMessage();
+            this.eventBus.post(new ChatEvent(chatMessage));
+            this.messages.add(chatMessage);
         }
     }
 

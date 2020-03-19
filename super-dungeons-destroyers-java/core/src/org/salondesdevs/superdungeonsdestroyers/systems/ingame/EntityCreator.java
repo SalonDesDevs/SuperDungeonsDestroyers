@@ -11,7 +11,7 @@ import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
-import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 

@@ -1,40 +1,57 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
+import com.google.common.eventbus.Subscribe;
+import net.wytrem.ecs.Component;
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.Service;
+import net.wytrem.ecs.World;
+import org.salondesdevs.superdungeonsdestroyers.components.Offset;
+import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
+import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.google.common.eventbus.Subscribe;
-import net.wytrem.ecs.Service;
-import org.salondesdevs.superdungeonsdestroyers.components.Offset;
-import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
-import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
-import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.wytrem.ecs.Component;
-import net.wytrem.ecs.Mapper;
-import net.wytrem.ecs.World;
-
+/**
+ * Listens to the server packets and keeps entities and components up to date.
+ */
 @Singleton
-public class IngameNetHandler extends Service {
+public class Synchroniser extends Service {
 
-    private static final Logger logger = LoggerFactory.getLogger( IngameNetHandler.class );
+    @Inject
+    Mapper<Offset> offsetMapper;
+
+    @Inject
+    LevelSwitcher mapSwitcher;
+
+    @Inject
+    Mapper<Position> positionMapper;
+
+    @Inject
+    Assets assetService;
+
+    @Inject
+    EntityCreator entityCreator;
+
+    @Inject
+    World world;
+
+    @Inject
+    Animator animator;
+
+    @Inject
+    AnimationsCreator animationsCreator;
 
     @Subscribe
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
-        handle(packetReceivedEvent.getPacket());
-    }
-
-    public void handle(Packet packet) {
-        logger.debug("Received {}", packet.getClass().getSimpleName());
+        Packet packet = packetReceivedEvent.getPacket();
         if (packet instanceof Welcome) {
             this.handleWelcome(((Welcome) packet));
         }
@@ -53,20 +70,7 @@ public class IngameNetHandler extends Service {
         else if (packet instanceof EntityComponentSet){
             this.handleEntityComponentSet(((EntityComponentSet) packet));
         }
-        else if (packet instanceof FromServerChat) {
-            this.handleFromServerChat((FromServerChat) packet);
-        }
     }
-
-    @Inject
-    ClientChat clientChat;
-
-    private void handleFromServerChat(FromServerChat packet) {
-        clientChat.onMessage(packet.getChatChannel(), packet.getChatMessage());
-    }
-
-    @Inject
-    World world;
 
     private void handleEntityComponentSet(EntityComponentSet packet) {
         setFromValue(packet.entityId, packet.watchableComponent);
@@ -95,12 +99,6 @@ public class IngameNetHandler extends Service {
             positionMapper.set(event.entityId, new Position(event.x, event.y));
         }
     }
-
-    @Inject
-    Animator animator;
-
-    @Inject
-    AnimationsCreator animationsCreator;
 
     private void handleEntityMove(EntityMove entityMove) {
         if (positionMapper.has(entityMove.entityId)) {
@@ -131,43 +129,4 @@ public class IngameNetHandler extends Service {
     private void handleWelcome(Welcome welcome) {
         entityCreator.addLocalPlayer(welcome.me);
     }
-
-    @Inject
-    Mapper<Offset> offsetMapper;
-
-    @Inject
-    LevelSwitcher mapSwitcher;
-
-    @Inject
-    Mapper<Position> positionMapper;
-
-    @Inject
-    Assets assetService;
-
-    @Inject
-    EntityCreator entityCreator;
-
-
-//    public void handleEnvironment(Environment environment) {
-//        logger.trace("Received environment {}", environment);
-//
-//
-
-//
-//
-//        for (int i = 0; i < environment.entitiesLength(); i++) {
-//            Entity entity = environment.entities(i);
-//            int id = (int) entity.entityId();
-//
-//            if (entity.kindType() == EntityKind.Player) {
-//                Player playerMessage = (Player) entity.kind(new Player());
-//                if (positionMapper.has(id)) {
-//                    positionMapper.get(id).set(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y() - 1);
-//                }
-//                else {
-//                    positionMapper.set(id, new Position(playerMessage.location().x(), mapSwitcher.currentHeight - playerMessage.location().y()));
-//                }
-//            }
-//        }
-//    }
 }

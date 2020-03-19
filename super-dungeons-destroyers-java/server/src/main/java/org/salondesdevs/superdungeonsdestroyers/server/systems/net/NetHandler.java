@@ -1,10 +1,11 @@
-package org.salondesdevs.superdungeonsdestroyers.server.systems;
+package org.salondesdevs.superdungeonsdestroyers.server.systems.net;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
@@ -12,14 +13,18 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
+import org.salondesdevs.superdungeonsdestroyers.server.events.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.server.events.PlayerJoinedEvent;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.ChatSystem;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.EnvironmentManager;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.MotionSystem;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.Synchronizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,19 +72,7 @@ public class NetHandler {
     private boolean checkedIn = false;
 
     @Inject
-    Mapper<MaxHealth> maxHealthMapper;
-
-    @Inject
-    Mapper<Size> sizeMapper;
-
-    @Inject
-    Mapper<Speed> speedMapper;
-
-    @Inject
-    ChatSystem chatSystem;
-
-    @Inject
-    Mapper<Name> nameMapper;
+    EventBus eventBus;
 
     private void handle(Packet packet) {
         if (packet instanceof VersionCheck) {
@@ -91,13 +84,9 @@ public class NetHandler {
                 this.playerId = environmentManager.spawn(EntityKind.PLAYER);
                 this.playerConnectionMapper.set(playerId, new PlayerConnection(ctx));
 
+                eventBus.post(new PlayerJoinedEvent(this.playerId));
+
                 // TODO: this should move to other systems (event subscribe)
-                synchronizer.startSynchronizingWith(this.playerId);
-                environmentManager.teleport(playerId, 1, 1);
-                maxHealthMapper.set(playerId, new MaxHealth(100));
-                sizeMapper.set(playerId, new Size(1.0f, 1.3f));
-                speedMapper.set(playerId, new Speed(3.0f));
-                chatSystem.broadcast(ChatMessage.text("bienvenue sur le server"));
             }
             else {
                 // Otherwise, close.
@@ -112,15 +101,7 @@ public class NetHandler {
             return;
         }
 
-        if (packet instanceof PlayerMove) {
-            motionSystem.playerMoved(this.playerId, ((PlayerMove) packet));
-        }
-        else if (packet instanceof FromClientChat) {
-            chatSystem.playerChatted(this.playerId, ((FromClientChat) packet));
-        }
-        else if (packet instanceof PlayerName) {
-            nameMapper.set(playerId, new Name(((PlayerName) packet).getName()));
-        }
+        eventBus.post(new PacketReceivedEvent(this.playerId, packet));
     }
 
     public void disconnect(String reason) {

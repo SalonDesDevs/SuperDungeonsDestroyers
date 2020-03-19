@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.events.input;
+package org.salondesdevs.superdungeonsdestroyers.events;
 
 import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
 

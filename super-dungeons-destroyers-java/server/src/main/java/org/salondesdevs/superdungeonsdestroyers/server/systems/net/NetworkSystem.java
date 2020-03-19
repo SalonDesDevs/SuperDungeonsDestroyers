@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.server.systems;
+package org.salondesdevs.superdungeonsdestroyers.server.systems.net;
 
 import java.util.ArrayList;
 import java.util.List;

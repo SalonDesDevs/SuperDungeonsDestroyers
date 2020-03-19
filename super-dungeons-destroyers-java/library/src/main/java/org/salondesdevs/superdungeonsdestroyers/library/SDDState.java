@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.states;
+package org.salondesdevs.superdungeonsdestroyers.library;
 
 import javax.inject.Inject;
 
@@ -29,6 +29,8 @@ public abstract class SDDState extends GameState {
 
     @Override
     public void poped() {
+        logger.info("Poped game state {}", this.toString());
+
         eventBus.unregisterGameState(this);
     }
 }

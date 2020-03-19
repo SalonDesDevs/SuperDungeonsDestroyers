@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.ui.widget.*;
+import org.salondesdevs.superdungeonsdestroyers.events.ChatEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
@@ -110,14 +112,19 @@ public class ChatScreen extends Screen {
         stage.addActor(table);
     }
 
-    public void appendMessage(ChatMessage message) {
+    @Subscribe
+    public void onChat(ChatEvent event) {
+        this.appendMessage(event.getMessage());
+    }
+
+    private void appendMessage(ChatMessage message) {
         VisLabel label = new VisLabel(message.toDisplayString());
         messages.addActor(label);
     }
 
     private void sendText() {
         if (!chatField.getText().isEmpty()) {
-            networkSystem.send(new FromClientChat(ChatMessage.text(chatField.getText()), ChatChannel.GAME));
+            networkSystem.send(new FromClientChat(ChatMessage.text(chatField.getText(), ChatChannel.GAME), ChatChannel.GAME));
             chatField.clearText();
         }
     }

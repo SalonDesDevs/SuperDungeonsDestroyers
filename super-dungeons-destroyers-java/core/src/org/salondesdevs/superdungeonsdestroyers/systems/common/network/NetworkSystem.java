@@ -4,17 +4,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.google.common.eventbus.Subscribe;
-import org.salondesdevs.superdungeonsdestroyers.library.events.net.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +44,11 @@ public class NetworkSystem extends BaseSystem {
 
     EventLoopGroup workerGroup;
 
-    public void tryConnect(String host, int port, MainMenuScreen screen) {
-        logger.info("Connecting to server at {}:{}", host, port);
+    @Inject
+    EventBus eventBus;
+
+    public void tryConnectToServer(String host, int port) {
+        logger.info("Try connecting to server at {}:{}", host, port);
 
         workerGroup = new NioEventLoopGroup();
 
@@ -79,12 +81,14 @@ public class NetworkSystem extends BaseSystem {
                     }
 
                     Gdx.app.postRunnable(() -> {
-                        screen.connectFailed(f.cause());
+                        eventBus.post(new ConnectFailedEvent(f.cause()));
                     });
                 }
                 else {
                     logger.info("Successfully connected to {}:{}", host, port);
-                    Gdx.app.postRunnable(screen::connectSuccess);
+                    Gdx.app.postRunnable(() -> {
+                        eventBus.post(new ConnectSucceedEvent());
+                    });
                 }
             });
 
@@ -98,7 +102,6 @@ public class NetworkSystem extends BaseSystem {
 
     @Subscribe
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
-        logger.info("onPacketReceived(" + "packetReceivedEvent = " + packetReceivedEvent + ")");
 
         if (packetReceivedEvent.getPacket() instanceof VersionCheckSuccess) {
             world.push(IngameState.class);

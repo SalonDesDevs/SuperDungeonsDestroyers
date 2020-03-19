@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.eventbus.Subscribe;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
@@ -23,6 +24,8 @@ import org.salondesdevs.superdungeonsdestroyers.library.utils.AutoWatchedCompone
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
+import org.salondesdevs.superdungeonsdestroyers.server.events.PlayerJoinedEvent;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +90,11 @@ public class Synchronizer extends IteratingSystem {
 
     @Inject
     Mapper<Position> positionMapper;
+
+    @Subscribe
+    public void onPlayerJoined(PlayerJoinedEvent playerJoinedEvent) {
+        this.startSynchronizingWith(playerJoinedEvent.getPlayer());
+    }
 
     public void startSynchronizingWith(int player) {
         sendTrackedEntities(player);
