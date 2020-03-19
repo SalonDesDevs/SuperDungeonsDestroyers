@@ -1,8 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
-import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
-
 import io.netty.buffer.ByteBuf;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 
 public class EntityMove extends EntityPacket {
 

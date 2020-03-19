@@ -1,12 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.library.systems.animations;
 
+import net.wytrem.ecs.BaseSystem;
+
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
-import javax.inject.Singleton;
-
-import net.wytrem.ecs.BaseSystem;
 
 @Singleton
 public class Animator extends BaseSystem {

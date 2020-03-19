@@ -1,19 +1,17 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import net.wytrem.ecs.Aspect;
+import net.wytrem.ecs.IteratingSystem;
+import net.wytrem.ecs.Mapper;
 import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyersClient;
 import org.salondesdevs.superdungeonsdestroyers.components.Camera;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-
-import net.wytrem.ecs.Aspect;
-import net.wytrem.ecs.IteratingSystem;
-import net.wytrem.ecs.Mapper;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class CameraSystem extends IteratingSystem {

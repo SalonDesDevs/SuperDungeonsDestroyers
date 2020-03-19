@@ -1,9 +1,14 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.badlogic.gdx.Gdx;
 import com.google.common.eventbus.Subscribe;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.FutureListener;
+import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
@@ -17,20 +22,8 @@ import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.Gdx;
-
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.FutureListener;
-import net.wytrem.ecs.BaseSystem;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class NetworkSystem extends BaseSystem {

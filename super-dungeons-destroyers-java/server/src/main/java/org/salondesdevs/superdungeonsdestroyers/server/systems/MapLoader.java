@@ -1,13 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import java.io.IOException;
-
-import org.mapeditor.core.Map;
-import org.mapeditor.core.MapLayer;
-import org.mapeditor.core.TileLayer;
-import org.mapeditor.io.MapReader;
-
 import net.wytrem.ecs.Service;
+import org.mapeditor.core.Map;
 import org.mapeditor.io.TMXMapReader;
 import org.salondesdevs.superdungeonsdestroyers.server.utils.MapPerso;
 

@@ -1,21 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.google.common.eventbus.Subscribe;
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.FromServerChat;
-
-import net.wytrem.ecs.Mapper;
-import net.wytrem.ecs.Service;
-import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class ChatSystem extends Service {

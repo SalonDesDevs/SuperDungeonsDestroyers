@@ -1,14 +1,13 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.render;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-
 import net.wytrem.ecs.Aspect;
 import net.wytrem.ecs.IteratingSystem;
 import net.wytrem.ecs.Mapper;
+import org.salondesdevs.superdungeonsdestroyers.components.Sprited;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class SpriteRenderer extends IteratingSystem {

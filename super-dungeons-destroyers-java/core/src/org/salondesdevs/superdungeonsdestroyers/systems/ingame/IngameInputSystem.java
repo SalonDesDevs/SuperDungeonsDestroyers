@@ -1,23 +1,20 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyReleasedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.MouseScrolledEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import net.wytrem.ecs.BaseSystem;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Singleton

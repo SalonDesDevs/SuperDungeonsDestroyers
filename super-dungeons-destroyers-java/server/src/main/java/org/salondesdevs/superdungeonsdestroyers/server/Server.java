@@ -1,11 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.server;
 
-import org.salondesdevs.superdungeonsdestroyers.server.states.UniqueState;
-
 import com.google.inject.AbstractModule;
-
 import net.wytrem.ecs.World;
 import net.wytrem.ecs.WorldConfiguration;
+import org.salondesdevs.superdungeonsdestroyers.server.states.UniqueState;
 
 public class Server {
 

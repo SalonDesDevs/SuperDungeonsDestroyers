@@ -1,17 +1,15 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.wytrem.ecs.BaseSystem;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-
-import net.wytrem.ecs.BaseSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 /**

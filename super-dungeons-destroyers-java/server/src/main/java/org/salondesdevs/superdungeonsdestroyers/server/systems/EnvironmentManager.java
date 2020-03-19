@@ -1,16 +1,15 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import net.wytrem.ecs.Mapper;
+import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.wytrem.ecs.Mapper;
-import net.wytrem.ecs.Service;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 /**

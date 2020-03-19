@@ -1,8 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-
 import io.netty.buffer.ByteBuf;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 
 public class EntityTeleport extends EntityPacket {
 

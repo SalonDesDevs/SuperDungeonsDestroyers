@@ -1,9 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient;
 
+import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-
-import io.netty.buffer.ByteBuf;
 
 public class PlayerMove extends Packet {
     public Facing facing;

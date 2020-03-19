@@ -1,9 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.library.utils;
 
-import java.nio.charset.Charset;
-
 import io.netty.buffer.ByteBuf;
 import net.wytrem.ecs.Component;
+
+import java.nio.charset.Charset;
 
 public interface NettySerializable {
     void read(ByteBuf in);

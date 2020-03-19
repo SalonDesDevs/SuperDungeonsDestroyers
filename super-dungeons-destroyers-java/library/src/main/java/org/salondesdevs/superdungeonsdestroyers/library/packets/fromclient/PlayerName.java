@@ -1,8 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient;
 
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-
 import io.netty.buffer.ByteBuf;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
 public class PlayerName extends Packet {
 

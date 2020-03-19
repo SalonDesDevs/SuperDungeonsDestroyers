@@ -1,8 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components;
 
-import org.salondesdevs.superdungeonsdestroyers.library.components.watched.WatchableComponent;
-
 import io.netty.buffer.ByteBuf;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.WatchableComponent;
 
 public class Name extends WatchableComponent {
     private String value;

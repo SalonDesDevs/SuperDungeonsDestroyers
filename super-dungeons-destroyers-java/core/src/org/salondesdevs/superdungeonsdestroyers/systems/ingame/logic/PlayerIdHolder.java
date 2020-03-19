@@ -1,11 +1,10 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic;
 
-import javax.inject.Singleton;
-
-import org.salondesdevs.superdungeonsdestroyers.components.Me;
-
 import net.wytrem.ecs.Aspect;
 import net.wytrem.ecs.IteratingSystem;
+import org.salondesdevs.superdungeonsdestroyers.components.Me;
+
+import javax.inject.Singleton;
 
 /**
  * Simply stores (and keeps up to date) the ID of the entity that carries {@link Me}.

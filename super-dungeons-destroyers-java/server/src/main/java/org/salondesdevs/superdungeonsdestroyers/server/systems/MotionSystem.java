@@ -1,20 +1,21 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import javax.inject.Inject;
-
 import com.google.common.eventbus.Subscribe;
 import net.wytrem.ecs.Mapper;
-import org.mapeditor.core.*;
+import net.wytrem.ecs.Service;
+import org.mapeditor.core.Properties;
+import org.mapeditor.core.Tile;
+import org.mapeditor.core.TileLayer;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerMove;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
-import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.wytrem.ecs.Service;
+import javax.inject.Inject;
 
 public class MotionSystem extends Service {
     private static final Logger logger = LoggerFactory.getLogger( MotionSystem.class );

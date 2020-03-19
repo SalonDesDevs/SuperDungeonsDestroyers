@@ -1,11 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.server.components;
 
-import java.util.Arrays;
-
-import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-
 import io.netty.channel.ChannelHandlerContext;
 import net.wytrem.ecs.Component;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
 public class PlayerConnection implements Component {
     private ChannelHandlerContext channelHandlerContext;

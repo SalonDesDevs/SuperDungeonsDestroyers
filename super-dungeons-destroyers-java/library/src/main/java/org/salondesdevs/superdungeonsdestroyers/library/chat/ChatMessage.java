@@ -1,8 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library.chat;
 
-import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
-
 import io.netty.buffer.ByteBuf;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
 
 public class ChatMessage implements NettySerializable {
     private String content;

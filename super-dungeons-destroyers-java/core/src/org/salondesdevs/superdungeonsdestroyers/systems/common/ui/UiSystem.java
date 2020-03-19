@@ -1,18 +1,16 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.ui;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.badlogic.gdx.Gdx;
+import com.google.inject.Injector;
+import com.kotcrab.vis.ui.VisUI;
+import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyersClient;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.Screen;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameInputSystem;
 
-import com.badlogic.gdx.Gdx;
-import com.google.inject.Injector;
-import com.kotcrab.vis.ui.VisUI;
-
-import net.wytrem.ecs.BaseSystem;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class UiSystem extends BaseSystem {

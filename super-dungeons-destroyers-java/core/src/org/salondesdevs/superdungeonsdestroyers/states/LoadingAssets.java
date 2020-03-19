@@ -1,11 +1,10 @@
 package org.salondesdevs.superdungeonsdestroyers.states;
 
+import com.badlogic.gdx.Gdx;
 import org.salondesdevs.superdungeonsdestroyers.library.SDDState;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem;
-
-import com.badlogic.gdx.Gdx;
 
 public class LoadingAssets extends SDDState {
     public LoadingAssets() {

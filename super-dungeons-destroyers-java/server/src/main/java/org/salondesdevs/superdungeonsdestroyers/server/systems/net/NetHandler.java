@@ -1,17 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems.net;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
-import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
+import io.netty.channel.ChannelHandlerContext;
+import net.wytrem.ecs.Mapper;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
-import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Name;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Speed;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
@@ -21,15 +12,15 @@ import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PlayerJoinedEvent;
-import org.salondesdevs.superdungeonsdestroyers.server.systems.ChatSystem;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.EnvironmentManager;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.MotionSystem;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.Synchronizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.channel.ChannelHandlerContext;
-import net.wytrem.ecs.Mapper;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NetHandler {
     private static final Logger logger = LoggerFactory.getLogger( NetHandler.class );

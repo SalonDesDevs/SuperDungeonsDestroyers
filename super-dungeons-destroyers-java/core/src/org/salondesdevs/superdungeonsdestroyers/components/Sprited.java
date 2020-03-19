@@ -2,7 +2,6 @@ package org.salondesdevs.superdungeonsdestroyers.components;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import net.wytrem.ecs.Component;
 
 public class Sprited implements Component {

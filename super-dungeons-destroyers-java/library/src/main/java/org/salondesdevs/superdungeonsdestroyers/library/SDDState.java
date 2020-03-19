@@ -1,12 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.library;
 
-import javax.inject.Inject;
-
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
-
 import net.wytrem.ecs.GameState;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 public abstract class SDDState extends GameState {
 

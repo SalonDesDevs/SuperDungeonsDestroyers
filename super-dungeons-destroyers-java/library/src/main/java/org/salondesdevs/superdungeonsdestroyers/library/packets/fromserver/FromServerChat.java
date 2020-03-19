@@ -1,10 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
-import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
+import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-
-import io.netty.buffer.ByteBuf;
 
 public class FromServerChat extends Packet {
     private ChatMessage chatMessage;

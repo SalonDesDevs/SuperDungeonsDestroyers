@@ -1,8 +1,5 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import net.wytrem.ecs.Service;
@@ -12,9 +9,8 @@ import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.wytrem.ecs.Aspect;
-import net.wytrem.ecs.IteratingSystem;
-import net.wytrem.ecs.Mapper;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class LevelSwitcher extends Service {

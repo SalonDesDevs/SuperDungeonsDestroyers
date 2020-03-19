@@ -1,18 +1,5 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
-import javax.inject.Inject;
-
-import com.google.common.eventbus.Subscribe;
-import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
-import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -20,12 +7,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
-
 import net.wytrem.ecs.World;
+import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
+import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
+
+import javax.inject.Inject;
 
 public class MainMenuScreen extends Screen {
 

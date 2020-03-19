@@ -1,9 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 
+import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
-
-import io.netty.buffer.ByteBuf;
 
 public class SwitchLevel extends Packet {
 

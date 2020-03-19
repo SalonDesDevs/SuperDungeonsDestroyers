@@ -1,6 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.server.events;
-
-import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
+package org.salondesdevs.superdungeonsdestroyers.library.events;
 
 public class PlayerEvent extends Event {
     private final int player;
