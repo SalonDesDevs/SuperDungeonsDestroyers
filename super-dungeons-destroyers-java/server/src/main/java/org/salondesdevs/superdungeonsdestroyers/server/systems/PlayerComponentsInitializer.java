@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.library.components.MaxHealth;
@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PlayerComponentsInitializer extends Service {
+
     @Inject
     Mapper<MaxHealth> maxHealthMapper;
 
@@ -31,7 +32,7 @@ public class PlayerComponentsInitializer extends Service {
     @Inject
     ChatSystem chatSystem;
 
-    @Subscribe
+    @EventHandler
     public void onPlayerJoined(PlayerJoinedEvent playerJoinedEvent) {
         int player = playerJoinedEvent.getPlayer();
         maxHealthMapper.set(player, new MaxHealth(100));
@@ -44,7 +45,7 @@ public class PlayerComponentsInitializer extends Service {
     @Inject
     Mapper<Name> nameMapper;
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         if (packetReceivedEvent.getPacket() instanceof PlayerName) {
             PlayerName playerName = (PlayerName) packetReceivedEvent.getPacket();

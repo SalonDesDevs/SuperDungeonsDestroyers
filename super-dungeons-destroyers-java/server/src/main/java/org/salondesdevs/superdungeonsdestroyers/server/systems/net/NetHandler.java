@@ -1,20 +1,16 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems.net;
 
 import io.netty.channel.ChannelHandlerContext;
-import net.wytrem.ecs.Mapper;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.DisconnectReason;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
-import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PlayerJoinedEvent;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.EnvironmentManager;
-import org.salondesdevs.superdungeonsdestroyers.server.systems.MotionSystem;
-import org.salondesdevs.superdungeonsdestroyers.server.systems.Synchronizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +20,6 @@ import java.util.List;
 
 public class NetHandler {
     private static final Logger logger = LoggerFactory.getLogger( NetHandler.class );
-
-    @Inject
-    Mapper<PlayerConnection> playerConnectionMapper;
-
-    @Inject
-    Synchronizer synchronizer;
 
     private ChannelHandlerContext ctx;
     private List<Packet> packetsToHandle;
@@ -53,10 +43,10 @@ public class NetHandler {
     }
 
     @Inject
-    MotionSystem motionSystem;
+    EnvironmentManager environmentManager;
 
     @Inject
-    EnvironmentManager environmentManager;
+    NetworkSystem networkSystem;
 
     private int playerId;
 
@@ -73,11 +63,10 @@ public class NetHandler {
                 ctx.writeAndFlush(new VersionCheckSuccess());
                 // If the protocol is correct, we actually spawn the player in the world.
                 this.playerId = environmentManager.spawn(EntityKind.PLAYER);
-                this.playerConnectionMapper.set(playerId, new PlayerConnection(ctx));
+                networkSystem.registerPlayerConnection(this.playerId, ctx);
 
                 eventBus.post(new PlayerJoinedEvent(this.playerId));
 
-                // TODO: this should move to other systems (event subscribe)
             }
             else {
                 // Otherwise, close.

@@ -2,7 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 
 import javax.inject.Inject;
 

@@ -32,6 +32,7 @@ public class IngameState extends SDDState {
         register(EntityCreator.class);
         register(AnimationsCreator.class);
         register(Synchroniser.class);
+        register(ClientChat.class);
 
         // Network stuff
         register(NetworkSystem.class);
@@ -40,7 +41,6 @@ public class IngameState extends SDDState {
         // Input
         register(IngameInputSystem.class);
         register(PlayerMotionSystem.class);
-        register(ClientChat.class);
 
         // Updating stuff
         register(LevelSwitcher.class);
@@ -53,8 +53,8 @@ public class IngameState extends SDDState {
         register(GroundRenderer.class);
         register(SpriteRenderer.class);
         register(AnimatedSpriteRenderer.class);
-        register(NameRenderer.class);
         register(OverlayRenderer.class);
+        register(NameRenderer.class);
         register(HudRenderer.class);
         register(UiSystem.class);
     }

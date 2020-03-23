@@ -32,7 +32,6 @@ public class MapLayerRenderer {
     }
 
     public void initialize(String... layersToRender) {
-        this.createAndStoreRenderer(assets.testMap, layersToRender);
         for (TiledMap tiledMap : assets.rooms) {
             this.createAndStoreRenderer(tiledMap, layersToRender);
         }

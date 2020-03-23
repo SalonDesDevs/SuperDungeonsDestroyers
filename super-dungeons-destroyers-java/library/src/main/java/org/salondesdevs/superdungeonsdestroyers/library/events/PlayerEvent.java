@@ -1,13 +1,11 @@
 package org.salondesdevs.superdungeonsdestroyers.library.events;
 
-public class PlayerEvent extends Event {
-    private final int player;
-
+public class PlayerEvent extends EntityEvent {
     public PlayerEvent(int player) {
-        this.player = player;
+        super(player);
     }
 
     public int getPlayer() {
-        return player;
+        return this.getEntityId();
     }
 }

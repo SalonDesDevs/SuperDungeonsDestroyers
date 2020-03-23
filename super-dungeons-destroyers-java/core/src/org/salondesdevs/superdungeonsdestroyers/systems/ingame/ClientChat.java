@@ -1,13 +1,14 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import com.badlogic.gdx.Input;
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
+import com.google.inject.Injector;
 import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.events.ChatEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyReleasedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.FromServerChat;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.ChatScreen;
@@ -32,12 +33,18 @@ public class ClientChat extends Service {
     @Inject
     EventBus eventBus;
 
+    @Inject
+    Injector injector;
+
+    ChatScreen chatScreen;
+
     @Override
     public void initialize() {
         this.messages = new ArrayList<>();
+        chatScreen = injector.getInstance(ChatScreen.class);
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         if (packetReceivedEvent.getPacket() instanceof FromServerChat) {
             FromServerChat fromServerChat = ((FromServerChat) packetReceivedEvent.getPacket());
@@ -47,7 +54,7 @@ public class ClientChat extends Service {
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onKeyTyped(KeyReleasedEvent keyPressedEvent) {
         if (keyPressedEvent.getKeycode() == Input.Keys.T) {
             uiSystem.displayScreen(ChatScreen.class);

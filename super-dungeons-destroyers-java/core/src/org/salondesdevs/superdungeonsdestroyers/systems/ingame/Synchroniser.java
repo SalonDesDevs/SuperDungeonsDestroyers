@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.Component;
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.Service;
@@ -49,7 +49,7 @@ public class Synchroniser extends Service {
     @Inject
     AnimationsCreator animationsCreator;
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         Packet packet = packetReceivedEvent.getPacket();
         if (packet instanceof Welcome) {

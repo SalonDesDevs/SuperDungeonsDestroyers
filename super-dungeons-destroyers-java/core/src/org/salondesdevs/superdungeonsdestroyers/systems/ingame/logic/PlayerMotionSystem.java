@@ -2,12 +2,13 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
+import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
@@ -47,6 +48,9 @@ public class PlayerMotionSystem extends Service {
     @Inject
     LevelSwitcher levelSwitcher;
 
+    @Inject
+    Mapper<Animated> animatedMapper;
+
     private long lastMoved = 0L;
 
     @Override
@@ -57,7 +61,7 @@ public class PlayerMotionSystem extends Service {
         keysToDirection.put(Input.Keys.LEFT, Facing.WEST);
     }
 
-    @Subscribe
+    @EventHandler
     public void keyPressed(KeyPressedEvent keyPressedEvent) {
         ActionState state = actionStateMapper.get(playerIdHolder.getEntityId());
         if (state == ActionState.MOVING) {
@@ -93,6 +97,7 @@ public class PlayerMotionSystem extends Service {
             // If it is not solid, process
 
             actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
+            animatedMapper.get(playerIdHolder.getEntityId()).getAnimation().setPlayMode(com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP);
             switch (facing) {
                 case NORTH:
                     position.y++;
@@ -112,6 +117,7 @@ public class PlayerMotionSystem extends Service {
 
             Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(playerIdHolder.getEntityId(), facing, () -> {
                 actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);
+                animatedMapper.get(playerIdHolder.getEntityId()).getAnimation().setPlayMode(com.badlogic.gdx.graphics.g2d.Animation.PlayMode.NORMAL);
             });
 
             animator.play(walkAnimation);

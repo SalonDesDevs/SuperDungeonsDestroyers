@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.2.4" name="dungeon_combined" tilewidth="16" tileheight="16" tilecount="4096" columns="64">
+<tileset version="1.2" tiledversion="1.3.2" name="dungeon_combined" tilewidth="16" tileheight="16" tilecount="4096" columns="64">
  <image source="dungeon_combined.png" width="1024" height="1024"/>
  <tile id="3">
   <properties>
@@ -56,6 +56,13 @@
    <property name="solid" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="98">
+  <animation>
+   <frame tileid="98" duration="100"/>
+   <frame tileid="99" duration="100"/>
+   <frame tileid="100" duration="100"/>
+  </animation>
+ </tile>
  <tile id="132">
   <properties>
    <property name="solid" type="bool" value="true"/>
@@ -70,6 +77,13 @@
   <properties>
    <property name="solid" type="bool" value="true"/>
   </properties>
+ </tile>
+ <tile id="162">
+  <animation>
+   <frame tileid="162" duration="100"/>
+   <frame tileid="163" duration="100"/>
+   <frame tileid="164" duration="100"/>
+  </animation>
  </tile>
  <tile id="196">
   <properties>
@@ -90,6 +104,13 @@
   <properties>
    <property name="solid" type="bool" value="true"/>
   </properties>
+ </tile>
+ <tile id="226">
+  <animation>
+   <frame tileid="226" duration="100"/>
+   <frame tileid="227" duration="100"/>
+   <frame tileid="228" duration="100"/>
+  </animation>
  </tile>
  <tile id="256">
   <properties>
@@ -145,6 +166,13 @@
   <properties>
    <property name="solid" type="bool" value="true"/>
   </properties>
+ </tile>
+ <tile id="290">
+  <animation>
+   <frame tileid="290" duration="100"/>
+   <frame tileid="291" duration="100"/>
+   <frame tileid="292" duration="100"/>
+  </animation>
  </tile>
  <tile id="330">
   <properties>

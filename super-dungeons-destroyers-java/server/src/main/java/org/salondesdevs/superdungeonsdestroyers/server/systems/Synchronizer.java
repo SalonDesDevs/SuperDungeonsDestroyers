@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Facing;
@@ -10,7 +10,6 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.AutoWatchedComponents;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
-import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PlayerJoinedEvent;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
@@ -67,12 +66,9 @@ public class Synchronizer extends IteratingSystem {
     }
     
     @Inject
-    Mapper<PlayerConnection> playerConnectionMapper;
-
-    @Inject
     NetworkSystem networkSystem;
 
-    Levels level = Levels.COLLISIONS_TESTER;
+    Levels level = Levels.TOP;
 
     @Inject
     Mapper<EntityKind> entityKindMapper;
@@ -80,14 +76,15 @@ public class Synchronizer extends IteratingSystem {
     @Inject
     Mapper<Position> positionMapper;
 
-    @Subscribe
+    @EventHandler
     public void onPlayerJoined(PlayerJoinedEvent playerJoinedEvent) {
         this.startSynchronizingWith(playerJoinedEvent.getPlayer());
     }
 
     public void startSynchronizingWith(int player) {
         sendTrackedEntities(player);
-        playerConnectionMapper.get(player).send(new SwitchLevel(this.level), new Welcome(player));
+
+        networkSystem.send(player, new SwitchLevel(this.level), new Welcome(player));
     }
 
     private void sendTrackedEntities(int player) {
@@ -96,7 +93,8 @@ public class Synchronizer extends IteratingSystem {
         for (int i = 0; i < entities.size(); i++) {
             addEntityData(entities.getInt(i), packetList);
         }
-        playerConnectionMapper.get(player).sendAll(packetList);
+
+        networkSystem.send(player, packetList);
     }
 
     private void addEntityData(int entity, List<Packet> packetList) {

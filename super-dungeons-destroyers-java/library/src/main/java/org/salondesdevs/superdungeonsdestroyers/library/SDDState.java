@@ -1,7 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library;
 
 import net.wytrem.ecs.GameState;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -7,11 +7,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import net.wytrem.ecs.BaseSystem;
+import net.wytrem.ecs.Component;
 import net.wytrem.ecs.Mapper;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
-import org.salondesdevs.superdungeonsdestroyers.server.components.PlayerConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +23,6 @@ import java.util.List;
 @Singleton
 public class NetworkSystem extends BaseSystem {
     private static final Logger logger = LoggerFactory.getLogger(NetworkSystem.class);
-
-    @Inject
-    org.salondesdevs.superdungeonsdestroyers.server.Server sddServer;
 
     @Inject
     Injector injector;
@@ -63,11 +60,19 @@ public class NetworkSystem extends BaseSystem {
         }
     }
 
+    public void send(int player, Iterable<Packet> packetIterable) {
+        this.playerConnectionMapper.get(player).send(packetIterable);
+    }
+
     public void send(int player, Packet... packets) {
         this.playerConnectionMapper.get(player).send(packets);
     }
 
     public void broadcast(Packet... packets) {
+        this.playerConnectionMapper.forEachValue(playerConnection -> playerConnection.send(packets));
+    }
+
+    public void broadcast(Iterable<Packet> packets) {
         this.playerConnectionMapper.forEachValue(playerConnection -> playerConnection.send(packets));
     }
 
@@ -77,6 +82,11 @@ public class NetworkSystem extends BaseSystem {
                 playerConnection.send(packets);
             }
         });
+    }
+
+    public void registerPlayerConnection(int playerId, ChannelHandlerContext channelHandlerContext) {
+        this.playerConnectionMapper.set(playerId, new PlayerConnection(channelHandlerContext));
+
     }
 
     @Override
@@ -111,5 +121,27 @@ public class NetworkSystem extends BaseSystem {
     public void dispose() {
         workerGroup.shutdownGracefully();
         bossGroup.shutdownGracefully();
+    }
+
+    private static class PlayerConnection implements Component {
+        private ChannelHandlerContext channelHandlerContext;
+
+        public PlayerConnection(ChannelHandlerContext channelHandlerContext) {
+            this.channelHandlerContext = channelHandlerContext;
+        }
+
+        public void send(Iterable<Packet> packets) {
+            for (Packet packet : packets) {
+                this.channelHandlerContext.write(packet);
+            }
+            this.channelHandlerContext.flush();
+        }
+
+        public void send(Packet...packets) {
+            for (Packet packet : packets) {
+                this.channelHandlerContext.write(packet);
+            }
+            this.channelHandlerContext.flush();
+        }
     }
 }

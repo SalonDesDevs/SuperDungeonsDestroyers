@@ -1,7 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
 import com.badlogic.gdx.Gdx;
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,12 +11,12 @@ import io.netty.util.concurrent.FutureListener;
 import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketDecoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.PacketEncoder;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.VersionCheck;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.ProtocolVersion;
 import org.salondesdevs.superdungeonsdestroyers.states.IngameState;
 import org.slf4j.Logger;
@@ -93,9 +93,8 @@ public class NetworkSystem extends BaseSystem {
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
-
         if (packetReceivedEvent.getPacket() instanceof VersionCheckSuccess) {
             world.push(IngameState.class);
         }

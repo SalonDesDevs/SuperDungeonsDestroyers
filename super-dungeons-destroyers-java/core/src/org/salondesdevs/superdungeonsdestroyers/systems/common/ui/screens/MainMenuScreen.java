@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -102,7 +102,7 @@ public class MainMenuScreen extends Screen {
         verticalGroup.addActor(buttons);
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         if (packetReceivedEvent.getPacket() instanceof VersionCheckSuccess) {
               networkSystem.send(new PlayerName(this.getNickname()));
@@ -111,12 +111,12 @@ public class MainMenuScreen extends Screen {
     }
 
 
-    @Subscribe
+    @EventHandler
     public void onConnectSucceed(ConnectSucceedEvent connectSucceedEvent) {
             errorLabel.setText("");
     }
 
-    @Subscribe
+    @EventHandler
     public void onConnectFailed(ConnectFailedEvent connectFailedEvent) {
         Throwable t = connectFailedEvent.getCause();
 

@@ -9,7 +9,7 @@ import org.salondesdevs.superdungeonsdestroyers.events.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyReleasedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.MouseScrolledEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.events.Event;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -16,39 +16,59 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import org.salondesdevs.superdungeonsdestroyers.events.ChatEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.ClientChat;
 import org.salondesdevs.superdungeonsdestroyers.utils.BackgroundColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ChatScreen extends Screen {
 
     private static final Logger logger = LoggerFactory.getLogger(ChatScreen.class);
 
-
     @Inject
     ClientChat clientChat;
-
-    @Inject
-    UiSystem uiSystem;
 
     @Inject
     NetworkSystem networkSystem;
 
     VisTextField chatField;
     VerticalGroup messages;
+    HorizontalGroup fieldAndSendButton;
+
+    @Inject
+    EventBus eventBus;
+
+    @Inject
+    public void initialize() {
+        eventBus.register(this);
+    }
+
+
+    @Override
+    public void onClosed() {
+        // Override super, te prevent EventBus::unregister
+        fieldAndSendButton.setVisible(false);
+    }
+
+    @Override
+    public void onDisplayed() {
+        // Override super, te prevent EventBus::register
+        fieldAndSendButton.setVisible(true);
+    }
 
     @Inject
     public void addActors() {
         Table table = new Table();
-        table.setBackground(new BackgroundColor(new Color(0.4f, 0.4f, 0.4f, 0.4f)));
-        table.center();
-        table.setFillParent(true);
+        table.setBounds(10, 220, 180, 200);
+//        table.center();
+//        table.setFillParent(true);
 
         {
             VerticalGroup globalLayout = new VerticalGroup().space(15.0f);
@@ -60,8 +80,8 @@ public class ChatScreen extends Screen {
                     VerticalGroup messagesAndButtons = new VerticalGroup().space(5.0f);
                     {
                         messages = new VerticalGroup().space(2.0f);
+                        messages.setHeight(100.0f);
                         messages.left();
-                        messages.setHeight(200.0f);
 
                         for (ChatMessage message : clientChat.messages) {
                             appendMessage(message);
@@ -70,7 +90,7 @@ public class ChatScreen extends Screen {
                         VisScrollPane scrollPane = new VisScrollPane(messages);
                         messagesAndButtons.addActor(scrollPane);
 
-                        HorizontalGroup horizontalGroup = new HorizontalGroup().space(5.0f);
+                        fieldAndSendButton = new HorizontalGroup().space(5.0f);
 
                         chatField = new VisTextField();
                         chatField.setMessageText("Type here...");
@@ -84,7 +104,7 @@ public class ChatScreen extends Screen {
                                 return false;
                             }
                         });
-                        horizontalGroup.addActor(chatField);
+                        fieldAndSendButton.addActor(chatField);
 
                         VisTextButton sendButton = new VisTextButton("Send");
                         sendButton.addListener(new ClickListener() {
@@ -93,29 +113,21 @@ public class ChatScreen extends Screen {
                                 sendText();
                             }
                         });
-                        horizontalGroup.addActor(sendButton);
-                        messagesAndButtons.addActor(horizontalGroup);
+                        fieldAndSendButton.addActor(sendButton);
+                        messagesAndButtons.addActor(fieldAndSendButton);
                     }
+                    messagesAndButtons.setFillParent(true);
                     messagesAndSendBackground.add(messagesAndButtons);
                 }
 
                 globalLayout.addActor(messagesAndSendBackground);
-
-                VisTextButton closeButton = new VisTextButton("Close chat");
-                closeButton.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        uiSystem.closeScreen();
-                    }
-                });
-                globalLayout.addActor(closeButton);
             }
             table.add(globalLayout);
         }
         stage.addActor(table);
     }
 
-    @Subscribe
+    @EventHandler
     public void onChat(ChatEvent event) {
         this.appendMessage(event.getMessage());
     }

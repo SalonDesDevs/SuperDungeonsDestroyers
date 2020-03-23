@@ -2,18 +2,18 @@ package org.salondesdevs.superdungeonsdestroyers.library.events;
 
 public abstract class Event {
 
-    private boolean consumed;
+    private boolean cancelled;
 
-    public boolean isConsumed() {
-        return consumed;
+    public boolean isCancelled() {
+        return cancelled;
     }
 
-    public Event consume() {
-        setConsumed(true);
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    public Event cancel() {
+        setCancelled(true);
         return this;
-    }
-
-    public void setConsumed(boolean consumed) {
-        this.consumed = consumed;
     }
 }

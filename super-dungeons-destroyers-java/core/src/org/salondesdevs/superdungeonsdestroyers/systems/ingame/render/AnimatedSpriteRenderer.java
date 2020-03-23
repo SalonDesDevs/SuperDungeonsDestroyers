@@ -61,7 +61,7 @@ public class AnimatedSpriteRenderer extends IteratingSystem {
         Animated animated = animatedMapper.get(entity);
         Position position = positionMapper.get(entity);
 
-        TextureRegion region = animated.animation.getKeyFrame(stateTime, true);
+        TextureRegion region = animated.getAnimation().getKeyFrame(stateTime);
 
         if (offsetMapper.has(entity)) {
             Offset offset = offsetMapper.get(entity);

@@ -1,8 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.network;
 
 import net.wytrem.ecs.BaseSystem;
+import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
-import org.salondesdevs.superdungeonsdestroyers.library.systems.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

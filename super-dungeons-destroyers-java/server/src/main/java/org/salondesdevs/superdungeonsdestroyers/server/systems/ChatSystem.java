@@ -1,6 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
-import com.google.common.eventbus.Subscribe;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatChannel;
@@ -39,7 +39,7 @@ public class ChatSystem extends Service {
         networkSystem.send(player, new FromServerChat(message));
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         if (packetReceivedEvent.getPacket() instanceof FromClientChat) {
             FromClientChat fromClientChat = ((FromClientChat) packetReceivedEvent.getPacket());

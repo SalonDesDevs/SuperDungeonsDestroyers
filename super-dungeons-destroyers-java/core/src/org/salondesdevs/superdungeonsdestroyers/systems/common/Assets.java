@@ -30,9 +30,6 @@ public class Assets extends Service {
     @Asset(path = "title_background.png")
     public Texture titleBackground;
 
-    @Asset(path = "testmap.tmx")
-    public TiledMap testMap;
-
     @Asset(path = "tiledmaps/dungeon_combined.png")
     public Texture tileset;
 
