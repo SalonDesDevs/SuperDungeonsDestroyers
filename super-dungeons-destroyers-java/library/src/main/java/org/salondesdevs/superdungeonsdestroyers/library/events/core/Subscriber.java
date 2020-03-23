@@ -17,7 +17,7 @@ package org.salondesdevs.superdungeonsdestroyers.library.events.core;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.salondesdevs.superdungeonsdestroyers.library.events.SubscriberPriority;
+import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -39,7 +39,7 @@ class Subscriber {
     /**
      * Creates a {@code Subscriber} for {@code method} on {@code listener}.
      */
-    static Subscriber create(EventBus bus, Object listener, Method method, SubscriberPriority priority, boolean ignoreCancelled) {
+    static Subscriber create(EventBus bus, Object listener, Method method, EventHandler.Priority priority, boolean ignoreCancelled) {
         return isDeclaredThreadSafe(method)
                 ? new Subscriber(bus, listener, method, priority, ignoreCancelled)
                 : new SynchronizedSubscriber(bus, listener, method, priority, ignoreCancelled);
@@ -67,10 +67,10 @@ class Subscriber {
      */
     private final Method method;
 
-    private final SubscriberPriority priority;
+    private final EventHandler.Priority priority;
     private final boolean ignoreCancelled;
 
-    private Subscriber(EventBus bus, Object target, Method method, SubscriberPriority priority, boolean ignoreCancelled) {
+    private Subscriber(EventBus bus, Object target, Method method, EventHandler.Priority priority, boolean ignoreCancelled) {
         this.bus = bus;
         this.target = checkNotNull(target);
         this.method = method;
@@ -79,7 +79,7 @@ class Subscriber {
         method.setAccessible(true);
     }
 
-    public SubscriberPriority getPriority() {
+    public EventHandler.Priority getPriority() {
         return priority;
     }
 
@@ -163,7 +163,7 @@ class Subscriber {
     @VisibleForTesting
     static final class SynchronizedSubscriber extends Subscriber {
 
-        private SynchronizedSubscriber(EventBus bus, Object target, Method method, SubscriberPriority priority, boolean ignoreCancelled) {
+        private SynchronizedSubscriber(EventBus bus, Object target, Method method, EventHandler.Priority priority, boolean ignoreCancelled) {
             super(bus, target, method, priority, ignoreCancelled);
         }
 

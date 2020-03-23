@@ -8,7 +8,6 @@ import org.mapeditor.core.Tile;
 import org.mapeditor.core.TileLayer;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EntityMoveEvent;
-import org.salondesdevs.superdungeonsdestroyers.library.events.SubscriberPriority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,7 @@ public class CollisionDetector extends Service {
     @Inject
     MapLoader mapLoader;
 
-    @EventHandler(priority = SubscriberPriority.SYSTEM)
+    @EventHandler(priority = EventHandler.Priority.SYSTEM)
     public void onEntityMove(EntityMoveEvent event) {
         int playerId = event.getEntityId();
         Position pos = positionMapper.get(playerId);

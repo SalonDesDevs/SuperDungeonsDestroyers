@@ -96,5 +96,4 @@ public class EventBus extends Service {
             post(new DeadEvent(this, event));
         }
     }
-
 }

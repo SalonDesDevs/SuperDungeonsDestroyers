@@ -5,7 +5,16 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EventHandler {
-    SubscriberPriority priority() default SubscriberPriority.NORMAL;
+    Priority priority() default Priority.NORMAL;
 
     boolean ignoreCancelled() default false;
+
+    enum Priority {
+        SYSTEM,
+        VERY_HIGH,
+        HIGH,
+        NORMAL,
+        LOW,
+        VERY_LOW;
+    }
 }
