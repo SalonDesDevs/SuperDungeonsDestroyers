@@ -44,4 +44,8 @@ public abstract class Screen {
     public void onDisplayed() {
         eventBus.register(this);
     }
+
+    public boolean disposeOnClose() {
+        return true;
+    }
 }

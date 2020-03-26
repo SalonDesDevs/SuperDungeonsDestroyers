@@ -1,6 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.library.utils;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import net.wytrem.ecs.Component;
 
 import java.nio.charset.Charset;
@@ -13,12 +14,11 @@ public interface NettySerializable {
     Charset utf8 = Charset.forName("utf-8");
 
     default void writeString(String str, ByteBuf out) {
-        out.writeInt(str.length());
-        out.writeCharSequence(str, utf8);
+        Utils.writeUTF8String(out, str);
     }
 
     default String readString(ByteBuf in) {
-        return in.readCharSequence(in.readInt(), utf8).toString();
+        return Utils.readUTF8String(in);
     }
 
     default  <E extends Enum<E>> void writeEnum(E value, ByteBuf out) {

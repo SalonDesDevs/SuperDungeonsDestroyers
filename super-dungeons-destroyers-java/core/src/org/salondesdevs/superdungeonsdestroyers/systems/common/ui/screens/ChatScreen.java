@@ -2,12 +2,13 @@ package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import net.wytrem.ecs.World;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -19,6 +20,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.chat.ChatMessage;
 import org.salondesdevs.superdungeonsdestroyers.library.events.core.EventBus;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.FromClientChat;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.ClientChat;
 import org.salondesdevs.superdungeonsdestroyers.utils.BackgroundColor;
 import org.slf4j.Logger;
@@ -38,6 +40,10 @@ public class ChatScreen extends Screen {
     @Inject
     NetworkSystem networkSystem;
 
+    @Inject
+    UiSystem uiSystem;
+
+    VisScrollPane scrollPane;
     VisTextField chatField;
     VerticalGroup messages;
     HorizontalGroup fieldAndSendButton;
@@ -61,12 +67,15 @@ public class ChatScreen extends Screen {
     public void onDisplayed() {
         // Override super, te prevent EventBus::register
         fieldAndSendButton.setVisible(true);
+        chatField.focusField();
     }
+
+    private static float X = 10.0f, Y = 200.0f, WIDTH = 180.0f, HEIGHT = 200.0f;
 
     @Inject
     public void addActors() {
         Table table = new Table();
-        table.setBounds(10, 220, 180, 200);
+        table.setBounds(X, Y, WIDTH, HEIGHT);
 //        table.center();
 //        table.setFillParent(true);
 
@@ -80,15 +89,17 @@ public class ChatScreen extends Screen {
                     VerticalGroup messagesAndButtons = new VerticalGroup().space(5.0f);
                     {
                         messages = new VerticalGroup().space(2.0f);
-                        messages.setHeight(100.0f);
                         messages.left();
 
                         for (ChatMessage message : clientChat.messages) {
                             appendMessage(message);
                         }
 
-                        VisScrollPane scrollPane = new VisScrollPane(messages);
-                        messagesAndButtons.addActor(scrollPane);
+                        scrollPane = new ChatScrollPane(messages);
+
+                        Container<ScrollPane> container = new Container<>(scrollPane);
+                        container.height(200.0f);
+                        messagesAndButtons.addActor(container);
 
                         fieldAndSendButton = new HorizontalGroup().space(5.0f);
 
@@ -99,6 +110,10 @@ public class ChatScreen extends Screen {
                             public boolean keyUp(InputEvent event, int keycode) {
                                 if (keycode == Input.Keys.ENTER) {
                                     sendText();
+                                    return true;
+                                }
+                                else if (keycode == Input.Keys.ESCAPE) {
+                                    uiSystem.displayScreen(null);
                                     return true;
                                 }
                                 return false;
@@ -125,6 +140,8 @@ public class ChatScreen extends Screen {
             table.add(globalLayout);
         }
         stage.addActor(table);
+
+//        stage.setDebugAll(true);
     }
 
     @EventHandler
@@ -134,13 +151,49 @@ public class ChatScreen extends Screen {
 
     private void appendMessage(ChatMessage message) {
         VisLabel label = new VisLabel(message.toDisplayString());
-        messages.addActor(label);
+        label.setWrap(true);
+        Container<VisLabel> container = new Container<>(label);
+        container.prefWidth(WIDTH);
+        container.maxWidth(WIDTH);
+
+//        label.setWrap(true);
+//        label.setWidth(messages.getWidth());
+        messages.addActor(container);
+
+        messages.layout();
+        scrollPane.layout();
+        scrollPane.setScrollPercentY(1.0f);
+        scrollPane.updateVisualScroll();
     }
 
     private void sendText() {
         if (!chatField.getText().isEmpty()) {
             networkSystem.send(new FromClientChat(ChatMessage.text(chatField.getText(), ChatChannel.GAME), ChatChannel.GAME));
             chatField.clearText();
+        }
+    }
+
+    @Override
+    public boolean disposeOnClose() {
+        return false;
+    }
+
+    private static class ChatScrollPane extends VisScrollPane {
+
+        public ChatScrollPane(Actor widget, ScrollPaneStyle style) {
+            super(widget, style);
+        }
+
+        public ChatScrollPane(Actor widget, String styleName) {
+            super(widget, styleName);
+        }
+
+        public ChatScrollPane(Actor widget) {
+            super(widget);
+        }
+
+        @Override
+        protected void drawScrollBars(Batch batch, float r, float g, float b, float a) {
         }
     }
 }
