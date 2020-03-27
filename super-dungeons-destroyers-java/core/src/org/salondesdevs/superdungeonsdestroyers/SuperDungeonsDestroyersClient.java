@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import net.wytrem.ecs.World;
 import net.wytrem.ecs.WorldConfiguration;
+import org.salondesdevs.superdungeonsdestroyers.library.utils.Version;
 import org.salondesdevs.superdungeonsdestroyers.states.LoadingAssets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import java.util.Set;
 
 public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
 
-    public static final String VERSION = "1.0";
 
     private static final Logger logger = LoggerFactory.getLogger(SuperDungeonsDestroyersClient.class);
 
@@ -24,7 +24,7 @@ public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
 
     @Override
     public void create() {
-        logger.info("Starting SDDClient v{}", VERSION);
+        logger.info("Starting SDDClient v{}", Version.VERSION);
         WorldConfiguration worldConfiguration = new WorldConfiguration();
         worldConfiguration.addModule(new AbstractModule() {
             @Override

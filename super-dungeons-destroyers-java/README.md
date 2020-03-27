@@ -36,7 +36,7 @@ Components are accessed by systems via **Mappers**, small pieces of code automat
 
 
 #### An example
-For instance, a basic continous movement system would consider of:
+For instance, a basic velocity-based movement system would consist of:
 
 ```java
 class Position implements Component {
@@ -49,7 +49,7 @@ class Velocity implements Component {
 
 @Singleton
 class VelocitySystem extends ProcessingSystem {
-  MotionSystem() {
+  VelocitySystem() {
     super(Aspect.all(Position.class, Velocity.class));
   }
 
@@ -80,7 +80,7 @@ class HasGravity implements Component {}
 
 @Singleton
 class GravitySystem extends ProcessingSystem {
-  MotionSystem() {
+  GravitySystem() {
     super(Aspect.all(Velocity.class, HasGravity.class));
   }
 
