@@ -33,7 +33,7 @@ public class IngameState extends SDDState {
         register(I18NService.class);
         register(EntityCreatorClient.class);
         register(AnimationsCreator.class);
-        register(Synchroniser.class);
+        register(SynchroniserClient.class);
         register(ClientChat.class);
 
         // Network stuff

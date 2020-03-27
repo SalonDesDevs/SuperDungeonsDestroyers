@@ -23,7 +23,7 @@ import javax.inject.Singleton;
  * Listens to the server packets and keeps entities and components up to date.
  */
 @Singleton
-public class Synchroniser extends Service {
+public class SynchroniserClient extends Service {
 
     @Inject
     Mapper<Offset> offsetMapper;
@@ -81,9 +81,7 @@ public class Synchroniser extends Service {
     }
 
     private void handleEntitySpawn(EntitySpawn entitySpawn) {
-        if (entitySpawn.entityKind.equals(EntityKind.PLAYER)) {
-            this.entityCreatorClient.setPlayer(entitySpawn.entityId);
-        }
+        this.entityCreatorClient.addComponents(entitySpawn.entityId, entitySpawn.entityKind);
     }
 
     private void handleSwitchLevel(SwitchLevel switchLevel) {

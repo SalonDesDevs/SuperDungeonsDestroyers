@@ -40,6 +40,9 @@ public class Synchronizer extends IteratingSystem {
     
     private Set<Mapper<? extends Component>> autoWatchedMappers;
 
+    @Inject
+    Mapper<Tracked> trackedMapper;
+
     @Override
     public void initialize() {
         this.autoWatchedMappers = new HashSet<>();
@@ -48,6 +51,20 @@ public class Synchronizer extends IteratingSystem {
             if (AutoWatchedComponents.contains(clazz)) {
                 this.autoWatchedMappers.add(mapper);
                 mapper.addListener(new WatchedComponentChanged());
+            }
+        });
+
+        trackedMapper.addListener(new Mapper.ChangeListener<Tracked>() {
+            @Override
+            public void onSet(int entity, Tracked oldValue, Tracked newValue) {
+               if (oldValue == null) {
+                   onTrackedSet(entity);
+               }
+            }
+
+            @Override
+            public void onUnset(int entity, Tracked oldValue) {
+                onTrackedUnset(entity);
             }
         });
     }
@@ -113,8 +130,20 @@ public class Synchronizer extends IteratingSystem {
         }
     }
 
-    public void notifyEntitySpawned(int entity, EntityKind entityKind) {
-        networkSystem.broadcast(new EntitySpawn(entity, entityKind));
+    private void onTrackedSet(int entity) {
+        networkSystem.broadcast(new EntitySpawn(entity, entityKindMapper.get(entity)));
+    }
+
+    private void onTrackedUnset(int entity) {
+        networkSystem.broadcast(new EntitySpawn(entity, entityKindMapper.get(entity)));
+    }
+
+    public void startTracking(int entity) {
+        trackedMapper.set(entity, Tracked.INSTANCE);
+    }
+
+    public void stopTracking(int entity) {
+        trackedMapper.unset(entity);
     }
 
     public void notifyEntityMoved(int entity, Facing facing) {

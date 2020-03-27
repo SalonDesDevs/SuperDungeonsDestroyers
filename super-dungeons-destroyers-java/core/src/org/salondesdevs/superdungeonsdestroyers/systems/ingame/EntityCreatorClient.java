@@ -9,6 +9,7 @@ import org.salondesdevs.superdungeonsdestroyers.components.*;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
+import org.salondesdevs.superdungeonsdestroyers.library.systems.EntityCreator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EntityCreatorClient extends Service {
+public class EntityCreatorClient extends EntityCreator {
 
     private static final Logger logger = LoggerFactory.getLogger(EntityCreatorClient.class);
 
@@ -26,13 +27,7 @@ public class EntityCreatorClient extends Service {
     Mapper<Sprited> spritedMapper;
 
     @Inject
-    Mapper<Position> positionMapper;
-
-    @Inject
     Assets assets;
-
-    @Inject
-    Mapper<Size> sizeMapper;
 
     @Inject
     Mapper<Offset> offsetMapper;
@@ -46,17 +41,19 @@ public class EntityCreatorClient extends Service {
     @Inject
     Mapper<Camera> cameraMapper;
 
-
-    public void setSprited(int entity, Sprited.Sprites sprites) {
+    public void addSprited(int entity, Sprited.Sprites sprites) {
         this.spritedMapper.set(entity, new Sprited(sprites.toTextureRegion(assets.tileset)));
     }
 
-    public void setBasics(int entity) {
+    @Override
+    public void addBasicComponents(int entity) {
+        super.addBasicComponents(entity);
         offsetMapper.set(entity, new Offset());
     }
 
-    public void setPlayer(int entity) {
-        setBasics(entity);
+    @Override
+    public void addPlayerComponents(int entity) {
+        super.addPlayerComponents(entity);
         setWalkAnim(entity, 608, 74);
     }
 
