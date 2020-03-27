@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 /**
  * This is NOT for direct use, see {@link EnvironmentManager#spawn(EntityKind)}.
  */
-public class EntityCreator extends Service {
+public class EntityCreatorServer extends Service {
 
     @Inject
     World world;

@@ -12,7 +12,9 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class NameRenderer extends IteratingSystem {
     public NameRenderer() {
         super(Aspect.all(Name.class, Position.class));

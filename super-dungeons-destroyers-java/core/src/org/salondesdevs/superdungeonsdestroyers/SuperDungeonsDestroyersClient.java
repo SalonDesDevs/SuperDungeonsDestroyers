@@ -25,6 +25,7 @@ public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
     @Override
     public void create() {
         logger.info("Starting SDDClient v{}", Version.VERSION);
+        logger.info("Using libgdx v{}", com.badlogic.gdx.Version.VERSION);
         WorldConfiguration worldConfiguration = new WorldConfiguration();
         worldConfiguration.addModule(new AbstractModule() {
             @Override
@@ -42,6 +43,10 @@ public class SuperDungeonsDestroyersClient extends ApplicationAdapter {
 
     public void addResizeListener(Runnable run) {
         this.resizeListeners.add(run);
+    }
+
+    public void removeResizeListener(Runnable run) {
+        this.resizeListeners.remove(run);
     }
 
     @Override

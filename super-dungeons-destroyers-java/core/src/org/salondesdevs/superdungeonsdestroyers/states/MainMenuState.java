@@ -11,7 +11,9 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.I18NSe
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.MainMenuScreen;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MainMenuState extends SDDState {
 
     @Inject

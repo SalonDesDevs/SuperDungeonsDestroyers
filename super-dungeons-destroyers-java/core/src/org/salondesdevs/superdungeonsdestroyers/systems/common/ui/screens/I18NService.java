@@ -4,7 +4,9 @@ import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class I18NService extends Service {
     @Inject
     Assets assets;

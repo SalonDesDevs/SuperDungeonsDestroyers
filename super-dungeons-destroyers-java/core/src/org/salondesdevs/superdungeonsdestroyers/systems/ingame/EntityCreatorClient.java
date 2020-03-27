@@ -18,9 +18,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EntityCreator extends Service {
+public class EntityCreatorClient extends Service {
 
-    private static final Logger logger = LoggerFactory.getLogger(EntityCreator.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityCreatorClient.class);
 
     @Inject
     Mapper<Sprited> spritedMapper;

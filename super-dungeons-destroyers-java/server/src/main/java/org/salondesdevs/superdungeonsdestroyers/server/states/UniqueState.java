@@ -4,6 +4,9 @@ import org.salondesdevs.superdungeonsdestroyers.library.SDDState;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.*;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class UniqueState extends SDDState {
     public UniqueState() {
         register(PlayerComponentsInitializer.class);
@@ -13,7 +16,7 @@ public class UniqueState extends SDDState {
         register(MapLoader.class);
         register(MotionSystem.class);
         register(Synchronizer.class);
-        register(EntityCreator.class);
+        register(EntityCreatorServer.class);
         register(EnvironmentManager.class);
     }
 

@@ -26,7 +26,7 @@ public class EnvironmentManager extends Service {
     Synchronizer synchronizer;
 
     @Inject
-    EntityCreator entityCreator;
+    EntityCreatorServer entityCreatorServer;
 
     public void moveEntity(int entity, Facing facing) {
         if (positionMapper.has(entity)) {
@@ -39,7 +39,7 @@ public class EnvironmentManager extends Service {
     }
 
     public int spawn(EntityKind entityKind) {
-        int spawned = entityCreator.create(entityKind);
+        int spawned = entityCreatorServer.create(entityKind);
         synchronizer.notifyEntitySpawned(spawned, entityKind);
         return spawned;
     }

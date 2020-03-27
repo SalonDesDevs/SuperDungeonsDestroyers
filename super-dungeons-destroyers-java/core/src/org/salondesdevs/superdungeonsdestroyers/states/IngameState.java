@@ -15,7 +15,9 @@ import org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic.PlayerMotio
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.render.*;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class IngameState extends SDDState {
     @Inject
     NetworkHandlerSystem networkHandlerSystem;
@@ -29,7 +31,7 @@ public class IngameState extends SDDState {
         // Services
         register(Assets.class);
         register(I18NService.class);
-        register(EntityCreator.class);
+        register(EntityCreatorClient.class);
         register(AnimationsCreator.class);
         register(Synchroniser.class);
         register(ClientChat.class);

@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class CollisionDetector extends Service {
 
     private static final Logger logger = LoggerFactory.getLogger(CollisionDetector.class);

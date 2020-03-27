@@ -13,7 +13,9 @@ import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.UiSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.ChatScreen;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class HudRenderer extends IteratingSystem {
 
     SpriteBatch batch;

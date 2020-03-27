@@ -38,7 +38,7 @@ public class Synchroniser extends Service {
     Assets assetService;
 
     @Inject
-    EntityCreator entityCreator;
+    EntityCreatorClient entityCreatorClient;
 
     @Inject
     World world;
@@ -82,7 +82,7 @@ public class Synchroniser extends Service {
 
     private void handleEntitySpawn(EntitySpawn entitySpawn) {
         if (entitySpawn.entityKind.equals(EntityKind.PLAYER)) {
-            this.entityCreator.setPlayer(entitySpawn.entityId);
+            this.entityCreatorClient.setPlayer(entitySpawn.entityId);
         }
     }
 
@@ -127,6 +127,6 @@ public class Synchroniser extends Service {
     }
 
     private void handleWelcome(Welcome welcome) {
-        entityCreator.addLocalPlayer(welcome.me);
+        entityCreatorClient.addLocalPlayer(welcome.me);
     }
 }
