@@ -3,7 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.library.components.watched;
 import net.wytrem.ecs.Component;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.NettySerializable;
 
-public abstract class WatchableComponent implements Component, NettySerializable {
+public abstract class WatchableComponent implements Component, AutoWatched, NettySerializable {
 
     private boolean changed;
 

@@ -1,8 +1,10 @@
 package org.salondesdevs.superdungeonsdestroyers.library.utils;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import net.wytrem.ecs.Component;
+import org.checkerframework.checker.units.qual.A;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatched;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatchedComponents;
 
 import java.nio.charset.Charset;
 
@@ -29,7 +31,7 @@ public interface NettySerializable {
         return clazz.getEnumConstants()[in.readByte()];
     }
 
-    default void writeWatchableComponent(Component watchableComponent, ByteBuf out) {
+    default void writeWatchableComponent(AutoWatched watchableComponent, ByteBuf out) {
         out.writeByte(AutoWatchedComponents.getId(watchableComponent));
 
         if (Enum.class.isAssignableFrom(watchableComponent.getClass())) {
@@ -40,14 +42,14 @@ public interface NettySerializable {
         }
     }
 
-    default Component readWatchableComponent(ByteBuf in) {
+    default AutoWatched readWatchableComponent(ByteBuf in) {
         byte id = in.readByte();
 
         if (Enum.class.isAssignableFrom(AutoWatchedComponents.getClassById(id))) {
-            return (Component) readEnum((Class<? extends Enum>) AutoWatchedComponents.getClassById(id), in);
+            return (AutoWatched) readEnum((Class<? extends Enum>) AutoWatchedComponents.getClassById(id), in);
         }
         else {
-            Component read = AutoWatchedComponents.createFromId(id);
+            AutoWatched read = AutoWatchedComponents.createFromId(id);
             ((NettySerializable) read).read(in);
             return read;
         }

@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatched;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.*;
 import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
@@ -8,7 +9,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.components.watched.WatchableComponent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
-import org.salondesdevs.superdungeonsdestroyers.library.utils.AutoWatchedComponents;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatchedComponents;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
 import org.salondesdevs.superdungeonsdestroyers.server.components.Tracked;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PlayerJoinedEvent;
@@ -38,7 +39,7 @@ public class Synchronizer extends IteratingSystem {
     @Inject
     World world;
     
-    private Set<Mapper<? extends Component>> autoWatchedMappers;
+    private Set<Mapper<? extends AutoWatched>> autoWatchedMappers;
 
     @Inject
     Mapper<Tracked> trackedMapper;
@@ -48,9 +49,11 @@ public class Synchronizer extends IteratingSystem {
         this.autoWatchedMappers = new HashSet<>();
         world.addMapperRegisterListener(mapper -> {
             Class<? extends Component> clazz = mapper.getComponentTypeClass();
-            if (AutoWatchedComponents.contains(clazz)) {
-                this.autoWatchedMappers.add(mapper);
-                mapper.addListener(new WatchedComponentChanged());
+            if (AutoWatchedComponents.contains(clazz) && AutoWatched.class.isAssignableFrom(clazz)) {
+                Mapper<? extends AutoWatched> casted =((Mapper<? extends AutoWatched>) mapper);
+
+                this.autoWatchedMappers.add(casted);
+                casted.addListener(new WatchedComponentChanged());
             }
         });
 
@@ -122,7 +125,7 @@ public class Synchronizer extends IteratingSystem {
                 packetList.add(new EntityTeleport(entity, positionMapper.get(entity)));
             }
 
-            for (Mapper<? extends Component> mapper : autoWatchedMappers) {
+            for (Mapper<? extends AutoWatched> mapper : autoWatchedMappers) {
                 if (mapper.has(entity)) {
                     packetList.add(new EntityComponentSet(entity, mapper.get(entity)));
                 }
@@ -135,7 +138,7 @@ public class Synchronizer extends IteratingSystem {
     }
 
     private void onTrackedUnset(int entity) {
-        networkSystem.broadcast(new EntitySpawn(entity, entityKindMapper.get(entity)));
+        networkSystem.broadcast(new EntityDespawn(entity));
     }
 
     public void startTracking(int entity) {
@@ -159,19 +162,23 @@ public class Synchronizer extends IteratingSystem {
         networkSystem.broadcast(new EntityTeleport(entity, x, y));
     }
     
-    private void sendComponentUpdate(int entity, Component newValue) {
+    private void sendComponentUpdate(int entity, AutoWatched newValue) {
         networkSystem.broadcast(new EntityComponentSet(entity, newValue));
     }
 
-    class WatchedComponentChanged implements Mapper.ChangeListener<Component> {
+    private void sendComponentUnset(int entity, AutoWatched oldValue) {
+        networkSystem.broadcast(new EntityComponentUnset(entity, AutoWatchedComponents.getId(oldValue)));
+    }
+
+    class WatchedComponentChanged implements Mapper.ChangeListener<AutoWatched> {
         @Override
-        public void onSet(int entity, Component oldValue, Component newValue) {
+        public void onSet(int entity, AutoWatched oldValue, AutoWatched newValue) {
             sendComponentUpdate(entity, newValue);
         }
 
         @Override
-        public void onUnset(int entity, Component oldValue) {
-            // TODO
+        public void onUnset(int entity, AutoWatched oldValue) {
+            sendComponentUnset(entity, oldValue);
         }
     }
 }

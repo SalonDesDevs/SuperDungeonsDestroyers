@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.library.utils;
+package org.salondesdevs.superdungeonsdestroyers.library.components.watched;
 
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
@@ -16,12 +16,11 @@ import java.util.function.Supplier;
  */
 public class AutoWatchedComponents {
 
-    private static final Byte2ObjectMap<Supplier<? extends Component>> suppliers = new Byte2ObjectOpenHashMap<>();
-    private static final Byte2ObjectMap<Class<? extends Component>> classesById = new Byte2ObjectOpenHashMap<>();
-    private static final Object2ByteMap<Class<? extends Component>> classes = new Object2ByteOpenHashMap<>();
+    private static final Byte2ObjectMap<Supplier<? extends AutoWatched>> suppliers = new Byte2ObjectOpenHashMap<>();
+    private static final Byte2ObjectMap<Class<? extends AutoWatched>> classesById = new Byte2ObjectOpenHashMap<>();
+    private static final Object2ByteMap<Class<? extends AutoWatched>> classes = new Object2ByteOpenHashMap<>();
 
     static {
-        // Both sides
         int id = 0;
         register(id++, Name::new, Name.class);
         register(id++, Size::new, Size.class);
@@ -32,7 +31,7 @@ public class AutoWatchedComponents {
         register(id++, Speed::new, Speed.class);
     }
 
-    private static <P extends Component> void register(int id, Supplier<P> componentSupplier, Class<P> clazz) {
+    private static <P extends AutoWatched> void register(int id, Supplier<P> componentSupplier, Class<P> clazz) {
         if (id > 126) {
            return;
         }
@@ -41,7 +40,7 @@ public class AutoWatchedComponents {
         classes.put(clazz, (byte) id);
     }
 
-    public static byte getId(Component component) {
+    public static byte getId(AutoWatched component) {
         if (classes.containsKey(component.getClass())) {
             return classes.getByte(component.getClass());
         }
@@ -54,11 +53,11 @@ public class AutoWatchedComponents {
         return classes.containsKey(clazz);
     }
 
-    public static Component createFromId(byte id) {
+    public static AutoWatched createFromId(byte id) {
         return suppliers.get(id).get();
     }
     
-    public static Class<? extends Component> getClassById(byte id) {
+    public static Class<? extends AutoWatched> getClassById(byte id) {
         return classesById.get(id);
     }
 }

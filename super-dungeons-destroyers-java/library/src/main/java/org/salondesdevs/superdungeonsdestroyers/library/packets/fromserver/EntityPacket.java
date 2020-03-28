@@ -5,23 +5,27 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
 public abstract class EntityPacket extends Packet {
 
-    public int entityId;
+    private int entity;
 
     protected EntityPacket() {
 
     }
 
-    protected EntityPacket(int entityId) {
-        this.entityId = entityId;
+    protected EntityPacket(int entity) {
+        this.entity = entity;
     }
 
     @Override
     public void read(ByteBuf in) {
-        this.entityId = in.readInt();
+        this.entity = in.readInt();
     }
 
     @Override
     public void write(ByteBuf out) {
-        out.writeInt(this.entityId);
+        out.writeInt(this.entity);
+    }
+
+    public int getEntity() {
+        return entity;
     }
 }

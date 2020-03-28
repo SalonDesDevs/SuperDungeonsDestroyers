@@ -1,8 +1,9 @@
 package org.salondesdevs.superdungeonsdestroyers.library.components;
 
 import net.wytrem.ecs.Component;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatched;
 
-public enum Facing implements Component {
+public enum Facing implements Component, AutoWatched {
     NORTH(0, 1),
     SOUTH(0, -1),
     WEST(-1, 0),

@@ -7,12 +7,12 @@ import net.wytrem.ecs.Service;
 import net.wytrem.ecs.World;
 import org.salondesdevs.superdungeonsdestroyers.components.Offset;
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
-import org.salondesdevs.superdungeonsdestroyers.library.components.EntityKind;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
+import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatchedComponents;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 
@@ -67,13 +67,31 @@ public class SynchroniserClient extends Service {
         else if (packet instanceof EntitySpawn) {
             this.handleEntitySpawn(((EntitySpawn) packet));
         }
+        else if (packet instanceof EntityDespawn) {
+            this.handleEntityDespawn(((EntityDespawn) packet));
+        }
         else if (packet instanceof EntityComponentSet){
             this.handleEntityComponentSet(((EntityComponentSet) packet));
         }
+        else if (packet instanceof EntityComponentUnset){
+            this.handleEntityComponentUnset(((EntityComponentUnset) packet));
+        }
+    }
+
+    private void handleEntityDespawn(EntityDespawn packet) {
+        world.deleteEntity(packet.getEntity());
+    }
+
+    private void handleEntityComponentUnset(EntityComponentUnset packet) {
+        unsetFromId(packet.getEntity(), packet.getComponentId());
     }
 
     private void handleEntityComponentSet(EntityComponentSet packet) {
-        setFromValue(packet.entityId, packet.watchableComponent);
+        setFromValue(packet.getEntity(), packet.watchableComponent);
+    }
+
+    private void unsetFromId(int entity, byte componentId) {
+        world.getMapper(AutoWatchedComponents.getClassById(componentId)).unset(entity);
     }
 
     private <C extends Component> void setFromValue(int entityId, C component) {
@@ -81,7 +99,7 @@ public class SynchroniserClient extends Service {
     }
 
     private void handleEntitySpawn(EntitySpawn entitySpawn) {
-        this.entityCreatorClient.addComponents(entitySpawn.entityId, entitySpawn.entityKind);
+        this.entityCreatorClient.addComponents(entitySpawn.getEntity(), entitySpawn.entityKind);
     }
 
     private void handleSwitchLevel(SwitchLevel switchLevel) {
@@ -89,18 +107,17 @@ public class SynchroniserClient extends Service {
     }
 
     private void handleEntityTeleport(EntityTeleport event) {
-        if (positionMapper.has(event.entityId)) {
-//            positionMapper.get(event.entityId).set(event.x, mapSwitcher.currentHeight - event.location().y() - 1);
-            positionMapper.get(event.entityId).set(event.x, event.y);
+        if (positionMapper.has(event.getEntity())) {
+            positionMapper.get(event.getEntity()).set(event.x, event.y);
         }
         else {
-            positionMapper.set(event.entityId, new Position(event.x, event.y));
+            positionMapper.set(event.getEntity(), new Position(event.x, event.y));
         }
     }
 
     private void handleEntityMove(EntityMove entityMove) {
-        if (positionMapper.has(entityMove.entityId)) {
-            Position tilePosition = positionMapper.get(entityMove.entityId);
+        if (positionMapper.has(entityMove.getEntity())) {
+            Position tilePosition = positionMapper.get(entityMove.getEntity());
 
             switch (entityMove.facing) {
                 case NORTH:
@@ -118,8 +135,8 @@ public class SynchroniserClient extends Service {
             }
         }
 
-        if (positionMapper.has(entityMove.entityId) && offsetMapper.has(entityMove.entityId)) {
-            Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(entityMove.entityId, entityMove.facing, () -> {});
+        if (positionMapper.has(entityMove.getEntity()) && offsetMapper.has(entityMove.getEntity())) {
+            Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(entityMove.getEntity(), entityMove.facing, () -> {});
             animator.play(walkAnimation);
         }
     }
