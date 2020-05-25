@@ -2,13 +2,11 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.salondesdevs.superdungeonsdestroyers.library.components.Role;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.Mapper;
-import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.components.*;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Position;
-import org.salondesdevs.superdungeonsdestroyers.library.components.Size;
-import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.Welcome;
+import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.ThatsYou;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.EntityCreator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
@@ -17,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 
 @Singleton
 public class EntityCreatorClient extends EntityCreator {
@@ -41,57 +41,84 @@ public class EntityCreatorClient extends EntityCreator {
     @Inject
     Mapper<Camera> cameraMapper;
 
+    @Inject
+    Mapper<Role> roleMapper;
+
+    @Inject
+    Mapper<AnimationsRegistry> animationsRegistryMapper;
+
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        {
+            Map<ActionState, Animation<TextureRegion>> map = new HashMap<>();
+            map.put(ActionState.IDLE, assets.bowmanIdle);
+            map.put(ActionState.MOVING, assets.bowmanWalk);
+            AnimationsRegistry bowman = new AnimationsRegistry(map);
+
+            map = new HashMap<>();
+            map.put(ActionState.IDLE, assets.knightIdle);
+            map.put(ActionState.MOVING, assets.knightWalk);
+            AnimationsRegistry knight = new AnimationsRegistry(map);
+
+
+            map = new HashMap<>();
+            map.put(ActionState.IDLE, assets.mageIdle);
+            map.put(ActionState.MOVING, assets.mageWalk);
+            AnimationsRegistry mage = new AnimationsRegistry(map);
+
+            roleMapper.addListener(new Mapper.ChangeListener<Role>() {
+                @Override
+                public void onSet(int entity, Role oldValue, Role newValue) {
+                    if (newValue == Role.BOWMAN) {
+                        animationsRegistryMapper.set(entity, bowman);
+                    }
+                    else if (newValue == Role.KNIGHT) {
+                        animationsRegistryMapper.set(entity, knight);
+                    }
+                    else if (newValue == Role.MAGE) {
+                        animationsRegistryMapper.set(entity, mage);
+                    }
+                }
+
+                @Override
+                public void onUnset(int entity, Role oldValue) {
+
+                }
+            });
+        }
+    }
+
     public void addSprited(int entity, Sprited.Sprites sprites) {
         this.spritedMapper.set(entity, new Sprited(sprites.toTextureRegion(assets.tileset)));
     }
 
+    @Inject
+    Mapper<ActionState> actionStateMapper;
+
     @Override
     public void addBasicComponents(int entity) {
         super.addBasicComponents(entity);
+        actionStateMapper.set(entity, ActionState.IDLE);
         offsetMapper.set(entity, new Offset());
     }
 
     @Override
     public void addPlayerComponents(int entity) {
         super.addPlayerComponents(entity);
-        setWalkAnim(entity, 608, 74);
     }
 
     public void addLocalPlayer(int me) {
         cameraMapper.set(me, Camera.INSTANCE);
         meMapper.set(me, Me.INSTANCE);
-
-        setWalkAnim(me, 608, 74);
     }
 
-    private static final int WIDTH = 128;
-    private static final int HEIGHT = 22;
-    private static final int FRAME_COLS = 8, FRAME_ROWS = 1;
-
-    public void setWalkAnim(int entity, int u, int v) {
-        TextureRegion walkSheet = new TextureRegion(assets.tileset, u, v, WIDTH, HEIGHT);
-        TextureRegion[][] tmp = walkSheet.split(WIDTH / FRAME_COLS, HEIGHT / FRAME_ROWS);
-
-        // Place the regions into a 1D array in the correct order, starting from the top
-        // left, going across first. The Animation constructor requires a 1D array.
-        TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-        int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for (int j = 0; j < FRAME_COLS; j++) {
-                walkFrames[index++] = tmp[i][j];
-            }
-        }
-
-        // Initialize the Animation with the frame interval and array of frames
-        Animation<TextureRegion> walkAnimation = new Animation<>(0.07f, walkFrames);
-
-        animatedMapper.set(entity, new Animated(walkAnimation));
-    }
 
     @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
-        if (packetReceivedEvent.getPacket() instanceof Welcome) {
-            addLocalPlayer(((Welcome) packetReceivedEvent.getPacket()).me);
+        if (packetReceivedEvent.getPacket() instanceof ThatsYou) {
+            addLocalPlayer(((ThatsYou) packetReceivedEvent.getPacket()).me);
         }
     }
 }

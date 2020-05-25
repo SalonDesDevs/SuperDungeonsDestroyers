@@ -29,20 +29,22 @@ public class IngameState extends SDDState {
         // Be aware, the order matters.
 
         // Services
+        // -- for these, the order doesn't matter
         register(Assets.class);
         register(I18NService.class);
         register(EntityCreatorClient.class);
         register(AnimationsCreator.class);
         register(SynchroniserClient.class);
         register(ClientChat.class);
+        register(AutomaticAnimationSwitcher.class);
 
-        // Network stuff
+        // Networking stuff
         register(NetworkSystem.class);
         register(NetworkHandlerSystem.class);
 
-        // Input
-        register(IngameInputSystem.class);
+        // Input stuff
         register(PlayerMotionSystem.class);
+        register(IngameInputSystem.class);
 
         // Updating stuff
         register(LevelSwitcher.class);

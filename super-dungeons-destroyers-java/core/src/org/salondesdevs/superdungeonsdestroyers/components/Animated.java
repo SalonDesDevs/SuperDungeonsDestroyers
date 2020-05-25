@@ -14,4 +14,8 @@ public class Animated implements Component {
     public Animation<TextureRegion> getAnimation() {
         return animation;
     }
+
+    public void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+    }
 }

@@ -17,6 +17,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.Playe
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
+import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameInputSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.LevelSwitcher;
 
 import javax.inject.Inject;
@@ -26,6 +27,9 @@ import javax.inject.Singleton;
 public class PlayerMotionSystem extends Service {
 
     private Int2ObjectMap<Facing> keysToDirection = new Int2ObjectArrayMap<>();
+
+    @Inject
+    IngameInputSystem ingameInputSystem;
 
     @Inject
     NetworkSystem networkSystem;
@@ -51,8 +55,6 @@ public class PlayerMotionSystem extends Service {
     @Inject
     Mapper<Animated> animatedMapper;
 
-    private long lastMoved = 0L;
-
     @Override
     public void initialize() {
         keysToDirection.put(Input.Keys.UP, Facing.NORTH);
@@ -69,35 +71,33 @@ public class PlayerMotionSystem extends Service {
         }
 
         if (keysToDirection.keySet().contains(keyPressedEvent.getKeycode())) {
-
-
             final Facing facing = keysToDirection.get(keyPressedEvent.getKeycode());
 
             Position position = positionMapper.get(playerIdHolder.getEntityId());
 
             // Check if tile is solid
-            int wantedX = position.x + facing.x;
-            int wantedY = position.y + facing.y;
+            {
+                int wantedX = position.x + facing.x;
+                int wantedY = position.y + facing.y;
 
-            TiledMapTile tile = this.levelSwitcher.getGround().getCell(wantedX, wantedY).getTile();
-            Object solidProperty = tile.getProperties().get("solid");
+                TiledMapTile tile = this.levelSwitcher.getGround().getCell(wantedX, wantedY).getTile();
+                Object solidProperty = tile.getProperties().get("solid");
 
-            if (solidProperty != null) {
-                if (solidProperty instanceof String) {
-                    if (((String) solidProperty).equals("true")) {
-                        return;
-                    }
-                }
-                else if (solidProperty instanceof Boolean) {
-                    if (((Boolean) solidProperty).booleanValue()) {
-                        return;
+                if (solidProperty != null) {
+                    if (solidProperty instanceof String) {
+                        if (((String) solidProperty).equals("true")) {
+                            return;
+                        }
+                    } else if (solidProperty instanceof Boolean) {
+                        if ((Boolean) solidProperty) {
+                            return;
+                        }
                     }
                 }
             }
             // If it is not solid, process
 
             actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.MOVING);
-            animatedMapper.get(playerIdHolder.getEntityId()).getAnimation().setPlayMode(com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP);
             switch (facing) {
                 case NORTH:
                     position.y++;
@@ -116,8 +116,7 @@ public class PlayerMotionSystem extends Service {
             networkSystem.send(new PlayerMove(facing));
 
             Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(playerIdHolder.getEntityId(), facing, () -> {
-                actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);
-                animatedMapper.get(playerIdHolder.getEntityId()).getAnimation().setPlayMode(com.badlogic.gdx.graphics.g2d.Animation.PlayMode.NORMAL);
+                 actionStateMapper.set(playerIdHolder.getEntityId(), ActionState.IDLE);
             });
 
             animator.play(walkAnimation);

@@ -1,5 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 
+import org.salondesdevs.superdungeonsdestroyers.components.ActionState;
+import org.salondesdevs.superdungeonsdestroyers.components.Animated;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.Component;
 import net.wytrem.ecs.Mapper;
@@ -35,6 +37,12 @@ public class SynchroniserClient extends Service {
     Mapper<Position> positionMapper;
 
     @Inject
+    Mapper<Animated> animatedMapper;
+
+    @Inject
+    Mapper<ActionState> actionStateMapper;
+
+    @Inject
     Assets assetService;
 
     @Inject
@@ -52,8 +60,8 @@ public class SynchroniserClient extends Service {
     @EventHandler
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         Packet packet = packetReceivedEvent.getPacket();
-        if (packet instanceof Welcome) {
-            this.handleWelcome(((Welcome) packet));
+        if (packet instanceof ThatsYou) {
+            this.handleWelcome(((ThatsYou) packet));
         }
         else if (packet instanceof EntityTeleport) {
             this.handleEntityTeleport(((EntityTeleport) packet));
@@ -116,8 +124,9 @@ public class SynchroniserClient extends Service {
     }
 
     private void handleEntityMove(EntityMove entityMove) {
-        if (positionMapper.has(entityMove.getEntity())) {
-            Position tilePosition = positionMapper.get(entityMove.getEntity());
+        int entity = entityMove.getEntity();
+        if (positionMapper.has(entity)) {
+            Position tilePosition = positionMapper.get(entity);
 
             switch (entityMove.facing) {
                 case NORTH:
@@ -135,13 +144,19 @@ public class SynchroniserClient extends Service {
             }
         }
 
-        if (positionMapper.has(entityMove.getEntity()) && offsetMapper.has(entityMove.getEntity())) {
-            Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(entityMove.getEntity(), entityMove.facing, () -> {});
+        if (positionMapper.has(entity) && offsetMapper.has(entity)) {
+            actionStateMapper.set(entity, ActionState.MOVING);
+            animatedMapper.get(entity).getAnimation().setPlayMode(com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP);
+            Animation<Float> walkAnimation = animationsCreator.createMoveAnimationBasedOnSpeed(entity, entityMove.facing, () -> {
+
+                actionStateMapper.set(entity, ActionState.IDLE);
+                animatedMapper.get(entity).getAnimation().setPlayMode(com.badlogic.gdx.graphics.g2d.Animation.PlayMode.NORMAL);
+            });
             animator.play(walkAnimation);
         }
     }
 
-    private void handleWelcome(Welcome welcome) {
-        entityCreatorClient.addLocalPlayer(welcome.me);
+    private void handleWelcome(ThatsYou thatsYou) {
+        entityCreatorClient.addLocalPlayer(thatsYou.me);
     }
 }

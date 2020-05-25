@@ -1,13 +1,13 @@
 package org.salondesdevs.superdungeonsdestroyers.library.events;
 
 public class EntityEvent extends Event {
-    private final int entityId;
+    private final int entity;
 
-    public EntityEvent(int entityId) {
-        this.entityId = entityId;
+    public EntityEvent(int entity) {
+        this.entity = entity;
     }
 
-    public int getEntityId() {
-        return entityId;
+    public int getEntity() {
+        return entity;
     }
 }

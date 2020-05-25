@@ -29,6 +29,7 @@ public class AutoWatchedComponents {
         register(id++, MaxHealth::new, MaxHealth.class);
         register(id++, RemainingSteps::new, RemainingSteps.class);
         register(id++, Speed::new, Speed.class);
+        register(id++, null, Role.class);
     }
 
     private static <P extends AutoWatched> void register(int id, Supplier<P> componentSupplier, Class<P> clazz) {

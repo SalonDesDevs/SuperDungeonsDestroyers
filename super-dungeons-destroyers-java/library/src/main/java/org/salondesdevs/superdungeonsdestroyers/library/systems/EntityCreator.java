@@ -41,15 +41,15 @@ public abstract class EntityCreator extends Service {
     @Inject
     Mapper<Position> positionMapper;
 
-    protected void addPosition(int player) {
-        positionMapper.set(player, new Position());
+    protected void addPosition(int entity) {
+        positionMapper.set(entity, new Position());
     }
 
     @Inject
     Mapper<Speed> speedMapper;
 
-    private void addSpeed(int player) {
-        speedMapper.set(player, new Speed());
+    private void addSpeed(int entity) {
+        speedMapper.set(entity, new Speed());
     }
 
     protected void addPlayerComponents(int entity) {

@@ -125,7 +125,7 @@ public class AssetsLoadingSystem extends BaseSystem {
                 }
             }
         }
-        assets.finishInitialization();
+        assets.createCompositeAssets();
     }
 
     @Override

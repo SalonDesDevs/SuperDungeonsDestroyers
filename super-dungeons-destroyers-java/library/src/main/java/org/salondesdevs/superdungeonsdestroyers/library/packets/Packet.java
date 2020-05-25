@@ -35,7 +35,7 @@ public abstract class Packet implements NettySerializable {
         // From server
         register(id++, VersionCheckSuccess::new, VersionCheckSuccess.class);
         register(id++, DisconnectReason::new, DisconnectReason.class);
-        register(id++, Welcome::new, Welcome.class);
+        register(id++, ThatsYou::new, ThatsYou.class);
         register(id++, EntitySpawn::new, EntitySpawn.class);
         register(id++, EntityDespawn::new, EntityDespawn.class);
         register(id++, EntityTeleport::new, EntityTeleport.class);

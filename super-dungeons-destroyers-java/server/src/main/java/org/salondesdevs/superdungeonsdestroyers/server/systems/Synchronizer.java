@@ -75,7 +75,7 @@ public class Synchronizer extends IteratingSystem {
     @Override
     public void process(int entity) {
         for (Mapper<? extends Component> mapper : autoWatchedMappers) {
-            if (mapper.has(entity)) {
+            if (mapper.has(entity) && WatchableComponent.class.isAssignableFrom(mapper.getComponentTypeClass())) {
                 WatchableComponent watchableComponent = (WatchableComponent) mapper.get(entity);
                 if (watchableComponent.hasChanged()) {
                     this.sendComponentUpdate(entity, watchableComponent);
@@ -104,7 +104,7 @@ public class Synchronizer extends IteratingSystem {
     public void startSynchronizingWith(int player) {
         sendTrackedEntities(player);
 
-        networkSystem.send(player, new SwitchLevel(this.level), new Welcome(player));
+        networkSystem.send(player, new SwitchLevel(this.level), new ThatsYou(player));
     }
 
     private void sendTrackedEntities(int player) {

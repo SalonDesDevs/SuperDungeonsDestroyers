@@ -27,7 +27,7 @@ public class CollisionDetector extends Service {
 
     @EventHandler(priority = EventHandler.Priority.SYSTEM)
     public void onEntityMove(EntityMoveEvent event) {
-        int playerId = event.getEntityId();
+        int playerId = event.getEntity();
         Position pos = positionMapper.get(playerId);
 
         int wantedX = pos.x + event.getDirection().x;

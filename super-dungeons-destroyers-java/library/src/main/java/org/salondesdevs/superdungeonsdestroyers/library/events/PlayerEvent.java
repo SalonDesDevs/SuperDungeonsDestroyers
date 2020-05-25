@@ -6,6 +6,6 @@ public class PlayerEvent extends EntityEvent {
     }
 
     public int getPlayer() {
-        return this.getEntityId();
+        return this.getEntity();
     }
 }

@@ -3,7 +3,9 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyPressedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.KeyReleasedEvent;
@@ -44,6 +46,22 @@ public class IngameInputSystem extends BaseSystem implements InputProcessor {
         if (this.repeatEvents) {
             this.pressedKeys.stream().map(key -> new KeyPressedEvent(key, true)).forEach(this.eventBus::post);
         }
+    }
+
+    public boolean isKeyDown(int keycode) {
+        return this.pressedKeys.contains(keycode);
+    }
+
+    public boolean isAnyKeyDown(IntSet intSet) {
+        IntIterator intIterator = intSet.iterator();
+
+        while (intIterator.hasNext()) {
+            if (isKeyDown(intIterator.nextInt())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean repeatEvents = true;

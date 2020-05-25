@@ -3,13 +3,13 @@ package org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver;
 import io.netty.buffer.ByteBuf;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
-public class Welcome extends Packet {
+public class ThatsYou extends Packet {
     public int me;
 
-    public Welcome() {
+    public ThatsYou() {
     }
 
-    public Welcome(int me) {
+    public ThatsYou(int me) {
         this.me = me;
     }
 
