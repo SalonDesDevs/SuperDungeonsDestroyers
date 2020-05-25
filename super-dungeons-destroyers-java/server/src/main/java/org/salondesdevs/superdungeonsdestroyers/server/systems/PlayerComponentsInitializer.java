@@ -32,14 +32,13 @@ public class PlayerComponentsInitializer extends Service {
     @Inject
     ChatSystem chatSystem;
 
-    @EventHandler
+    @EventHandler(priority = EventHandler.Priority.SYSTEM)
     public void onPlayerJoined(PlayerJoinedEvent playerJoinedEvent) {
         int player = playerJoinedEvent.getPlayer();
         maxHealthMapper.set(player, new MaxHealth(100));
         environmentManager.teleport(player, 1, 1);
         sizeMapper.set(player, new Size(1.0f, 1.3f));
         speedMapper.set(player, new Speed(3.0f));
-        chatSystem.send(player, "Welcome on board!");
     }
 
     @Inject
@@ -52,5 +51,4 @@ public class PlayerComponentsInitializer extends Service {
             nameMapper.set(packetReceivedEvent.getPlayer(), new Name(playerName.getName()));
         }
     }
-
 }

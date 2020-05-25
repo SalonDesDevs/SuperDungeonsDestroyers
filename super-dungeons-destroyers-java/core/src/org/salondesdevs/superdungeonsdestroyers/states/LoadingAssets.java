@@ -2,7 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.states;
 
 import com.badlogic.gdx.Gdx;
 import org.salondesdevs.superdungeonsdestroyers.library.SDDState;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.loadingassets.AssetsLoadingSystem;
 

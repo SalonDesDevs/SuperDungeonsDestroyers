@@ -15,7 +15,7 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.*;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animation;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
 import org.salondesdevs.superdungeonsdestroyers.library.components.watched.AutoWatchedComponents;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 
 import javax.inject.Inject;

@@ -3,7 +3,7 @@ package org.salondesdevs.superdungeonsdestroyers.states;
 import org.salondesdevs.superdungeonsdestroyers.content.AnimationsCreator;
 import org.salondesdevs.superdungeonsdestroyers.library.SDDState;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.animations.Animator;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;

@@ -4,7 +4,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import net.wytrem.ecs.Service;
 import org.salondesdevs.superdungeonsdestroyers.library.utils.Levels;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.utils.TiledMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

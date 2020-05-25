@@ -18,6 +18,11 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Processes the incoming packets.
+ *
+ * @see PacketReceivedEvent
+ */
 public class NetHandler {
     private static final Logger logger = LoggerFactory.getLogger( NetHandler.class );
 

@@ -2,7 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.states;
 
 import net.wytrem.ecs.World;
 import org.salondesdevs.superdungeonsdestroyers.library.SDDState;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ClearScrenSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;

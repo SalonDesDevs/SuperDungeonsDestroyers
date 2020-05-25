@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Detects tile collisions and cancels {@link EntityMoveEvent} accordingly.
+ */
 @Singleton
 public class CollisionDetector extends Service {
 

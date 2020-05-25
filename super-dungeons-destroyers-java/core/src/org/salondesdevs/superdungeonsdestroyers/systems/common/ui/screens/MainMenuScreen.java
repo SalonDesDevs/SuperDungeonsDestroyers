@@ -17,7 +17,7 @@ import org.salondesdevs.superdungeonsdestroyers.events.ConnectFailedEvent;
 import org.salondesdevs.superdungeonsdestroyers.events.ConnectSucceedEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.PlayerName;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.VersionCheckSuccess;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkHandlerSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.NetworkSystem;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;

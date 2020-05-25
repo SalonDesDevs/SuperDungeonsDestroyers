@@ -3,6 +3,9 @@ package org.salondesdevs.superdungeonsdestroyers.server.events;
 import org.salondesdevs.superdungeonsdestroyers.library.events.PlayerEvent;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.Packet;
 
+/**
+ * Posted when a packet is received (both sides).
+ */
 public class PacketReceivedEvent extends PlayerEvent {
     private final Packet packet;
 

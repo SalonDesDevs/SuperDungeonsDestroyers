@@ -12,7 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.states.MainMenuState;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

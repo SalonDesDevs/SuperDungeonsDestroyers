@@ -11,16 +11,12 @@ import org.salondesdevs.superdungeonsdestroyers.library.packets.fromclient.Playe
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.EntityTeleport;
 import org.salondesdevs.superdungeonsdestroyers.server.events.PacketReceivedEvent;
 import org.salondesdevs.superdungeonsdestroyers.server.systems.net.NetworkSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class MotionSystem extends Service {
-    private static final Logger logger = LoggerFactory.getLogger(MotionSystem.class);
-
     @Inject
     NetworkSystem networkSystem;
 
@@ -31,9 +27,12 @@ public class MotionSystem extends Service {
     Mapper<Position> positionMapper;
 
     @Inject
+    Mapper<Facing> facingMapper;
+
+    @Inject
     EventBus eventBus;
 
-    public boolean tryMove(int entity, Facing direction) {
+    private boolean tryMove(int entity, Facing direction) {
         EntityMoveEvent entityMoveEvent = new EntityMoveEvent(entity, direction);
 
         eventBus.post(entityMoveEvent);
@@ -50,13 +49,17 @@ public class MotionSystem extends Service {
     public void onPacketReceived(PacketReceivedEvent packetReceivedEvent) {
         if (packetReceivedEvent.getPacket() instanceof PlayerMove) {
             PlayerMove playerMove = ((PlayerMove) packetReceivedEvent.getPacket());
-            int playerId = packetReceivedEvent.getPlayer();
-            Position pos = positionMapper.get(playerId);
-            if (!tryMove(playerId, playerMove.facing)) {
-                // If the wanted tile is solid, discard move.
-                logger.warn("Player {} tried to move on a solid tile.", playerId);
 
+            int playerId = packetReceivedEvent.getPlayer();
+
+            if (!tryMove(playerId, playerMove.facing)) {
+                // The move was discarded.
+                Position pos = positionMapper.get(playerId);
                 networkSystem.send(playerId, new EntityTeleport(playerId, pos.x, pos.y));
+            }
+            else {
+                // The move was successful, set the facing accordingly.
+                facingMapper.set(playerId, playerMove.facing);
             }
         }
     }

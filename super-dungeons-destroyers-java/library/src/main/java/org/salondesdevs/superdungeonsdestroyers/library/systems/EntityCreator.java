@@ -1,5 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.systems;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import net.wytrem.ecs.Mapper;
 import net.wytrem.ecs.Service;
 import net.wytrem.ecs.World;
@@ -23,11 +26,11 @@ public abstract class EntityCreator extends Service {
     @Inject
     World world;
 
-    protected Map<EntityKind, IntConsumer> componentsAdders;
+    protected Multimap<EntityKind, IntConsumer> componentsAdders;
 
     @Override
     public void initialize() {
-        componentsAdders = new HashMap<>();
+        componentsAdders = ArrayListMultimap.create();
         componentsAdders.put(EntityKind.PLAYER, this::addPlayerComponents);
     }
 
@@ -72,7 +75,7 @@ public abstract class EntityCreator extends Service {
         addEntityKind(entity, entityKind);
 
         if (this.componentsAdders.containsKey(entityKind)) {
-            this.componentsAdders.get(entityKind).accept(entity);
+            this.componentsAdders.get(entityKind).forEach(c -> c.accept(entity));
         }
     }
 

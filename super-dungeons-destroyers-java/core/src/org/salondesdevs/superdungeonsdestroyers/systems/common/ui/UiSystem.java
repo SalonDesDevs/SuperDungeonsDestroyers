@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import com.kotcrab.vis.ui.VisUI;
 import net.wytrem.ecs.BaseSystem;
 import org.salondesdevs.superdungeonsdestroyers.SuperDungeonsDestroyersClient;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens.Screen;
 import org.salondesdevs.superdungeonsdestroyers.systems.ingame.IngameInputSystem;
 

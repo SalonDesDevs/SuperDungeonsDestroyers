@@ -1,4 +1,4 @@
-package org.salondesdevs.superdungeonsdestroyers.systems.common;
+package org.salondesdevs.superdungeonsdestroyers.content;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;

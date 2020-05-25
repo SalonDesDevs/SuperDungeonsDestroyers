@@ -24,10 +24,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Singleton
 /**
  * Used to keep players up to date (entities movements, levels changes...).
  */
+@Singleton
 public class Synchronizer extends IteratingSystem {
 
     private static final Logger logger = LoggerFactory.getLogger( Synchronizer.class );

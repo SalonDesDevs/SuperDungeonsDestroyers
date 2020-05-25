@@ -8,7 +8,7 @@ import net.wytrem.ecs.Mapper;
 import org.salondesdevs.superdungeonsdestroyers.components.*;
 import org.salondesdevs.superdungeonsdestroyers.library.packets.fromserver.ThatsYou;
 import org.salondesdevs.superdungeonsdestroyers.library.systems.EntityCreator;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 import org.salondesdevs.superdungeonsdestroyers.systems.common.network.PacketReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

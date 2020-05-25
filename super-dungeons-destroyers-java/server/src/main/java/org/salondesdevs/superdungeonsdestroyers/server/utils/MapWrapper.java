@@ -2,11 +2,14 @@ package org.salondesdevs.superdungeonsdestroyers.server.utils;
 
 import org.mapeditor.core.MapLayer;
 
-public class MapPerso {
+/**
+ * Wrapper class for {@link org.mapeditor.core.Map}. Provides some convenient methods such as {@link MapWrapper#getLayerByName(String)}.
+ */
+public class MapWrapper {
 
     private org.mapeditor.core.Map tiledMap;
 
-    public MapPerso(org.mapeditor.core.Map tiledMap) {
+    public MapWrapper(org.mapeditor.core.Map tiledMap) {
         this.tiledMap = tiledMap;
     }
 

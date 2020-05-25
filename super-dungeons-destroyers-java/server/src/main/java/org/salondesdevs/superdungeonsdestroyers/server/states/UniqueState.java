@@ -18,6 +18,7 @@ public class UniqueState extends SDDState {
         register(Synchronizer.class);
         register(EntityCreatorServer.class);
         register(EnvironmentManager.class);
+        register(Motd.class);
     }
 
     @Override

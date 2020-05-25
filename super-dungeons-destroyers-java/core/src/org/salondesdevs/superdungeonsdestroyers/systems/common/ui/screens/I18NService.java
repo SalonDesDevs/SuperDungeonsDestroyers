@@ -1,7 +1,7 @@
 package org.salondesdevs.superdungeonsdestroyers.systems.common.ui.screens;
 
 import net.wytrem.ecs.Service;
-import org.salondesdevs.superdungeonsdestroyers.systems.common.Assets;
+import org.salondesdevs.superdungeonsdestroyers.content.Assets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

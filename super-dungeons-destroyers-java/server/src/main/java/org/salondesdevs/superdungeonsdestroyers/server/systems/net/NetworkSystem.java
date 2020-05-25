@@ -20,6 +20,9 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the Netty {@link EventLoopGroup} and delegates the packets to the {@link NetHandler}s.
+ */
 @Singleton
 public class NetworkSystem extends BaseSystem {
     private static final Logger logger = LoggerFactory.getLogger(NetworkSystem.class);
