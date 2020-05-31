@@ -29,6 +29,7 @@ public abstract class Packet implements NettySerializable {
         register(id++, VersionCheck::new, VersionCheck.class);
         register(id++, PlayerMove::new, PlayerMove.class);
         register(id++, PlayerName::new, PlayerName.class);
+        register(id++, FromClientChat::new, FromClientChat.class);
 
         id = 50;
 
@@ -43,7 +44,6 @@ public abstract class Packet implements NettySerializable {
         register(id++, SwitchLevel::new, SwitchLevel.class);
         register(id++, EntityComponentSet::new, EntityComponentSet.class);
         register(id++, EntityComponentUnset::new, EntityComponentUnset.class);
-        register(id++, FromClientChat::new, FromClientChat.class);
         register(id++, FromServerChat::new, FromServerChat.class);
     }
 

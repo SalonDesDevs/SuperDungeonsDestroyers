@@ -23,6 +23,21 @@ public class IntWatchedComponent extends WatchableComponent {
         this.setChanged();
     }
 
+    public void increment() {
+        this.value++;
+        this.setChanged();
+    }
+
+    public void decrement() {
+        this.value--;
+        this.setChanged();
+    }
+
+    public void add(int a) {
+        this.value += a;
+        this.setChanged();
+    }
+
     @Override
     public void read(ByteBuf in) {
         this.value = in.readInt();
@@ -32,4 +47,5 @@ public class IntWatchedComponent extends WatchableComponent {
     public void write(ByteBuf out) {
         out.writeInt(this.value);
     }
+
 }

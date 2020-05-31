@@ -1,5 +1,6 @@
 package org.salondesdevs.superdungeonsdestroyers.server.systems;
 
+import org.salondesdevs.superdungeonsdestroyers.library.components.RemainingSteps;
 import org.salondesdevs.superdungeonsdestroyers.library.components.Role;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import net.wytrem.ecs.Mapper;
@@ -31,6 +32,9 @@ public class ChatSystem extends Service {
 
     @Inject
     Mapper<Role> roleMapper;
+
+    @Inject
+    Mapper<RemainingSteps> remainingStepsMapper;
 
     public void broadcast(ChatMessage chatMessage) {
         networkSystem.broadcast(new FromServerChat(chatMessage));
@@ -84,6 +88,37 @@ public class ChatSystem extends Service {
                             }
                             catch (Exception ex) {
                                 this.send(player, "Invalid role " + tokens[1]);
+                            }
+                        }
+                    }
+                    else if (tokens[0].equals("steps")) {
+                        if (tokens.length == 2) {
+                            if (tokens[1].equals("unset")) {
+                                remainingStepsMapper.unset(player);
+                            }
+                            else {
+                                this.send(player, "/steps set|add|unset <amount>");
+                            }
+                        }
+                        else if (tokens.length < 3) {
+                            this.send(player, "/steps set|add|unset <amount>");
+                        }
+                        else {
+                            int count = Integer.parseInt(tokens[2]);
+
+                            if (tokens[1].equals("set")) {
+                                remainingStepsMapper.set(player, new RemainingSteps(count));
+                            }
+                            else if (tokens[1].equals("add")) {
+                                if (remainingStepsMapper.has(player)) {
+                                    remainingStepsMapper.get(player).add(count);
+                                }
+                                else {
+                                    remainingStepsMapper.set(player, new RemainingSteps(count));
+                                }
+                            }
+                            else {
+                                this.send(player, "Unknown command.");
                             }
                         }
                     }

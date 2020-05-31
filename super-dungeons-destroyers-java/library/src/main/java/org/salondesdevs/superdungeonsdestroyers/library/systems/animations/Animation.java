@@ -3,7 +3,6 @@ package org.salondesdevs.superdungeonsdestroyers.library.systems.animations;
 import java.util.function.Consumer;
 
 public class Animation<T> {
-
     private float duration;
     private float advancement;
     private T start, end;

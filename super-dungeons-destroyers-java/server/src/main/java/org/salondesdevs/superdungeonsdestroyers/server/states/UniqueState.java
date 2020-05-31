@@ -19,6 +19,7 @@ public class UniqueState extends SDDState {
         register(EntityCreatorServer.class);
         register(EnvironmentManager.class);
         register(Motd.class);
+        register(StepsLimiter.class);
     }
 
     @Override

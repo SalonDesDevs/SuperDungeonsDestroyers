@@ -1,5 +1,8 @@
 package org.salondesdevs.superdungeonsdestroyers.library.systems.animations;
 
+/**
+ * Some standard interpolator.
+ */
 public class Interpolators {
 
     public static final Interpolator<Float> LINEAR_FLOAT = (a, b, t) -> a * (1-t) + b * t;

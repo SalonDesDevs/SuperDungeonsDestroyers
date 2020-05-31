@@ -8,4 +8,12 @@ public class RemainingSteps extends IntWatchedComponent {
     public RemainingSteps(int value) {
         super(value);
     }
+
+
+    @Override
+    public String toString() {
+        return "RemainingSteps{" +
+                "value=" + this.get() +
+                '}';
+    }
 }

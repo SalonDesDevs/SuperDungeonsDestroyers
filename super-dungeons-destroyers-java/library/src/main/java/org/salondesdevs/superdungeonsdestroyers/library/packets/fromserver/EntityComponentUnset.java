@@ -16,6 +16,7 @@ public class EntityComponentUnset extends EntityPacket {
 
     public EntityComponentUnset(int entityId, byte componentId) {
         super(entityId);
+        this.componentId = componentId;
     }
 
     public byte getComponentId() {

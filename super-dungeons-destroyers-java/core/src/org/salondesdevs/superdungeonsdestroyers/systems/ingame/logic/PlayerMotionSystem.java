@@ -2,6 +2,7 @@ package org.salondesdevs.superdungeonsdestroyers.systems.ingame.logic;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import org.salondesdevs.superdungeonsdestroyers.library.components.RemainingSteps;
 import org.salondesdevs.superdungeonsdestroyers.library.events.EventHandler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -54,6 +55,9 @@ public class PlayerMotionSystem extends Service {
 
     @Inject
     Mapper<Animated> animatedMapper;
+
+    @Inject
+    Mapper<RemainingSteps> remainingStepsMapper;
 
     @Override
     public void initialize() {
